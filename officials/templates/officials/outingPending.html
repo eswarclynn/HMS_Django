@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  {% load static %}
+  <link href="{% static 'officials/outingPending.css' %} " rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/outingPending.js' %}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar fixed-top" id="topnav">
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
+        <div class="justify-content-center">
+            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+        </div>
+
+        <div>
+            <a href="{% url 'officials:profile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        </div>
+    </nav>
+
+
+    <div id="mySidenav" class="sidenav">
+        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
+        <a href="#"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
+        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+    </div>
+
+    <br> <br> <br> <br>
+    <div class="container main-container">
+        <p style="text-align: center; font-size: large;"><b>{{off_details.name}}</b>, take at look at pending outing requests.</p><br>
+
+
+
+        <div class="table-container">
+            <h2 style="text-align: center;">Non-Local Outing Requests</h2>
+            <form method="POST" action=" {% url 'officials:grantOuting' %}">
+            {% csrf_token %}
+
+                {% if messages %}
+                                   
+                {% for message in messages %}
+                     <script>
+                          alert('{{message}}');
+                     </script>
+                {% endfor %}
+                     
+                {% endif %}
+                <table class="table table-hover table-dark table-striped" >
+                    <thead>
+                        <tr>
+                            <th>Reg No.</th>
+                            <th>Student Name</th>
+                            <th>Year</th>
+                            <th>Branch</th>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th>Purpose of Visit</th>
+                            <th>Parent's Mobile</th>
+                            <th>Allow?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stud in stud_list %}
+                            <tr>
+                                <td>{{stud.info.regd_no}}</td>
+                                <td>{{stud.info.name}}</td>
+                                <td>{{stud.info.year}}</td>
+                                <td>{{stud.info.branch}}</td>
+                                <td>{{stud.outing.fromDate}}</td>
+                                <td>{{stud.outing.toDate}}</td>
+                                <td>{{stud.outing.purpose}}</td>
+                                <td>{{stud.outing.parent_mobile}}</td>
+                                <td>
+                                    <select class="form-control" id="{{stud.outing.id}}" name="{{stud.outing.id}}">
+                                        <option value="">Select Permission</option>
+                                        <option value="Granted">Granted</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                </td>
+                            
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="9" class="text-center">
+                                    No Pending Outing Requests!
+                                </td>
+                            </tr>
+                            <script>
+                                window.onload = function(){
+                                    document.getElementById("sub-btn").disabled = true;
+                                }
+                            </script>
+
+                        {% endfor %}
+                        <tr>
+                            <td colspan="9" style="text-align: center;">
+                                <input type="submit" class="btn-success" id="sub-btn" style="border: none; border-radius: 10px; height: 3.5em; padding: 1em; transition: 0.7s;">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

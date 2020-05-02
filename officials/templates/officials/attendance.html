@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Attendance - Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  {% load static %}
+  <link href="{% static 'officials/attendance.css' %} " rel="stylesheet"> <!--attendance.css-->
+
+  <script src = "{% static 'officials/attendance.js' %}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar fixed-top" id="topnav">
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
+        <div class="justify-content-center">
+            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+        </div>
+
+        <div>
+            <a href="{% url 'officials:profile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        </div>
+    </nav>
+
+
+    <div id="mySidenav" class="sidenav">
+        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
+        <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
+        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+    </div>
+
+    <br> <br> <br> <br>
+    <div class="container" style="border: 1.5px solid #a1a1a1; border-radius: 15px; padding: 30px;">
+
+        <div class="table1-container" style="padding: 20px; ">
+
+            <h1 style="text-align: center;">Attendace Submission</h1>
+
+            <table class="table table-hover table-dark table-striped" id="att-table">
+                <form method="POST" action="{% url 'officials:attendance' %}">
+                {% csrf_token %}
+
+                {% if messages %}
+                                   
+                {% for message in messages %}
+                     <script>
+                          alert('{{message}}');
+                     </script>
+                {% endfor %}
+                     
+                {% endif %}
+
+                <div class="row" style="margin-bottom: 10px;">
+
+                    <span class="col-md">Block : <b>{{block_details.block_name}}</b></span>
+
+                    <span class="col-md ddbut-con">
+                        Date: <input type="date" id="datefield" name="datefield" required/>
+                    </span>
+                </div>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Room No.</th>
+                        <th>Attendance</th>
+                    </tr>
+                </thead>
+                
+                    <tbody>
+                        
+                        {% for stud in stud_list %}
+                        <tr>
+                            <td>{{stud.student.regd_no}}</td>
+                            <td>{{stud.name}}</td>
+                            <td>{{stud.student.room_no}},{{stud.student.floor}}</td>
+                            <td>
+                                <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}" required>
+                                    <option value="">Select Attendance</option>
+                                    <option value="Present">Present</option>
+                                    <option value="Absent">Absent</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                            
+                        <tr >
+                            <td colspan="4" style="text-align: center;"><input type="submit" class="subbtn btn-success" ></td>
+                        </tr>    
+    
+                    </tbody>
+
+                    
+                </form>
+
+            </table>
+        </div>
+
+
+
+    </div>
+
+
+</body>
+</html>
+
+
