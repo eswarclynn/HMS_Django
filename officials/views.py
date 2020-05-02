@@ -11,6 +11,7 @@ from django.http.response import Http404
 from complaints.models import Complaints, OfficialComplaints
 
 # Create your views here.
+@csrf_exempt
 def official_home(request):
     name = request.COOKIES['username_off']
     user_details = Officials.objects.get(emp_id=str(name))
@@ -40,7 +41,18 @@ def official_home(request):
                     }
                 )
 
-        return render(request, 'officials/caretaker-home.html', {'user_details': user_details, 'block_details':block_details,'present_list':present_list,'absent_list':absent_list})
+        complaints = list(Complaints.objects.filter(status='Registered'))
+
+        if request.method == 'POST':
+            for item in complaints:
+                newComplaint = Complaints.objects.get(id=item.id)
+                newComplaint.status = request.POST[str(item.id)]
+                newComplaint.save()
+            else:
+                messages.success(request, 'Successfully Complaints updated!')
+                return redirect('officials:official_home') 
+
+        return render(request, 'officials/caretaker-home.html', {'user_details': user_details, 'block_details':block_details,'present_list':present_list,'absent_list':absent_list, 'complaints':complaints})
 
     else:
         name = request.COOKIES['username_off']
@@ -67,6 +79,15 @@ def official_home(request):
         offComplaints = list(OfficialComplaints.objects.all())
         complaints+=offComplaints
 
+        if request.method == 'POST':
+            for item in complaints:
+                newComplaint = Complaints.objects.get(id=item.id)
+                newComplaint.status = request.POST[str(item.id)]
+                newComplaint.save()
+            else:
+                messages.success(request, 'Successfully Complaints updated!')
+                return redirect('officials:official_home')
+
         return render(request, 'officials/chiefs-home.html', {'user_details': user_details, 'present':present, 'absent':absent, 'complaints':complaints})
 
 
@@ -77,7 +98,7 @@ def profile(request):
     block_details = Blocks.objects.filter(emp_id_id=str(name))
     complaints=user_details.offComplaints.all()
 
-    return render(request, 'officials/profile.html', {'user_details': user_details, 'complaints':complaints})
+    return render(request, 'officials/profile.html', {'user_details': user_details,'block_details':block_details, 'complaints':complaints})
 
 def chiefsProfile(request):
     name = request.COOKIES['username_off']
@@ -179,3 +200,9 @@ def grantOuting(request):
             return redirect('officials:grantOuting') 
 
     return render(request, 'officials/outingPending.html', {'off_details':off_details, 'stud_list':stud_list})
+
+
+
+def search(request):
+    
+    return render(request, 'officials/search.html')

@@ -33,11 +33,3 @@ function editDetails(id) {
     document.getElementById("subbtn").style.display = "contents";
 
 }
-
-function showList1(id) {
-    if(id == "comps") {
-        document.getElementById("complaints-wrapper").style.display = "block";
-        console.log('clicked complaints');
-        
-    }
-}

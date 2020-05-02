@@ -25,7 +25,7 @@ def login(request):
             return response
 
         else:
-            messages.error(request, 'Invalid Username')
+            messages.error(request, 'Invalid Username or Password')
             return redirect('authenticate:login')
             
 

@@ -34,7 +34,7 @@
     <div id="mySidenav" class="sidenav">
         <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
-        <a href="./search.html"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
 
@@ -47,14 +47,14 @@
 
         <div class="row">
             <div class="col-md cclass" >
-                <div class="card" id="present">
+                <div class="card" id="present" onclick="showList1(this.id)">
                     <span class="atticon"><i class="fa fa-user-plus"></i></span>
                     <span class="attnum">{{present|length}}</span>
                     <span class="atttext">Number of inmates present.</span>
                 </div>
             </div>
             <div class="col-md cclass">
-                <div class="card" id="absent">
+                <div class="card" id="absent" onclick="showList1(this.id)">
                     <span class="atticon"><i class="fa fa-user-times"></i></span>
                     <span class="attnum">{{absent|length}}</span>
                     <span class="atttext">Number of inmates absent.</span>
@@ -71,7 +71,7 @@
 
         <br>
 
-        <div class="table1-container" style="padding: 20px; ">
+        <div class="table1-container" style="padding: 20px;" id="absent-wrapper">
             <h2 class="text-center">List of Absentees</h2>
             <table class="table table-hover table-dark table-striped" id="abstable">
                 <thead>
@@ -97,7 +97,44 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6" class="text-center"> No complaints registered! </td>
+                            <td colspan="6" class="text-center"> No Absentees! </td>
+                        </tr>                        
+                    {% endfor %}
+                        
+
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table1-container" style="padding: 20px;" id="present-wrapper">
+            <h2 class="text-center">List of Present Students</h2>
+            <table class="table table-hover table-dark table-striped" >
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Year</th>
+                        <th>Branch</th>
+                        <th>Block</th>
+                        <th>Room No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for stud in present %}
+                        <tr>
+                            <td>{{stud.info.regd_no}}</td>
+                            <td>{{stud.info.name}}</td>
+                            <td>{{stud.info.year}}</td>
+                            <td>{{stud.info.branch}}</td>
+                            <td>{{stud.block_name}}</td>
+                            <td>{{stud.block.floor}},{{stud.block.room_no}}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center"> No Present students! </td>
                         </tr>                        
                     {% endfor %}
                         
@@ -123,27 +160,58 @@
 
                         </tr>
                     </thead>
-                    <tbody>
-                        
-                        {% for item in complaints %}
-                            <tr>
-                                <td>{{forloop.counter}} </td>
-                                <td>{{item.regd_no}}</td>
-                                <td>{{item.type}}</td>
-                                <td>{{item.complainee}}</td>
-                                <td>{{item.summary}}</td>
-                                <td>{{item.date}}</td>
-
-
-                            </tr>
-                            
-                        {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center"> No complaints registered! </td>
-                            </tr>
+                    <form method="POST" action="{% url 'officials:official_home' %}">
+                        {% csrf_token %}
+                        {% if messages %}
+                                       
+                        {% for message in messages %}
+                             <script>
+                                  alert('{{message}}');
+                             </script>
                         {% endfor %}
-        
-                    </tbody>
+                             
+                        {% endif %}    
+                            <tbody>
+                                
+                                {% for item in complaints %}
+                                <tr>
+                                    <td>{{forloop.counter}} </td>
+                                    <td>{{item.regd_no}}</td>
+                                    <td>{{item.type}}</td>
+                                    <td>{{item.complainee}}</td>
+                                    <td>{{item.summary}}</td>
+                                    <td>{{item.date}}</td>
+                                    <td>                            
+                                        <select class="form-control w-75" id="{{item.id}}" name="{{item.id}}" required>
+                                            <option value="">Status</option>
+                                            <option value="Registered">Registered</option>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Resolved">Resolved</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                
+                                {% empty %}
+                                
+                                <tr>
+                                    <td colspan="9" class="text-center">
+                                        No Complaints!
+                                    </td>
+                                </tr>
+                                <script>
+                                    window.onload = function(){
+                                        document.getElementById("sub-btn").disabled = true;
+                                    }
+                                </script>
+    
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="9" style="text-align: center;">
+                                        <input type="submit" class="btn-success" id="sub-btn" style="border: none; border-radius: 10px; height: 3.5em; padding: 1em; transition: 0.7s;">
+                                    </td>
+                                </tr>
+                        </tbody>
+                        </form>
                 </table>
             </div>
     </div>

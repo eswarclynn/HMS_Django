@@ -67,9 +67,9 @@
             </div>
 
             <div class="col-md cclass">
-                <div class="card" id="comps">
+                <div class="card" id="comps" onclick="showList1(this.id)">
                     <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
-                    <span class="attnum">28</span>
+                    <span class="attnum">{{complaints|length}}</span>
                     <span class="atttext">Number of complaints received.</span></div>
             </div>
         </div>
@@ -144,6 +144,78 @@
             </table>
         </div>
 
+
+        <div class="table-container">
+            <div class="container" id="complaints-wrapper">
+                <h2 style="text-align: center;">Complaints Registered</h2> <br>
+                <table class="table table-hover table-dark table-striped" id="abstable">
+                    <thead>
+                        <tr>
+                            <th>Count</th>
+                            <th>Complainant</th>
+                            <th>Type</th>
+                            <th>Complainee</th>
+                            <th>Summary</th>
+                            <th>Date Registered</th>
+                            <th>Status</th>
+
+                        </tr>
+                    </thead>
+                    <form method="POST" action="{% url 'officials:official_home' %}">
+                    {% csrf_token %}
+                    {% if messages %}
+                                   
+                    {% for message in messages %}
+                         <script>
+                              alert('{{message}}');
+                         </script>
+                    {% endfor %}
+                         
+                    {% endif %}    
+                        <tbody>
+                            
+                            {% for item in complaints %}
+                            <tr>
+                                <td>{{forloop.counter}} </td>
+                                <td>{{item.regd_no}}</td>
+                                <td>{{item.type}}</td>
+                                <td>{{item.complainee}}</td>
+                                <td>{{item.summary}}</td>
+                                <td>{{item.date}}</td>
+                                <td>                            
+                                    <select class="form-control w-75" id="{{item.id}}" name="{{item.id}}" required>
+                                        <option value="">Status</option>
+                                        <option value="Registered">Registered</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Resolved">Resolved</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            
+                            {% empty %}
+                            
+                            <tr>
+                                <td colspan="9" class="text-center">
+                                    No Complaints!
+                                </td>
+                            </tr>
+                            <script>
+                                window.onload = function(){
+                                    document.getElementById("sub-btn").disabled = true;
+                                }
+                            </script>
+
+                            {% endfor %}
+                            <tr>
+                                <td colspan="9" style="text-align: center;">
+                                    <input type="submit" class="btn-success" id="sub-btn" style="border: none; border-radius: 10px; height: 3.5em; padding: 1em; transition: 0.7s;">
+                                </td>
+                            </tr>
+                    </tbody>
+                    </form>
+                </table>
+            </div>
+    </div>
 
 
     </div>

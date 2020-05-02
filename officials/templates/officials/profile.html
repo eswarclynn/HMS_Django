@@ -43,32 +43,6 @@
     <div class="container main-container">
         <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>!</p>
 
-        <div class="row card-container">
-            
-            <div class="col-md cclass">
-                <div class="card" id="present">
-                    <span class="atticon"><i class="fa fa-user-plus"></i></span>
-                    <span class="attnum">34</span>
-                    <span class="atttext">Number of days present.</span>
-                </div>
-            </div>
-
-            <div class="col-md cclass">
-                    <div class="card" id="absent">
-                        <span class="atticon"><i class="fa fa-user-times"></i></span>
-                        <span class="attnum">23</span>
-                        <span class="atttext">Number of days absent.</span>
-                    </div>
-                    
-            </div>
-            <div class="col-md cclass">
-                <div class="card" id="comps" onclick="showList1(this.id)" data-toggle="tooltip" title="Click to get list!">
-                    <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
-                    <span class="attnum">{{complaints|length}}</span>
-                    <span class="atttext">Number of complaints registered.</span></div>
-            </div>
-        </div>
-
         <div class="table-container profile">
             <form>
                 <table class="table table-hover">
@@ -140,19 +114,19 @@
                             <th>Complainee</th>
                             <th>Summary</th>
                             <th>Date Registered</th>
-
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         
                         {% for item in complaints %}
                             <tr>
-                                <td>{{forloop.counter}} </td>
-                                <td>{{item.type}}</td>
-                                <td>{{item.complainee}}</td>
-                                <td>{{item.summary}}</td>
-                                <td>{{item.date}}</td>
-
+                                <td class="text-center">{{forloop.counter}} </td>
+                                <td class="text-center">{{item.type}}</td>
+                                <td class="text-center">{{item.complainee}}</td>
+                                <td class="text-center">{{item.summary}}</td>
+                                <td class="text-center">{{item.date}}</td>
+                                <td class="text-center">{{item.status}}</td>
 
                             </tr>
                             
