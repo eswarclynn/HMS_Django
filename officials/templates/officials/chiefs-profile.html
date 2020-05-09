@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  {% load static %}
+  <link href=" {% static 'officials/chiefs-profile.css' %} " rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/chiefs-profile.js' %}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar fixed-top" id="topnav">
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
+        <div class="justify-content-center">
+            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+        </div>
+
+        <div>
+            <a href="{% url 'officials:chiefsProfile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        </div>
+    </nav>
+
+
+    <div id="mySidenav" class="sidenav">
+        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
+        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+    </div>
+
+    <br> <br> <br> <br>
+    <div class="container main-container">
+        <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>!</p>
+
+
+        <div class="table-container profile">
+            <form>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Your Details</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tbody">
+                        <tr>
+                            <td class="field">Name</td>
+                            <td class="field-item">{{user_details.name}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Staff No.</td>
+                            <td class="field-item">{{user_details.emp_id}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Designation</td>
+                            <td class="field-item">{{user_details.designation}}</td>
+                        </tr>
+                        <tr>
+                            <td class="field">Block</td>
+                            <td class="field-item">
+                                
+                                {% for block in block_details %}
+                                    {{block.block_name}},
+                                {% endfor %}
+                                    
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="field">Contact Number</td>
+                            <td class="field-item" id="phone-field">{{user_details.phone}}</td>
+                            <td><span class="edit-icon" id="phone-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="field">e-Mail ID</td>
+                            <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
+                            <td><span class="edit-icon" id="mail-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
+                        </tr>
+                        <tr>
+                            <td class="field">Address</td>
+                            <td class="field-item" id="address-field">{{user_details.address}}</td>
+                            <td><span class="edit-icon" id="address-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
+                        </tr>
+                        <tr  id="subbtn">
+                            <td colspan="3" style="text-align: center;"> <input type="submit" class="btn-primary" style="border: 0; height: 2.5em; padding: 10px;"></td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </form>
+
+
+        </div>
+
+        <div class="table-container">
+            <div class="container" id="complaints-wrapper">
+                <h2 style="text-align: center;">Complaints Registered</h2> <br>
+                <table class="table table-hover table-dark table-striped" id="abstable">
+                    <thead>
+                        <tr>
+                            <th>Count</th>
+                            <th>Type</th>
+                            <th>Complainee</th>
+                            <th>Summary</th>
+                            <th>Date Registered</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for item in complaints %}
+                            <tr>
+                                <td>{{forloop.counter}} </td>
+                                <td>{{item.type}}</td>
+                                <td>{{item.complainee}}</td>
+                                <td>{{item.summary}}</td>
+                                <td>{{item.date}}</td>
+
+
+                            </tr>
+                            
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center"> No complaints registered! </td>
+                            </tr>
+                        {% endfor %}
+        
+                    </tbody>
+                </table>
+            </div>
+    </div>
+
+</body>
+</html>

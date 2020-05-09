@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  {% load static %}
+  <link href="{% static 'officials/search.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/search.js' %}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar fixed-top" id="topnav">
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
+        <div class="justify-content-center">
+            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+        </div>
+
+        <div>
+            <span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span>
+        </div>
+    </nav>
+
+
+    <div id="mySidenav" class="sidenav">
+        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
+        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+    </div>
+    
+    <div class="container main-container">
+        <h2 class="text-center">Search Student</h2>
+        
+        <form method="POST" action="{% url 'officials:search' %}">
+
+            <div class="row text-center">
+                <div class="col">Registration No.: <input type="checkbox" class="checkBox ml-3" id="regCheck" onclick="setEnabled()"></div>
+                <div class="col">Block: <input type="checkbox" class="checkBox ml-3" id="blockCheck" onclick="setEnabled()"></div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-sm-6 text-right pr-5">
+                    <label for="regno"><strong>Registration No. :</strong></span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <input type="text" id="regno" name="regno" class="form-control w-50" placeholder="Enter Registration No." disabled required/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 text-right pr-5">
+                    <label for="block"><strong> Block :</strong></span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <select class="form-control w-50" id="block" name="block" disabled required>
+                        <option value="">Select Block</option>
+                        {% for block in send_blocks %}
+                        <option value="{{block.block_id}}">{{block.block_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <input type="submit" class="btn btn-primary" style="transition: 0.5s;"/>
+                </div>
+            </div>
+        </form>
+<br><br>
+
+            
+        
+            
+        <div class="container">
+            <table class="table table-hover table-dark table-striped">
+                <thead>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Year</th>
+                    <th>Branch</th>
+                    <th>Phone</th>
+                    <th>Block</th>
+                    <th>Room No.</th>
+                    <th>In Campus?</th>
+                </thead>
+                <tbody>
+                    
+                    {% for item in items_list %}
+                    <tr>
+                        <td>{{item.stud.regd_no}}</td>
+                        <td>{{item.stud.name}}</td>
+                        <td>{{item.stud.year}}</td>
+                        <td>{{item.stud.branch}}</td>
+                        <td>{{item.stud.phone}}</td>
+                        <td>{{item.block_name}}</td>
+                        <td>{{item.block_details.floor}},{{item.block_details.room_no}}</td>
+                        <td>{{item.isPresent}}</td>
+                        
+
+                    </tr>
+                        
+                    {% endfor %}
+                        
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+
+</body>
+</html>

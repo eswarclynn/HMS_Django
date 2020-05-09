@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap" rel="stylesheet"> <!--Montserrat-->
+  {% load static %}
+  <link href="{% static 'institute/index.css' %}" type="text/css" rel="stylesheet"> <!--index.css-->
+
+</head>
+
+<body>
+    <nav class="navbar fixed-top justigy-content-center" id="topnav">
+        
+        
+        <div class="title-container">
+            <span style="color:darkorange; font-family: 'Lobster', cursive; ;" id="title">Hostel Management System</span>
+        </div>
+
+        
+    </nav>
+
+    <div class="main-container container">
+        <div class="search">
+            <h1 style="color: aliceblue; font-weight:800; margin-bottom: 1.3em;">WELCOME TO HOSTELS-NIT AP</h1>
+
+
+            <div class="search-box ">
+                <form method="POST" action="{% url 'institute:search' %}">
+                    <input class="search-ph " name="regno" placeholder="Search here...">
+                    <input type="submit"  value="&#xf002;" id="search-btn"/>
+                    
+                </form>
+            </div>
+
+        </div>
+
+        <div class="links ">
+
+                <a href="{% url 'authenticate:login'%}" class="link-item">Log in</a> &nbsp; &nbsp;
+                <a href="{% url 'authenticate:signup' %}" class="link-item">Sign in</a> &nbsp; &nbsp;
+                <a href="{% url 'institute:gallery' %}" class="link-item">Gallery - Take a look</a> &nbsp; &nbsp;<!--Change caretaker home link--> 
+
+        </div>
+
+    </div>
+
+
+</body>
+</html>

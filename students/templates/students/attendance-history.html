@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  {% load static %}
+  <link href="{% static 'students/attendance-history.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'students/attendance-history.js' %}"></script>
+
+</head>
+
+<body>
+    <nav class="navbar fixed-top" id="topnav">
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
+        <div class="justify-content-center">
+            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+        </div>
+
+        <div>
+            <a href="{% url 'students:student_home' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        </div>
+    </nav>
+
+
+    <div id="mySidenav" class="sidenav">
+        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'students:student_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'students:outing_app' %}"><span><i class="fa fa-map-marker"></i></span> &nbsp;&nbsp; Outing Application</a>
+        <a href="#"><span><i class="fa fa-list" ></i></span> &nbsp;&nbsp; Attendance History</a>
+        <a href="{% url 'students:outing_history' %}"><span><i class="fa fa-history" ></i></span> &nbsp;&nbsp; Outing History</a>
+        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
+        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+
+    </div>
+
+    <br> <br> <br> <br>
+    <div class="container main-container">
+        <p style="text-align: center; font-size: large;"><b>{{user_details.name}}</b>, take at look at your attendance history.</p>
+
+        <div class="row card-container">
+            
+            <div class="col-md cclass">
+                <div class="card" id="present" onclick="showList1(this.id)" data-toggle="tooltip" title="Click to get list!">
+                    <span class="atticon"><i class="fa fa-user-plus"></i></span>
+                    <span class="attnum">{{pres|length}}</span>
+                    <span class="atttext">Number of days present.</span>
+                </div>
+            </div>
+
+            <div class="col-md cclass">
+                    <div class="card" id="absent" onclick="showList1(this.id)" data-toggle="tooltip" title="Click to get list!">
+                        <span class="atticon"><i class="fa fa-user-times"></i></span>
+                        <span class="attnum">{{abse|length}}</span>
+                        <span class="atttext">Number of days absent.</span>
+                    </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="container" id="present-wrapper">
+                <h2 style="text-align: center;">Days present</h2> <br>
+                <table class="table table-hover table-dark table-striped" id="abstable">
+                    <thead>
+                        <tr>
+                            <th>Count</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for item in pres %}
+                            <tr>
+                                <td>{{forloop.counter}} </td>
+                                <td>{{item}}</td>
+                            </tr>                           
+                        {% endfor %}
+        
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container" id="absent-wrapper">
+                <h2 style="text-align: center;">Days absent</h2> <br>
+                <table class="table table-hover table-dark table-striped" id="abstable">
+                    <thead>
+                        <tr>
+                            <th>Count</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for item in abse %}
+                            <tr>
+                                <td>{{forloop.counter}} </td>
+                                <td>{{item}}</td>
+                            </tr>                           
+                        {% endfor %}
+        
+                    </tbody>
+                </table>
+            </div>
+        
+        </div>
+    </div>
+
+
+</body>
+</html>

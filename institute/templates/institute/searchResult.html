@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  {% load static %}
+  <link href="{% static 'institute/index.css' %}" type="text/css" rel="stylesheet"> <!--index.css-->
+
+</head>
+<body>
+    <nav class="navbar fixed-top justigy-content-center" id="topnav">
+        
+        
+        <div class="title-container">
+            <span style="color:darkorange; font-family: 'Lobster', cursive; ;" id="title">Hostel Management System</span>
+        </div>
+
+        
+    </nav>
+    <br><br><br><br>
+    <div class="main-container container">
+        <table class="table table-hover table-dark table-striped">
+            <thead>
+                <tr>
+                    <th colspan="2" class="text-center">Search Details</th>
+                </tr>
+            </thead>
+        
+            <tbody id="tbody">
+                <tr>
+                    <td class="field">Name</td>
+                    <td class="field-item">{{user_details.stud.name}}</td>
+                </tr>
+                <tr>
+                    <td class="field">Registration No.</td>
+                    <td class="field-item">{{user_details.stud.regd_no}}</td>
+                </tr>
+                <tr>
+                    <td class="field">Roll No.</td>
+                    <td class="field-item">{{user_details.stud.roll_no}}</td>
+                </tr>
+                <tr>
+                    <td class="field">Year</td>
+                    <td class="field-item">{{user_details.stud.year}}</td>
+                </tr>
+                <tr>
+                    <td class="field">Branch</td>
+                    <td class="field-item">{{user_details.stud.branch}}</td>
+                </tr>
+                <tr>
+                    <td class="field">e-Mail ID</td>
+                    <td class="field-item" id="mail-field">{{user_details.stud.email_id}}</td>
+                </tr>
+                <tr>
+                    <td class="field">Block</td>
+                    <td class="field-item" id="mail-field">{{user_details.block_name}}</td>
+                </tr>
+                <tr>
+                    <td class="field">Room</td>
+                    <td class="field-item" id="mail-field">{{user_details.block_details.floor}},{{user_details.block_details.room_no}}</td>
+                </tr>
+
+        
+        
+            </tbody>
+        </table>
+    </div>
+
+</body>
+

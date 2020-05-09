@@ -1,0 +1,88 @@
+body{
+     font-family: 'Roboto', sans-serif;
+     background: url('bg1.jpg') no-repeat center center fixed;
+     background-size: cover;
+ 
+ }
+ #topnav {
+     background-color: #7f5a83;
+     background-image: linear-gradient(315deg, #7f5a83 0%, #0d324d 74%);
+     box-shadow: 0 8px 6px -6px rgb(37, 34, 68);
+ }
+ #title{
+     font-size:xx-large;
+ }
+ 
+ 
+.container{
+    padding: 2rem;
+    margin-top: 6rem;
+    align-content: center;
+    justify-content: center;
+
+}
+     
+.card{
+    width: 400px;
+    background-color:white !important;
+    border: none;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0), 0 6px 20px 0 rgba(0, 0, 0, 0.19)!important;
+}
+     
+.card-header{
+    background-color:rgb(253, 190, 29);
+    text-align: center;
+
+}
+     
+.card-header h3{
+    color:black;
+    font-weight: 600;
+}
+     
+.input-group-prepend span{
+    width: 50px;
+    background-color: #FFC312;
+    color: black;
+    border:0 !important;
+}
+    
+input:focus{
+    outline: 0 0 0 0  !important;
+    box-shadow: 0 0 0 0 !important;
+    
+}
+    
+.sign-btn{
+    justify-content: center;
+    padding: 1rem; 
+}
+.sign_btn{
+    color: black;
+    background-color: #FFC312;
+    width: 100px;
+    transition: all 0.5s ;
+}
+    
+.sign_btn:hover{
+    color: white;
+    background-color: #0074D9 ;
+}
+
+label{
+    color:black;
+    font-weight: 100; 
+}
+.form-control:focus {
+     border-color: #0074D9;
+ }
+ .btn-space{
+     padding-right: 25px;
+ }
+
+ .form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+  }
+  
