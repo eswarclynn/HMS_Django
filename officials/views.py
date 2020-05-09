@@ -19,7 +19,7 @@ def official_home(request):
         try:
             block_details = Blocks.objects.get(emp_id_id=str(name))
         except Blocks.DoesNotExist:
-            raise Http404("You are currently not appointed any block!")
+            raise Http404("You are currently not appointed any block! Please contact Admin")
 
         students = details.objects.filter(block_id=block_details.block_id)
     
