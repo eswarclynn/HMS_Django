@@ -33,6 +33,7 @@
     <div id="mySidenav" class="sidenav">
         <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>

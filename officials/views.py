@@ -224,10 +224,7 @@ def search(request):
             return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
 
         else:
-            print('In else block')
-            print(request.POST['block'])
             block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
-            print(block_name)
             studs = details.objects.filter(block_id=request.POST['block'])
             items_list = list()
             for stud in studs:
@@ -242,7 +239,57 @@ def search(request):
                     'isPresent':isPresent
                 }
                 items_list.append(items)
-                print(items_list)
             return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
 
     return render(request, 'officials/search.html',{'send_blocks':send_blocks})
+
+@csrf_exempt
+def blockSearch(request):
+    send_blocks = Blocks.objects.all()
+
+    if request.method == 'POST':
+            block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
+            block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
+            block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
+            cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)*3
+            room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
+
+            if room_type == '3S':   cap_stud = cap_room*3
+            elif room_type == '2S': cap_stud = cap_room*2
+            elif room_type == '1S': cap_stud = cap_room
+            
+            studs = details.objects.filter(block_id=request.POST['block'])
+            pres_stud = studs.count()
+            items_list = list()
+            for stud in studs:
+                info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
+                block_details = details.objects.get(regd_no=info)
+                if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
+                else: isPresent = attendance.objects.get(regd_no=info).status
+                items={
+                    'stud':info,
+                    'block_details':block_details,
+                    'isPresent':isPresent
+                }
+                items_list.append(items)
+
+
+
+
+            return render(request, 'officials/roomLayout.html', {
+                'items_list':(items_list), 
+                'send_blocks':send_blocks, 
+                'block_name':block_name,
+                'cap_room': cap_room,
+                'room_type' : room_type,
+                'cap_stud' : cap_stud,
+                'block_gender':block_gender,
+                'block_care':block_care,
+                'pres_stud':pres_stud,
+                'pres_room': (int(pres_stud))//(int(room_type[0])),
+                'vacant_room':cap_room - (int(pres_stud))//(int(room_type[0])) - (int(pres_stud))%(int(room_type[0])),
+                'partial_room':(int(pres_stud))%(int(room_type[0])),
+                })
+
+
+    return render(request, 'officials/roomLayout.html',{'send_blocks':send_blocks})

@@ -10,5 +10,6 @@ urlpatterns = [
     path('attendance/', views.takeAttendance, name='attendance'),
     path('grant-outing/', views.grantOuting, name='grantOuting'),
     path('chief-profile/', views.chiefsProfile, name='chiefsProfile'),
+    path('block-search/', views.blockSearch, name='blockSearch'),
     path('search/',views.search, name='search')
 ]
