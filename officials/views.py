@@ -57,8 +57,10 @@ def official_home(request):
         if request.method == 'POST':
             for item in complaints:
                 newComplaint = Complaints.objects.get(id=item.id)
-                newComplaint.status = request.POST[str(item.id)]
-                newComplaint.save()
+                if newComplaint.status != request.POST[str(item.id)] and newComplaint.remark != request.POST['RE'+str(item.id)]:
+                    newComplaint.status = request.POST[str(item.id)]
+                    newComplaint.remark = request.POST['RE'+str(item.id)]
+                    newComplaint.save()
             else:
                 messages.success(request, 'Successfully Complaints updated!')
                 return redirect('officials:official_home') 
@@ -90,19 +92,25 @@ def official_home(request):
                 })
             except: pass
 
-        complaints = list(Complaints.objects.all())
-        offComplaints = list(OfficialComplaints.objects.all())
+        complaints = list(Complaints.objects.filter(status='Registered')) + list(Complaints.objects.filter(status='Processing'))
+        offComplaints = list(OfficialComplaints.objects.filter(status='Registered')) + list(OfficialComplaints.objects.filter(status='Processing'))
         complaints_list = complaints + offComplaints
         if request.method == 'POST':
             print(complaints)
             for item in complaints_list:
                 if isinstance(item, Complaints) :
                     newComplaint = Complaints.objects.get(id=item.id)
-                    newComplaint.status = request.POST['SC'+str(item.id)]
+                    if newComplaint.status != request.POST['SC'+str(item.id)] and newComplaint.remark != request.POST['SCRE'+str(item.id)]:
+                        newComplaint.status = request.POST['SC'+str(item.id)]
+                        newComplaint.remark = request.POST['SCRE'+str(item.id)]
+                        newComplaint.save()
 
                 elif isinstance(item, OfficialComplaints):
                     newComplaint = OfficialComplaints.objects.get(id=item.id)
-                    newComplaint.status = request.POST['OC'+str(item.id)]
+                    if newComplaint.status != request.POST['OC'+str(item.id)] and newComplaint.remark != request.POST['OCRE'+str(item.id)]:
+                        newComplaint.status = request.POST['OC'+str(item.id)]
+                        newComplaint.remark = request.POST['OCRE'+str(item.id)]
+                        newComplaint.save()
                 newComplaint.save()
             else:
                 messages.success(request, 'Successfully Complaints updated!')
@@ -486,6 +494,7 @@ def blockSearch(request):
         placing_block = location[0]
         placing_floor = location[1]
         placing_room = location[2]
+        print(placing_block)
 
         if details.objects.filter(regd_no=roll).exists():
             student = details.objects.get(regd_no=roll)
@@ -501,7 +510,7 @@ def blockSearch(request):
                     student.floor = placing_floor
 
                     student.save()
-                    messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id)+' : '+placing_block+'!')
+                    messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+placing_block+'!')
                     return redirect('officials:blockSearch')
                 else:
                     messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
@@ -543,7 +552,7 @@ def blockSearch(request):
                         stud.floor = None
                         stud.save()
 
-                        messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id)+' : '+block_name+'!')
+                        messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+block_name+'!')
                         messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
                         return redirect('officials:blockSearch')
                     else:
@@ -680,7 +689,7 @@ def registeremp (request):
                      em.emp_id=Officials.objects.get(emp_id=empid)
                      em.save()
             messages.success(request, 'Registration Successful!')
-            return render(request,'officials/register-emp.html',{'std':std,})
+    return render(request,'officials/register-emp.html',{'std':std,})
 
      
 

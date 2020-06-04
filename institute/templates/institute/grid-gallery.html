@@ -7,7 +7,8 @@
         <title>Gallery - Hostel Management System</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+        <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
         {% load static %}
         <link rel="stylesheet" href="{% static 'institute/grid-gallery.css' %}">
         <link rel="stylesheet" href="{% static 'institute/topnav.css' %}">
@@ -15,22 +16,16 @@
 
     <body>
 
-        <nav class="navbar fixed-top" id="topnav">
-            <div>
-                <a href="{% url 'institute:index' %}">Search</a>
-            </div>
-            <div class="justify-content-center">
-                <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
-            </div>
-    
-            <div>
-                <a href="{% url 'authenticate:login' %}"">Login</a>
-            </div>
-        </nav>
+        <nav class="navbar fixed-top row px-4" id="topnav">
+            <div class="col-12 d-flex justify-content-center">
+                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+                <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+            </div>   
+       </nav>
 
         <br><br>
 
-        <section class="gallery-block grid-gallery">
+        <section class="gallery-block grid-gallery"  style="padding-top: 40px;">
             <div class="container">
                 <div class="heading">
                     <h2 style="color: aliceblue;">NIT AP Hostels Gallery</h2>

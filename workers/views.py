@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import Http404, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from workers.models import Medical, Workers
 from institute.models import Blocks, Institutestd, Officials
 from complaints.models import Complaints, OfficialComplaints
@@ -7,6 +8,7 @@ from students.models import details
 from django.contrib import messages
 
 # Create your views here.
+@csrf_exempt
 def staff_home(request):
     staff_id = request.COOKIES['username_staff']
     user_details = Workers.objects.get(staff_id=str(staff_id))
@@ -72,6 +74,19 @@ def staff_home(request):
                 })
             except: print('Not Staff')
             print(medical)
+
+        if request.method == 'POST':
+            print(request.POST)
+            for item in medical:
+                newComplaint = Medical.objects.get(id=item['comp'].id)
+                print(str(item['comp'].id))
+                if newComplaint.status != request.POST[str(item['comp'].id)] and newComplaint.remarks != request.POST['RE'+str(item['comp'].id)]:
+                    newComplaint.status = request.POST[str(item['comp'].id)]
+                    newComplaint.remarks = request.POST['RE'+str(item['comp'].id)]
+                    newComplaint.save()
+            else:
+                messages.success(request, 'Successfully updated Medical Issues!')
+                return redirect('workers:staff_home') 
     if user_details.block: block_details = Blocks.objects.filter(block_id=user_details.block.block_id)
     else: block_details=""
     return render(request, 'workers/workers-profile.html', {'user_details': user_details, 'block_details':block_details, 'complaints':complaints,'off_complaints':off_complaints, 'medical':medical})

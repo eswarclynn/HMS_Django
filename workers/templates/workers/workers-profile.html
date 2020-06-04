@@ -9,7 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href=" {% static 'workers/workers-profile.css' %} " rel="stylesheet"> <!--Layout.css-->
@@ -18,17 +19,20 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'workers:staff_home' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>
+        
+        <div class="col-0 ">
+            <a href="{% url 'workers:staff_home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         </div>
     </nav>
-
 
     <div id="mySidenav" class="sidenav">
         <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
@@ -39,7 +43,7 @@
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
-    <br> <br> <br> <br>
+
     <div class="container main-container">
         <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>!</p>
 
@@ -85,13 +89,6 @@
                             <td class="field">e-Mail ID</td>
                             <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
                         </tr>
-                        <tr>
-                            <td class="field">Address</td>
-                            <td class="field-item" id="address-field">{{user_details.address}}</td>
-                        </tr>
-
-
-
                     </tbody>
                 </table>
             </form>
@@ -137,7 +134,7 @@
         </div>
         {% endif %}
 
-        {% if complaints|length > 0 %}
+        {% if off_complaints|length > 0 %}
         <div class="table-container">
             <div class="container" id="off_complaints-wrapper">
                 <h2 style="text-align: center;">Officials Complaints Registered</h2> <br>
@@ -178,6 +175,17 @@
         <div class="table-container">
             <div class="container" id="complaints-wrapper">
                 <h2 style="text-align: center;">Medical Issues Registered</h2> <br>
+                <form action="{% url 'workers:staff_home' %}" method="post">
+                {% csrf_token %}
+                {% if messages %}
+                                   
+                {% for message in messages %}
+                     <script>
+                          alert('{{message}}');
+                     </script>
+                {% endfor %}
+                     
+                {% endif %} 
                 <table class="table table-hover table-dark table-striped">
                     <thead>
                         <tr>
@@ -189,6 +197,8 @@
                             <th>Block</th>
                             <th>Summary</th>
                             <th>Details</th>
+                            <th>Action</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -202,17 +212,28 @@
                             <td class="text-center">{{item.floor|slice:"0:1"}}-{{item.room}}</td>
                             <td class="text-center">{{item.block}}</td>
                             <td class="text-center">{{item.comp.summary}}</td>
-                            <td class="text-center">{{item.comp.detailed}}</td>                   
+                            <td class="text-center">{{item.comp.detailed}}</td>
+                            <td>                          
+                                <select class="" id='{{item.comp.id}}' name='{{item.comp.id}}'>
+                                    <option value="Registered">Registered</option>
+                                    <option value="Resolved">Resolved</option>
+                                </select>
+                            </td>
+                            <td><input type="text" name="RE{{item.comp.id}}" id="RE{{item.comp.id}}" placeholder="Enter Remark..."></td>                
                         </tr>
                         
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center"> No complaints registered! </td>
+                            <td colspan="9" class="text-center"> No complaints registered! </td>
                         </tr>
                         {% endfor %}
                         
                     </tbody>
                 </table>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-success mt-2 p-3">
+                </div>
+                </form>
             </div>
         </div>
         {% endif %}

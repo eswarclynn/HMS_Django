@@ -1,7 +1,7 @@
 body{
     font-family: 'Montserrat', sans-serif;
     font-size: larger;
-    background: url('bg2.jpg') no-repeat center center fixed;
+    background: url('bg1.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -24,11 +24,11 @@ body{
 
 .main-container {
     height: 100%;
-    
+    margin-top: 5.5rem;
 }
 
 .search {
-    margin-top: 270px;
+    margin-top: 200px;
     text-align: center;
 }
 

@@ -16,7 +16,7 @@ body{
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 5;
     top: 0;
     left: 0;
     background-color: #100f18;
@@ -29,7 +29,7 @@ body{
 }
 
 .sidenav a {
-    padding: 8px 8px 30px 32px;
+    padding: 5px 8px 13px 32px;
     text-decoration: none;
     font-size: 1.3em;
     color: #a1a1a1;
@@ -42,14 +42,14 @@ body{
 }
 
 .main-container {
-
+    margin-top: 5.5rem;
     background-color: rgba(221, 221, 221, 0.5);
     border: 1.5px solid #a1a1a1;
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 30px;
+    max-width: 1300px;
 }
-
 
 thead {
     background-color: #a1a1a1d2;

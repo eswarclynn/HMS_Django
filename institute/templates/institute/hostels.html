@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blocks Gallery - Hostel Management System</title>    
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>     
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'institute/grid-gallery.css' %}">
+    <link rel="stylesheet" href="{% static 'institute/topnav.css' %}">
+</head>
+
+<body>
+    <nav class="navbar fixed-top row px-4 pt-0" id="topnav">
+        <div class="col-12 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>   
+   </nav>
+
+    <section class="gallery-block grid-gallery" style="padding-top: 60px;">
+        <div class="container-fluid" >
+            <div class="heading">
+                <h2 style="color: aliceblue;">NIT AP Girls Hostel</h2>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-5 col-lg-2 mr-5 item "  >
+                    <div class="main" style=" height:auto;width:18.5rem ">
+                         <div class="card">
+                            <div class="card-image waves-effect waves-block waves-light">
+                                <div class="activator" style="width: auto; height: 250px;">
+                                    <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                                </div> 
+                            </div>
+                            <div class="card-content">
+                                <span class="card-title activator grey-text text-darken-4">Krishnaveni Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                            </div>
+                            <div class="card-reveal">
+                                <span class="card-title grey-text text-darken-4">Krishnaveni Hall Of Residence<i class="material-icons right">close</i></span>
+                                <h5>Description</h5>
+                    <ul >
+                <li >• First year Girls hostel</li>
+                <li >• Room Capacity is 4 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Krishna Hall of Residence'%}
+                            <p>{{em.name}} : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-2 mr-5 item " >
+                      
+                <div class="main" style=" height:auto;width:18.5rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Tungabhadra Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Tungabhadra Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Second year Girls hostel </li>
+                <li >• Room Capacity is 2 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Tungabhadra Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-2 mr-5 item">
+                      
+                <div class="main" style=" height:auto;width:18.5rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Bhima Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Bhima Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Third year Girls hostel </li>
+                <li >• Room Capacity is 2 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Bhima Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-2 mr-5 item">
+                      
+                <div class="main" style=" height:auto;width:18.5rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Munneru Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Munneru Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Fourth year Girls hostel Block A</li>
+                <li >• Room Capacity is 1 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Munneru Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-2 mr-5 item">
+                      
+                <div class="main" style=" height:auto;width:18.5rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">GhataPrabha Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">GhataPrabha Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Fourth year Girls hostel Block B</li>
+                <li >• Room Capacity is 1 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'GhataPrabha Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                      
+                
+                
+            </div>
+        </div>
+    </section>
+    <section class="gallery-block grid-gallery">
+        <div class="container-fluid" >
+            <div class="heading">
+                <h2 style="color: aliceblue;">NIT AP Boys Hostel</h2>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-5 col-lg-3 item "  >
+                      
+                <div class="main" style=" height:auto;width:22rem ">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Godavari Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Godavari Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• First year Boys hostel</li>
+                <li >• Room Capacity is 4 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Godavari Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-3 item " >
+                      
+                <div class="main" style=" height:auto;width:22rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Sabari Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Sabari Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Second year Boys hostel  Block A</li>
+                <li >• Room Capacity is 2 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Sabari Hall of Residence'%}
+                            <p>{{em.name}} : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-3 item">
+                      
+                <div class="main" style=" height:auto;width:22rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Pranahita Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Pranahita Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Second year Boys hostel Block B</li>
+                <li >• Room Capacity is 2 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Pranahita Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-3 item">
+                      
+                <div class="main" style=" height:auto;width:22rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Indravathi Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Indravathi Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Third year Boys hostel Block A</li>
+                <li >• Room Capacity is 2 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Indravathi Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-3 item">
+                      
+                <div class="main" style=" height:auto;width:22rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Banganga Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Banganga Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Fourth year Boys hostel Block A</li>
+                <li >• Room Capacity is 1 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Banganga Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-3 item">
+                      
+                <div class="main" style=" height:auto;width:22rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Purna Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Purna Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Fourth year Boys hostel Block B</li>
+                <li >• Room Capacity is 1 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Purna Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                <div class="col-md-5 col-lg-3 item">
+                      
+                <div class="main" style=" height:auto;width:22rem">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                    <div class="activator" style="width: auto; height: 250px;">
+                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                    </div>                    </div>
+                    <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">Manjeera Hall Of Residence<i class="material-icons right">more_vert</i></span>
+                    <p></p>
+                    </div>
+                    <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Manjeera Hall Of Residence<i class="material-icons right">close</i></span>
+                    <h5>Description</h5>
+                    <ul >
+                <li >• Fourth year Boys hostel Block B</li>
+                <li >• Room Capacity is 1 students <li>
+                <li >• There are 3 floors</li>
+                <li >• Located near to Sports Ground</li>
+                <li >• Equiped with solar power</li>
+                </ul>
+                <h5>Caretaker Contact: </h5>
+                    {% if caretaker %}
+                        {%for em in caretaker%}
+                            {%if em.block == 'Manjeera Hall Of Residence'%}
+                            <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
+                            {%endif%}
+                        {%endfor%}
+
+                    {%else%}
+                    <p>Caretaker :  </p>
+
+                    {%endif%}
+                    </div>
+                </div>
+                </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script>
+        baguetteBox.run('.grid-gallery', { animation: 'slideIn'});
+    </script>
+</body>
+</html>

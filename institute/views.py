@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.messages.api import get_messages
-from institute.models import Blocks, Institutestd
+from institute.models import Blocks, Institutestd,Officials
 from students.models import attendance, details
 
 # Create your views here.
@@ -43,3 +43,25 @@ def search(request):
 
 def gallery(request):
     return render(request, 'institute/grid-gallery.html')
+
+def hostels(request):
+    emp=Officials.objects.all()
+    caretaker=list()
+
+    for em in emp:
+
+        try:
+            if Blocks.objects.filter(emp_id=em).exists():
+                block_name=Blocks.objects.get(emp_id=em).block_name
+                caretaker.append({
+                    'block':block_name,
+                    'ph':em.phone,
+                    'name':em.name,
+                })
+        except:
+            pass
+          
+    return render (request,'institute/hostels.html',{'caretaker':caretaker,})
+
+def contact(request):
+    return render (request,'institute/contact.html')

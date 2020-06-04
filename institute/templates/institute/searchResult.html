@@ -9,23 +9,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href="{% static 'institute/index.css' %}" type="text/css" rel="stylesheet"> <!--index.css-->
 
 </head>
 <body>
-    <nav class="navbar fixed-top justigy-content-center" id="topnav">
-        
-        
-        <div class="title-container">
-            <span style="color:darkorange; font-family: 'Lobster', cursive; ;" id="title">Hostel Management System</span>
-        </div>
-
-        
-    </nav>
-    <br><br><br><br>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-12 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>   
+   </nav>
+    
     <div class="main-container container">
         <table class="table table-hover table-dark table-striped">
             <thead>
