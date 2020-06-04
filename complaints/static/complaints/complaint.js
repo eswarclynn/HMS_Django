@@ -17,7 +17,7 @@ function setEnabled() {
         detail.disabled = true;
     }
 
-    else if(type === "Indisciplinary" || type ==="Discrimination/Harassment" || type ==="Damage to property"){
+    else if(type === "Indisciplinary" || type ==="Discrimination/Harassment" || type ==="Damage to property" || type ==="Latecomer"){
         regno.disabled = false;
         summary.disabled = false;
         detail.disabled = false;

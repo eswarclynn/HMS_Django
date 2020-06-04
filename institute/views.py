@@ -15,6 +15,10 @@ def index(request):
         response = render(request, 'institute/index.html')
         response.delete_cookie('username_off')
 
+    elif request.COOKIES.get('username_staff'):
+        response = render(request, 'institute/index.html')
+        response.delete_cookie('username_staff')
+
     else:
         response = render(request, 'institute/index.html')
 

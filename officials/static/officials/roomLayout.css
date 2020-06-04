@@ -3,6 +3,14 @@ body{
     background-color:#F9FAFB;
 
 }
+
+.container-fluid{
+    overflow-x: auto;
+}
+
+.container{
+    overflow-x: auto;
+}
 #topnav {
     background-color: #7f5a83;
     background-image: linear-gradient(315deg, #7f5a83 0%, #0d324d 74%);
@@ -76,7 +84,6 @@ body{
 }
 
 .vacant {
-    background: rgb(214, 200, 5);
     background: radial-gradient(circle, rgb(170, 161, 161) 0%, rgb(80, 80, 80) 100%);
 }
 
@@ -87,8 +94,7 @@ body{
 }
 
 .stairs {
-    background: rgb(80,251,186);
-    background: radial-gradient(circle, rgb(12, 209, 134) 0%, rgb(14, 129, 6) 100%);
+
     height: 3.5rem;
     width: 3.5rem;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
@@ -110,4 +116,16 @@ body{
     background: gray;
     width: 6rem;
     color: #000;
+}
+
+.balcony {
+    height: 3.5rem;
+    width: 3.5rem;
+    background-color: rgb(221, 150, 124);
+}
+
+.staff {
+    height: 3.5rem;
+    width: 3.5rem;
+    background-color: cadetblue;
 }

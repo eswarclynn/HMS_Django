@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  {% load static %}
+  <link href="{% static 'authenticate/SignUp1.css' %}" rel="stylesheet"> 
+  
+  
+</head>
+
+<body>
+    <nav class="navbar fixed-top" id="topnav">
+         <div></div>
+          <div class="justify-content-center">
+            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+          </div>
+          <div>
+          </div>
+    </nav>
+
+
+      <div class="container ">
+          <div class="d-flex justify-content-center">
+               <div class="card">
+                    <div class="card-header ">
+                         <h3>Employee Registration Form</h3>
+                    </div>
+                    <div class="card-body">
+                         <form class="form-horizontal" action="{% url 'officials:registeremp' %}" method="POST">
+                          {% csrf_token %}
+                              
+                              {% if messages %}
+                                   
+                                   {% for message in messages %}
+                                        <script>alert('{{message}}');</script>
+                                   {% endfor %}
+                                        
+                              {% endif %}
+               
+                              <div class="form-group">
+                                   <label  class="cols-sm-2 control-label">Employee ID :</label>
+                                   <div class="cols-sm-10">
+                                   {%if employee%}
+                                        <input type="text" class="form-control" value="{{employee.emp_id}}" name="empid" id="empid" placeholder="Employee ID" required> 
+                                   {%else%}     
+                                        <input type="text" class="form-control" name="empid" id="empid" placeholder="Employee ID" required>
+                                   {%endif%}
+                                        
+                                   </div>
+                              </div>
+                              
+                              <div class="form-group">
+                                   <label  class="cols-sm-2 control-label">Full Name :</label>
+                                   <div class="cols-sm-10">
+                                   {%if employee%}
+                                        <input type="text" value="{{employee.name}}" class="form-control" name="name" id="name" placeholder="Full Name" required>
+                                   {%else%}
+                                        <input type="text" class="form-control" name="name" id="name" placeholder="Full Name" required>
+                                   {%endif%}     
+                                   </div>
+                              </div>
+                              <div class="form-group">
+                                   <label  class="cols-sm-2 control-label">Gender :</label>
+                                   <div class="cols-sm-10 form-inline">
+     
+                                                  {% if employee%}
+                                                  {% if employee.gender == 'Male' %}
+                                                       <label for="Male">Male</label>
+                                                       <input type="radio" class="form-control ml-2" name="type" checked value="Male" required > 
+                                                       <label for="Female" class="ml-5">Female</label>
+                                                       <input type="radio" class="form-control ml-2" name="type"  value="Female" required >
+                                                  {% else %}
+                                                       <label for="Male">Male</label>
+                                                       <input type="radio" class="form-control ml-2" name="type"  value="Male" required > 
+                                                       <label for="Female" class="ml-5">Female</label>
+                                                       <input type="radio" class="form-control ml-2" name="type" checked  value="Female" required >
+                                                  {% endif %}
+                                             {% else %}
+                                                  <label for="Male">Male</label>
+                                                  <input type="radio" class="form-control ml-2" name="type"  value="Male" required > 
+                                                  <label for="Female" class="ml-5">Female</label>
+                                                  <input type="radio" class="form-control ml-2" name="type"  value="Female" required >
+                                             {% endif %}
+                                   </div>
+                              </div>
+                              <div class="form-group">
+                                   <label  class="cols-sm-2 control-label">Designation :</label>
+                                   <div class="cols-sm-10">
+                                   {%if employee%}
+                                        <input type="text" value="{{employee.designation}}" class="form-control" name="desig" id="name" placeholder="Designation" required>
+                                   {%else%}
+                                        <input type="text" class="form-control" name="desig" id="name" placeholder="Designation" required>
+                                   {%endif%}
+                                   </div>
+                              </div>
+                              <div class=" form-group">
+                              <label  class="cols-sm-2 control-label">Branch :</label>
+                              <div class="cols-sm-10">
+                              {% if employee %}
+                              {% if employee.branch == 'CSE' %}
+                                   <select class="form-control w-100" id="branch" name="branch"  required>
+                                        <option value="">Select Branch</option>
+                                        <option value="CSE"selected >CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="MECH">MECH</option>
+                                        <option value="CHEM">CHEM</option>
+                                        <option value="CIVIL">CIVIL</option>
+                                        <option value="MME">MME</option>
+                                        <option value="BIO">BIO</option>
+                                   </select>
+                              {% elif employee.branch == 'ECE' %}
+                                   <select class="form-control w-100" id="branch" name="branch"  required>
+                                        <option value="">Select Branch</option>
+                                        <option value="CSE" >CSE</option>
+                                        <option value="ECE" selected>ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="MECH">MECH</option>
+                                        <option value="CHEM">CHEM</option>
+                                        <option value="CIVIL">CIVIL</option>
+                                        <option value="MME">MME</option>
+                                        <option value="BIO">BIO</option>
+                                   </select>
+                              {% elif employee.branch == 'EEE' %}
+                                        <select class="form-control w-100" id="branch" name="branch"  required>
+                                             <option value="">Select Branch</option>
+                                             <option value="CSE" >CSE</option>
+                                             <option value="ECE">ECE</option>
+                                             <option value="EEE" selected>EEE</option>
+                                             <option value="MECH">MECH</option>
+                                             <option value="CHEM">CHEM</option>
+                                             <option value="CIVIL">CIVIL</option>
+                                             <option value="MME">MME</option>
+                                             <option value="BIO">BIO</option>
+                                        </select>
+                              {% elif employee.branch == 'MECH' %}
+                                   <select class="form-control w-100" id="branch" name="branch"  required>
+                                        <option value="">Select Branch</option>
+                                        <option value="CSE" >CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="MECH" selected>MECH</option>
+                                        <option value="CHEM">CHEM</option>
+                                        <option value="CIVIL">CIVIL</option>
+                                        <option value="MME">MME</option>
+                                        <option value="BIO">BIO</option>
+                                   </select>
+                              {% elif employee.branch == 'CHEM' %}
+                                   <select class="form-control w-100" id="branch" name="branch"  required>
+                                        <option value="">Select Branch</option>
+                                        <option value="CSE" >CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="MECH">MECH</option>
+                                        <option value="CHEM" selected>CHEM</option>
+                                        <option value="CIVIL">CIVIL</option>
+                                        <option value="MME">MME</option>
+                                        <option value="BIO">BIO</option>
+                                   </select>
+                              {% elif employee.branch == 'CIVIL' %}
+                                   <select class="form-control w-100" id="branch" name="branch"  required>
+                                        <option value="">Select Branch</option>
+                                        <option value="CSE" >CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="MECH">MECH</option>
+                                        <option value="CHEM">CHEM</option>
+                                        <option value="CIVIL" selected>CIVIL</option>
+                                        <option value="MME">MME</option>
+                                        <option value="BIO">BIO</option>
+                                   </select>
+                              {% elif employee.branch == 'MME' %}
+                                   <select class="form-control w-100" id="branch" name="branch"  required>
+                                        <option value="">Select Branch</option>
+                                        <option value="CSE" >CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="MECH">MECH</option>
+                                        <option value="CHEM">CHEM</option>
+                                        <option value="CIVIL">CIVIL</option>
+                                        <option value="MME" selected>MME</option>
+                                        <option value="BIO">BIO</option>
+                                   </select>
+                              {% else %}
+                                   <select class="form-control w-100" id="branch" name="branch"  required>
+                                        <option value="">Select Branch</option>
+                                        <option value="CSE" >CSE</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="EEE">EEE</option>
+                                        <option value="MECH">MECH</option>
+                                        <option value="CHEM">CHEM</option>
+                                        <option value="CIVIL">CIVIL</option>
+                                        <option value="MME">MME</option>
+                                        <option value="BIO" selected>BIO</option>
+                                   </select>
+                              {% endif %}
+                         {% else %}
+                              <select class="form-control w-100" id="branch" name="branch"  required>
+                              <option value="">Select Branch</option>
+                              <option value="CSE" >CSE</option>
+                              <option value="ECE">ECE</option>
+                              <option value="EEE">EEE</option>
+                              <option value="MECH">MECH</option>
+                              <option value="CHEM">CHEM</option>
+                              <option value="CIVIL">CIVIL</option>
+                              <option value="MME">MME</option>
+                              <option value="BIO">BIO</option>
+                          </select>
+                          {% endif %}
+
+                              </div>
+                              </div>
+                          
+                              <div class="form-group">
+                                   <label  class="cols-sm-2 control-label">Email ID :</label>
+                                   <div class="cols-sm-10">
+                                   {%if employee%}
+                                        <input type="text" value="{{employee.email_id}}"class="form-control" name="email"  placeholder="Email ID" required>
+                                   {%else%}     
+                                        <input type="text" class="form-control" name="email"  placeholder="Email ID" required>
+                                   {%endif%}
+                                   </div>
+                              </div>
+                              <div class="form-group">
+                                   <label  class="cols-sm-2 control-label">Mobile No :</label>
+                                   <div class="cols-sm-10">
+                                   {%if employee%}
+                                        <input type="text" value="{{employee.phone}}"class="form-control" name="ph" pattern="[0-9]{10}"  placeholder="Mobile No" required>
+                                   {%else%}
+                                        <input type="text" class="form-control" name="ph" pattern="[0-9]{10}"  placeholder="Mobile No" required>
+                                   {%endif%}     
+                                   </div>
+                              </div>
+                              <div class=" form-group">
+                              <label  class="cols-sm-2 control-label">Block :</label>
+                                   <div class="cols-sm-10">
+                                        <select class="form-control w-100"  name="block"  required>
+                                        <option value="">Select Block</option>
+                                        
+                                             {%for stud in std %}
+                                                  {%if block%}
+                                                       {%if block.block_id == stud.block_id %}
+                                                            <option selected value="{{stud.block_id}}">{{stud.block_name}}</option>
+                                                       {%else%}
+                                                            <option  value="{{stud.block_id}}">{{stud.block_name}}</option>
+                                                       {%endif%}
+                                                  {%else%}
+                                                       <option  value="{{stud.block_id}}">{{stud.block_name}}</option>
+                                                  {%endif%}
+
+                                             {%endfor%}
+                                             <option value="null" > None </option>
+                              
+                                        </select>
+                              
+
+
+                              
+                              <div class="form-group row align-items-center sign-btn ml-2">
+                                   <input type="submit" id="submit" name="submit_btn" value="Submit" class="btn float-right sign_btn" >
+                                   <span class ="btn-space"></span>
+                                   </form>
+                                   
+                                   
+                              </div>
+                              <div class="row justify-content-center">
+                                   <a href="{% url 'institute:index' %}"><button class="btn float-right sign_btn">Cancel</button></a>
+                              </div>
+                              
+                    </div>
+               </div>
+          </div>     
+      </div>
+
+
+
+      <script>
+
+       
+
+          function setEnabled(){
+               let bank=document.getElementById('bank').value;
+               let other=document.getElementById('other');
+               if(bank === "o")
+               {
+                    other.disabled=false;
+               }
+               else{
+                    other.disabled=true;
+               }
+          }
+         function setEnabled1(){
+               let host=document.getElementById('host').value;
+               let bank=document.getElementById('bank');
+               let other=document.getElementById('other');
+               let amount=document.getElementById('amount');
+               let ch_no =document.getElementById('ch_no');
+               let dop=document.getElementById('dop');
+               let appli=document.getElementById('application');
+               let under=document.getElementById('undertake');
+               let recp=document.getElementById('recipt');
+               let afd=document.getElementById('afd');
+               if(host === "H")
+               {
+                    afd.disabled=true;
+                    bank.disabled=false;
+                    amount.disabled=false;
+                    ch_no.disabled=false;
+                    dop.disabled=false;
+                    appli.disabled=false;
+                    under.disabled=false;
+                    recp.disabled=false;
+               }
+               else if(host === 'D'){
+                    bank.disabled=true;
+                    amount.disabled=true;
+                    ch_no.disabled=true;
+                    dop.disabled=true;
+                    appli.disabled=true;
+                    under.disabled=true;
+                    recp.disabled=true;
+                    afd.disabled=false;
+                    
+                    
+               }
+               else{
+                    afd.disabled=false;
+                    bank.disabled=false;
+                    amount.disabled=false;
+                    ch_no.disabled=false;
+                    dop.disabled=false;
+                    appli.disabled=false;
+                    under.disabled=false;
+                    recp.disabled=false;
+               }
+          }
+   
+          window.onload = function(){
+               var today = new Date();
+               var dd = today.getDate();
+               var mm = today.getMonth()+1; //January is 0!
+               var yyyy = today.getFullYear();
+                if(dd<10){
+                       dd='0'+dd
+               } 
+                if(mm<10){
+                       mm='0'+mm
+               } 
+               
+               today = yyyy+'-'+mm+'-'+dd;
+               console.log('setting date min');
+               
+               document.getElementBy("dob").setAttribute("min", today);
+               document.getElementBy("dop").setAttribute("min", today);
+               
+           
+           }
+      </script>
+
+
+</body>
+</html>

@@ -9,12 +9,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap" rel="stylesheet"> <!--Montserrat-->
   {% load static %}
-  <link href="{% static 'officials/chiefs-home.css' %}" rel="stylesheet"> <!--Layout.css-->
-  <script src = "{% static 'officials/chiefs-home.js' %}"></script>
+  <link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/sidenav.js' %}"></script>
 
 </head>
 
@@ -36,132 +37,181 @@
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
         <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
+        <a href="{% url 'officials:register' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:student_list' %}" target="_blank"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp;List of Students</a>
+        <a href="{% url 'officials:registeremp' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'officials:emp_list' %}" target="_blank"><span><i class="fa fa-file-text-o"></i></span> &nbsp;&nbsp; List of Employees</a>
+        <a href="{% url 'officials:registerworker' %}" target="_blank"><span><i class="fa fa-address-book"></i></span> &nbsp;&nbsp; Add Worker</a>
+        <a href="{% url 'officials:workers_list' %}" target="_blank"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
 
     </div>
 
     <br> <br> <br> <br>
-    <div class="container" style="border: 1.5px solid #a1a1a1; border-radius: 15px; padding: 30px;">
+    <div class="main-container container">
 
         <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>, <b>Hostel Board Member</b> of NIT-AP !</p>
 
         <div class="row">
-            <div class="col-md cclass" >
-                <div class="card" id="present" onclick="showList1(this.id)">
-                    <span class="atticon"><i class="fa fa-user-plus"></i></span>
-                    <span class="attnum">{{present|length}}</span>
-                    <span class="atttext">Number of inmates present.</span>
+            <div class="col-md" >
+                <div class="card" id="present">
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of inmates present.</span>
+                            <span class="row"><span class="attnum">{{present|length}}</span><span class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-user-plus"></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md cclass">
-                <div class="card" id="absent" onclick="showList1(this.id)">
-                    <span class="atticon"><i class="fa fa-user-times"></i></span>
-                    <span class="attnum">{{absent|length}}</span>
-                    <span class="atttext">Number of inmates absent.</span>
-                </div>   
-                    
+            <div class="col-md">
+                <div class="card" id="absent">
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of inmates absent.</span>
+                            <span class="row"><span class="attnum">{{absent|length}}</span><span class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
+                            <script>
+                                var mydate = new Date()
+                                mydate.setDate(mydate.getDate() - 1);
+                                var ele = document.getElementsByClassName('att_date');
+                                for (var i = 0; i < ele.length; i++) {
+                                    ele[i].innerHTML = 'As of '+mydate.toLocaleDateString("en-IN");
+                                }
+                            </script>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-user-times"></i></span>
+                        </div>
+                    </div>
+
+                </div>    
             </div>
-            <div class="col-md cclass">
-                <div class="card" id="comps">
-                    <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
-                    <span class="attnum">{{complaints|length}}</span>
-                    <span class="atttext">Number of complaints received.</span></div>
+            <div class="col-md">
+                <div class="card" id="comps" >
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of complaints received.</span>
+                            <span class="row attnum">{{complaints_list|length}}</span>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <br>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="table-container attendance-container container pb-3" >
+                <h2 class="text-center">List of Absentees</h2>
+                <table class="table table-hover table-dark table-striped attendance_table">
+                    <thead>
+                        <tr>
+                            <th>Roll No.</th>
+                            <th>Name</th>
+                            <th>Year</th>
+                            <th>Branch</th>
+                            <th>Block</th>
+                            <th>Room</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-        <div class="table1-container" style="padding: 20px;" id="absent-wrapper">
-            <h2 class="text-center">List of Absentees</h2>
-            <table class="table table-hover table-dark table-striped" id="abstable">
-                <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Year</th>
-                        <th>Branch</th>
-                        <th>Block</th>
-                        <th>Room No.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    {% for stud in absent %}
+                        {% for stud in absent %}
                         <tr>
                             <td>{{stud.info.regd_no}}</td>
                             <td>{{stud.info.name}}</td>
                             <td>{{stud.info.year}}</td>
                             <td>{{stud.info.branch}}</td>
-                            <td>{{stud.block_name}}</td>
-                            <td>{{stud.block.floor}},{{stud.block.room_no}}</td>
+                            <td>{{stud.block.block_id_id}}</td>
+                            <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
                         </tr>
-                    {% empty %}
+                        {% empty %}
                         <tr>
                             <td colspan="6" class="text-center"> No Absentees! </td>
                         </tr>                        
-                    {% endfor %}
+                        {% endfor %}   
+                    </tbody>
+                </table>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="table-container attendance-container container pb-3">
+                <h2 class="text-center">List of Present Students</h2>
+                <table class="table table-hover table-dark table-striped attendance_table" >
+                    <thead>
+                        <tr>
+                            <th>Roll No.</th>
+                            <th>Name</th>
+                            <th>Year</th>
+                            <th>Branch</th>
+                            <th>Block</th>
+                            <th>Room</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         
-
-
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="table1-container" style="padding: 20px;" id="present-wrapper">
-            <h2 class="text-center">List of Present Students</h2>
-            <table class="table table-hover table-dark table-striped" >
-                <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Year</th>
-                        <th>Branch</th>
-                        <th>Block</th>
-                        <th>Room No.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    {% for stud in present %}
+                        {% for stud in present %}
                         <tr>
                             <td>{{stud.info.regd_no}}</td>
                             <td>{{stud.info.name}}</td>
                             <td>{{stud.info.year}}</td>
                             <td>{{stud.info.branch}}</td>
-                            <td>{{stud.block_name}}</td>
-                            <td>{{stud.block.floor}},{{stud.block.room_no}}</td>
+                            <td>{{stud.block.block_id_id}}</td>
+                            <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
                         </tr>
-                    {% empty %}
+                        {% empty %}
                         <tr>
                             <td colspan="6" class="text-center"> No Present students! </td>
                         </tr>                        
-                    {% endfor %}
-                        
-
-
-
-                </tbody>
-            </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                    </div>
+                </div>
+            </div>
         </div>
+        <style>
+            #complaints_table {
+                counter-reset: rowNumber;
+            }
+        
+            #complaints_table tbody tr {
+                counter-increment: rowNumber;
+            }
+        
+            #complaints_table tbody tr td:first-child::before {
+                content: counter(rowNumber);
+            }
+            #complaints_table tbody tr:only-child td:first-child::before {
+                content: '';
+            }
+        </style>
 
-        <div class="table-container">
-            <div class="container" id="complaints-wrapper">
-                <h2 style="text-align: center;">Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped" id="abstable">
+        <div class="table-container container-fluid mt-4 pb-4">
+            <form method="POST" action="{% url 'officials:official_home' %}">
+                <h2 style="text-align: center;">Complaints Registered</h2>
+                <table class="table table-hover table-dark table-striped " id="complaints_table">
                     <thead>
-                        <tr>
-                            <th>Count</th>
+                        <tr class="text-center">
+                            <th>Sl. No.</th>
                             <th>Complainant</th>
                             <th>Type</th>
                             <th>Complainee</th>
                             <th>Summary</th>
                             <th>Date Registered</th>
+                            <th>Status</th>
 
                         </tr>
                     </thead>
-                    <form method="POST" action="{% url 'officials:official_home' %}">
                         {% csrf_token %}
                         {% if messages %}
                                        
@@ -171,55 +221,104 @@
                              </script>
                         {% endfor %}
                              
-                        {% endif %}    
-                            <tbody>
-                                
-                                {% for item in complaints %}
-                                <tr>
-                                    <td>{{forloop.counter}} </td>
-                                    <td>{{item.regd_no}}</td>
-                                    <td>{{item.type}}</td>
-                                    <td>{{item.complainee}}</td>
-                                    <td>{{item.summary}}</td>
-                                    <td>{{item.date}}</td>
-                                    <td>                            
-                                        <select class="form-control w-75" id="{{item.id}}" name="{{item.id}}" required>
-                                            <option value="">Status</option>
-                                            <option value="Registered">Registered</option>
-                                            <option value="Processing">Processing</option>
-                                            <option value="Resolved">Resolved</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                
-                                {% empty %}
-                                
-                                <tr>
-                                    <td colspan="9" class="text-center">
-                                        No Complaints!
-                                    </td>
-                                </tr>
-                                <script>
-                                    window.onload = function(){
-                                        document.getElementById("sub-btn").disabled = true;
-                                    }
-                                </script>
-    
-                                {% endfor %}
-                                <tr>
-                                    <td colspan="9" style="text-align: center;">
-                                        <input type="submit" class="btn-success" id="sub-btn" style="border: none; border-radius: 10px; height: 3.5em; padding: 1em; transition: 0.7s;">
-                                    </td>
-                                </tr>
+                        {% endif %}  
+                        <tbody>
+
+                            {% if complaints %}
+                            {% for item in complaints %}
+                            <tr>
+                                <td></td>
+                                <td>{{item.regd_no}}</td>
+                                <td>{{item.type}}</td>
+                                <td>{{item.complainee}}</td>
+                                <td>{{item.summary}}</td>
+                                <td>{{item.date}}</td>
+                                <td>                            
+                                    <select id="SC{{item.id}}" name="SC{{item.id}}">
+                                        <option value="Registered">Registered</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Resolved">Resolved</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            
+                            {% empty %}
+                            
+                            <tr>
+                                <td></td>
+                                <td colspan="9" class="text-center">
+                                    No Complaints!
+                                </td>
+                            </tr>
+                            <script>
+                                window.onload = function(){
+                                    document.getElementById("sub-btn").disabled = true;
+                                }
+                            </script>
+
+                            {% endfor %}
+                            {% endif %}
+                            {% if offComplaints %}
+                            {% for item in offComplaints %}
+                            <tr>
+                                <td></td>
+                                <td>{{item.regd_no}}</td>
+                                <td>{{item.type}}</td>
+                                <td>{{item.complainee}}</td>
+                                <td>{{item.summary}}</td>
+                                <td>{{item.date}}</td>
+                                <td>                            
+                                    <select id="OC{{item.id}}" name="OC{{item.id}}">
+                                        <option value="Registered">Registered</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Resolved">Resolved</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            
+                            {% empty %}
+                            
+                            <tr>
+                                <td></td>
+                                <td colspan="9" class="text-center">
+                                    No Complaints!
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+                            {% endif %}
+                            
                         </tbody>
-                        </form>
-                </table>
-            </div>
+                    </table>
+                </div>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-success ">
+                </div>
+            </form>
     </div>
 
 
-
     </div>
+
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('table.attendance_table').DataTable({
+                "pageLength": 6,
+                "lengthChange": false,
+                "info":false,
+                "dom": '<"row"<f"col"><"col"p>>t'
+            });
+            $('#complaints_table').DataTable({
+                "pageLength": 6,
+                "lengthChange": false,
+                "dom": '<"row"<"col-3"i><"col"f><"col"p>>'
+            });
+
+            
+        } );
+    </script>
 
 
 </body>

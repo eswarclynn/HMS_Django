@@ -43,6 +43,10 @@ def registerComplaint(request):
                 detailed = request.POST['detailed'],
                 )
 
+        elif request.COOKIES.get('username_staff'):
+            messages.success(request, 'Complaint Registered Successfully!')
+            return redirect('complaints:registerComplaint')
+
         else:
             raise Http404('Please Log In and then register complaint!')
         
@@ -50,6 +54,6 @@ def registerComplaint(request):
 
         newComplaint.save()
         messages.success(request, 'Complaint Registered Successfully!')
-        redirect('complaints:registerComplaint')
+        return redirect('complaints:registerComplaint')
 
     return render(request, 'complaints/complaint.html')

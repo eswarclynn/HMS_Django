@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href="{% static 'officials/attendance.css' %} " rel="stylesheet"> <!--attendance.css-->
+  <link href="{% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--attendance.css-->
 
   <script src = "{% static 'officials/attendance.js' %}"></script>
 
@@ -35,20 +35,24 @@
         <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
         <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
+        <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
         <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+        <a href="{% url 'officials:watercan' %}"><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
     <br> <br> <br> <br>
-    <div class="container" style="border: 1.5px solid #a1a1a1; border-radius: 15px; padding: 30px;">
+    <div class="container main-container">
 
         <div class="table1-container" style="padding: 20px; ">
 
-            <h1 style="text-align: center;">Attendace Submission</h1>
+            <h1 style="text-align: center;">Attendance Submission</h1>
 
             <table class="table table-hover table-dark table-striped" id="att-table">
-                <form method="POST" action="{% url 'officials:attendance' %}">
+                <form method="POST" action="{% url 'officials:attendance' %}" id="outer_form">
                 {% csrf_token %}
 
                 {% if messages %}
@@ -65,13 +69,28 @@
 
                     <span class="col-md">Block : <b>{{block_details.block_name}}</b></span>
 
-                    <span class="col-md ddbut-con">
-                        Date: <input type="date" id="datefield" name="datefield" required/>
+                    <span class="col-md d-flex justify-content-end">
+                        
+                        {% if get_date %}
+                            Date: <input type="date"  id="datefield" value="{{get_date}}" name="datefield" class="ml-3" onchange="date_click()" required/>
+                        {% else %}
+                            Date: <input type="date"  id="datefield" name="datefield" class="ml-3" onchange="date_click()" required/>
+                        {% endif %}
+                            
+
+                        <input type="submit" name="get_date" id="get_date" class="d-none">
+                        <script>
+                            function date_click(){
+                                document.getElementById("get_date").value = document.getElementById("datefield").value;
+                                console.log(document.getElementById("get_date"));
+                                document.getElementById("get_date").click();
+                            }
+                        </script>
                     </span>
                 </div>
                 <thead>
                     <tr>
-                        <th>Student ID</th>
+                        <th>Roll No.</th>
                         <th>Name</th>
                         <th>Room No.</th>
                         <th>Attendance</th>
@@ -83,20 +102,42 @@
                         {% for stud in stud_list %}
                         <tr>
                             <td>{{stud.student.regd_no}}</td>
-                            <td>{{stud.name}}</td>
-                            <td>{{stud.student.room_no}},{{stud.student.floor}}</td>
+                            <td>{{stud.info.name}}</td>
+                            <td>{{stud.student.floor|slice:"0:1"}}-{{stud.student.room_no}}</td>
                             <td>
-                                <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}" required>
-                                    <option value="">Select Attendance</option>
-                                    <option value="Present">Present</option>
+                                
+                                {% if stud.att %}
+                                    
+                                    {% if stud.att == 'Present' %}
+                                    <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
+                                        <option value="Present" selected>Present</option>
+                                        <option value="Absent">Absent</option>
+                                    </select> 
+                                        
+                                    {% else %}
+                                    <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
+                                        <option value="Present">Present</option>
+                                        <option value="Absent" selected>Absent</option>
+                                    </select> 
+                                        
+                                    {% endif %}
+                                       
+
+                                {% else %}
+                                <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
+                                    <option value="Present" selected>Present</option>
                                     <option value="Absent">Absent</option>
-                                </select>
+                                </select>  
+                                {% endif %}
                             </td>
+                            {% if stud.att %}
+                                <td><span>Editing Attendance</span></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                             
                         <tr >
-                            <td colspan="4" style="text-align: center;"><input type="submit" class="subbtn btn-success" ></td>
+                            <td colspan="6" style="text-align: center;"><input type="submit" name="submit" class="btn btn-success py-2 px-4" ></td>
                         </tr>    
     
                     </tbody>

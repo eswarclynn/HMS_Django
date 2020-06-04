@@ -14,9 +14,9 @@ class details(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    block_id = models.ForeignKey(Blocks,on_delete=models.CASCADE, null=False)
-    room_no = models.IntegerField(null=False)
-    floor = models.CharField(max_length=10, choices=FLOOR_OPTIONS)
+    block_id = models.ForeignKey(Blocks,on_delete=models.CASCADE, null=True, blank=True)
+    room_no = models.IntegerField(null=True, blank=True)
+    floor = models.CharField(max_length=10, choices=FLOOR_OPTIONS, null=True, blank=True)
 
 class attendance(models.Model):
     OPTIONS = (

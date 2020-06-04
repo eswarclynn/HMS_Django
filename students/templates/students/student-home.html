@@ -9,11 +9,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href="{% static 'students/student-home.css' %} " rel="stylesheet"> <!--Layout.css-->
+  <link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet"> <!--Layout.css-->
   <script src = "{% static 'students/student-home.js' %}"></script>
+
+  <style>
+    .profile{
+        border-radius: 10px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    .profile th{
+        border: none !important;
+    }
+  </style>
 
 </head>
 
@@ -36,6 +47,7 @@
         <a href="{% url 'students:outing_app' %}"><span><i class="fa fa-map-marker"></i></span> &nbsp;&nbsp; Outing Application</a>
         <a href="{% url 'students:attendance_history' %}"><span><i class="fa fa-list" ></i></span> &nbsp;&nbsp; Attendance History</a>
         <a href="{% url 'students:outing_history' %}"><span><i class="fa fa-history" ></i></span> &nbsp;&nbsp; Outing History</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
 
@@ -47,122 +59,147 @@
 
         <div class="row card-container">
             
-            <div class="col-md cclass">
-                <div class="card" id="present">
-                    <span class="atticon"><i class="fa fa-user-plus"></i></span>
-                    <span class="attnum">{{pres}}</span>
-                    <span class="atttext">Number of days present.</span>
+            <div class="col-md">
+                <div class="card" id="present" >
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of days present.</span>
+                            <span class="row attnum">{{pres}}</span>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-user-plus" ></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-md cclass">
-                    <div class="card" id="absent" >
-                        <span class="atticon"><i class="fa fa-user-times"></i></span>
-                        <span class="attnum">{{abse}}</span>
-                        <span class="atttext">Number of days absent.</span>
+            <div class="col-md">
+                <div class="card" id="absent" >
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of days absent.</span>
+                            <span class="row attnum">{{abse}}</span>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-user-times" ></i></span>
+                        </div>
                     </div>
-                    
+                </div>
             </div>
-            <div class="col-md cclass">
-                <div class="card" id="comps" onclick="showList1(this.id)" data-toggle="tooltip" title="Click to get list!">
-                    <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
-                    <span class="attnum">{{complaints|length}}</span>
-                    <span class="atttext">Number of complaints registered.</span></div>
+            
+            <div class="col-md">
+                <div class="card" id="comps" >
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of complaints.</span>
+                            <span class="row attnum">{{complaints|length}}</span>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="table-container profile">
-            <form>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Your Details</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="tbody">
-                        <tr>
-                            <td class="field">Name</td>
-                            <td class="field-item">{{user_details.name}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Registration No.</td>
-                            <td class="field-item">{{user_details.regd_no}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Roll No.</td>
-                            <td class="field-item">{{user_details.roll_no}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Year</td>
-                            <td class="field-item">{{user_details.year}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Branch</td>
-                            <td class="field-item">{{user_details.branch}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field">Contact Number</td>
-                            <td class="field-item" id="phone-field">{{user_details.phone}}</td>
-                            <td><span class="edit-icon" id="phone-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
-                        </tr>
-                        <tr>
-                            <td class="field">e-Mail ID</td>
-                            <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
-                            <td><span class="edit-icon" id="mail-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
-                        </tr>
-                        <tr>
-                            <td class="field">Address</td>
-                            <td class="field-item" id="address-field">{{user_details.address}}</td>
-                            <td><span class="edit-icon" id="address-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
-                        </tr>
-                        <tr  id="subbtn">
-                            <td colspan="3" style="text-align: center;"> <input type="submit" class="btn-primary" style="border: 0; height: 2.5em; padding: 10px;"></td>
-                        </tr>
-
-
-                    </tbody>
-                </table>
-            </form>
-
-        </div>
-
-        <div class="table-container">
-            <div class="container" id="complaints-wrapper">
-                <h2 style="text-align: center;">Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped" id="abstable">
-                    <thead>
-                        <tr>
-                            <th>Count</th>
-                            <th>Type</th>
-                            <th>Complainee</th>
-                            <th>Summary</th>
-                            <th>Date Registered</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        {% for item in complaints %}
-                            <tr>
-                                <td>{{forloop.counter}} </td>
-                                <td>{{item.type}}</td>
-                                <td>{{item.complainee}}</td>
-                                <td>{{item.summary}}</td>
-                                <td>{{item.date}}</td>
-
-
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="5" class="text-center"> No complaints registered! </td>
-                            </tr>                           
-                        {% endfor %}
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="table-container profile">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" class="text-center" style="background-color: darkgray;">Your Details</th>
+                                </tr>
+                            </thead>
         
-                    </tbody>
-                </table>
+                            <tbody id="tbody">
+                                <tr>
+                                    <td class="field">Name</td>
+                                    <td class="field-item">{{user_details.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">Registration No.</td>
+                                    <td class="field-item">{{user_details.regd_no}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">Roll No.</td>
+                                    <td class="field-item">{{user_details.roll_no}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">Year</td>
+                                    <td class="field-item">{{user_details.year}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">Branch</td>
+                                    <td class="field-item">{{user_details.branch}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">Contact Number</td>
+                                    <td class="field-item" id="phone-field">{{user_details.phone}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">e-Mail ID</td>
+                                    <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">Address</td>
+                                    <td class="field-item" id="address-field">{{user_details.address}}</td>
+                                </tr>
+        
+        
+                            </tbody>
+                        </table>
+                </div>
             </div>
-    </div>
+            <div class="col-lg-7">
+                <div class="table-container">
+                    <div class="container" id="complaints-wrapper">
+                        <h2 style="text-align: center;">Complaints Registered</h2> <br>
+                        <table class="table table-hover table-dark table-striped" id="complaints_table" >
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Sl. No</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">Complainee</th>
+                                    <th class="text-center">Summary</th>
+                                    <th class="text-center">Date Registered</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for item in complaints %}
+                                    <tr>
+                                        <td class="text-center">{{forloop.counter}} </td>
+                                        <td class="text-center">{{item.type}}</td>
+                                        <td class="text-center">{{item.complainee}}</td>
+                                        <td class="text-center">{{item.summary}}</td>
+                                        <td class="text-center">{{item.date}}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center"> No complaints registered! </td>
+                                    </tr>                           
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#complaints_table').DataTable({
+                    "pageLength": 6,
+                    "lengthChange": false,
+                    "filter":false
+                });
+    
+                
+            } );
+        </script>
+
 
 
 </body>

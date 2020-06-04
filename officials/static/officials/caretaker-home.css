@@ -1,8 +1,16 @@
 body{
     font-family: 'Roboto', sans-serif;
     background-color:#F9FAFB;
-
 }
+
+.container{
+    overflow-x: auto;
+}
+.container-fluid{
+    overflow-x: auto;
+}
+
+
 #topnav {
     background-color: #7f5a83;
     background-image: linear-gradient(315deg, #7f5a83 0%, #0d324d 74%);
@@ -29,7 +37,7 @@ body{
 }
 
 .sidenav a {
-    padding: 8px 8px 30px 32px;
+    padding: 5px 8px 13px 32px;
     text-decoration: none;
     font-size: 1.3em;
     color: #a1a1a1;
@@ -41,20 +49,28 @@ body{
     color: #b766ec;
 }
 
-.container {
+.main-container {
     background-color: rgba(221, 221, 221, 0.5);
+    border: 1.5px solid #a1a1a1;
+    border-radius: 15px;
+    padding: 30px;
     margin-bottom: 30px;
+    max-width: 1300px;
 }
 
-.cclass {
-    padding: 30px;
+@media (max-width: 768px){
+    .main-container {
+        overflow-x: scroll;
+    }
 }
 
 .card {
-    padding: 20px;
+    padding: 10px 0 10px 40px;
+    margin-bottom: 20px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     transition:  0.5s;
 }
+
 
 .card:hover {
     transform: scale(1.05);
@@ -64,12 +80,12 @@ body{
 
 #present {
     background: rgb(80,251,186);
-    background: radial-gradient(circle, rgba(80,251,186,1) 0%, rgba(14,126,3,1) 100%);
+    background: radial-gradient(circle, rgba(5, 172, 108, 0.637) 0%, rgba(14,126,3,1) 100%);
 }
 
 #absent {
     background: rgb(252,185,137);
-    background: radial-gradient(circle, rgba(252,185,137,1) 0%, rgba(236,0,0,1) 100%);
+    background: radial-gradient(circle, rgb(255, 168, 106) 0%, rgba(236,0,0,1) 100%);
 }
 
 #comps {
@@ -78,35 +94,43 @@ body{
 }
 
 .attnum {
-    font-size: 5.5em;
+    font-size: 2.5em;
     font-weight: bolder;
-    text-align: center;
+
     vertical-align: middle;
     color: aliceblue;
 }
 
 .atttext {
-    text-align: center;
-    color: rgba(240, 248, 255, 0.89);
+
+    color: rgba(255, 255, 255, 0.89);
     font-weight: 100;
 }
 
 .atticon {
     color: rgb(240, 248, 255);
-    text-align: center;
+
     font-size: 3em;
 }
 
-@media (max-width: 768px){
-    .table1-container {
-        overflow-x: scroll;
-    }
+.table-dark{
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-#present-wrapper {
-    display: none;
+th{
+    border: none !important;
+    max-width: 47px;
 }
 
-#absent-wrapper {
-    display: block;
+.table-container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}   
+.table-container::-webkit-scrollbar-track {
+    background: #ddd;
+}
+   
+.table-container::-webkit-scrollbar-thumb {
+    background: #666; 
 }

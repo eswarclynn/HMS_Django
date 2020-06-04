@@ -9,12 +9,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap" rel="stylesheet"> <!--Montserrat-->
   {% load static %}
-  <link href="{% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--Layout.css-->
-  <script src = "{% static 'officials/caretaker-home.js' %}"></script>
+  <link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/sidenav.js' %}"></script>
 
 </head>
 
@@ -33,16 +34,20 @@
 
     <div id="mySidenav" class="sidenav">
         <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href=" {% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
         <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
+        <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
         <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+        <a href="{% url 'officials:watercan' %}"><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
 
     </div>
 
     <br> <br> <br> <br>
-    <div class="container" style="border: 1.5px solid #a1a1a1; border-radius: 15px; padding: 30px;">
+    <div class="main-container container">
 
         <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>, caretaker of block 
             <b>
@@ -51,107 +56,143 @@
         </p>
 
         <div class="row">
-            <div class="col-md cclass" >
-                <div class="card" id="present" onclick="showList1(this.id)" data-toggle="tooltip" title="Click to get list!">
-                    <span class="atticon"><i class="fa fa-user-plus"></i></span>
-                    <span class="attnum">{{present_list|length}}</span>
-                    <span class="atttext">Number of inmates present.</span>
+            <div class="col-md" >
+                <div class="card" id="present">
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of inmates present.</span>
+                            <span class="row"><span class="attnum">{{present_list|length}}</span><span class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-user-plus"></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md cclass">
-                <div class="card" id="absent" onclick="showList1(this.id)" data-toggle="tooltip" title="Click to get list!">
-                    <span class="atticon"><i class="fa fa-user-times"></i></span>
-                    <span class="attnum">{{absent_list|length}}</span>
-                    <span class="atttext">Number of inmates absent.</span>
+            <div class="col-md">
+                <div class="card" id="absent">
+                    <div class="row">
+                        <div class="col-8">
+                            <span class="row atttext">Number of inmates absent.</span>
+                            <span class="row"><span class="attnum">{{absent_list|length}}</span><span class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
+                            <script>
+                                var mydate = new Date()
+                                mydate.setDate(mydate.getDate() - 1);
+                                var ele = document.getElementsByClassName('att_date');
+                                for (var i = 0; i < ele.length; i++) {
+                                    ele[i].innerHTML = 'As of '+mydate.toLocaleDateString("en-IN");
+                                }
+                            </script>
+                        </div>
+                        <div class="col-4">
+                            <span class="atticon"><i class="fa fa-user-times"></i></span>
+                        </div>
+                    </div>
+
                 </div>    
             </div>
 
-            <div class="col-md cclass">
-                <div class="card" id="comps" onclick="showList1(this.id)">
-                    <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
-                    <span class="attnum">{{complaints|length}}</span>
-                    <span class="atttext">Number of complaints received.</span></div>
+            <div class="col-md">
+                <div class="card" id="comps" >
+                    <div class="row">
+                        <div class="col-9">
+                            <span class="row atttext">Number of complaints received.</span>
+                            <span class="row attnum">{{complaints|length}}</span>
+                        </div>
+                        <div class="col-3">
+                            <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <br>
 
-        <div class="table1-container" style="padding: 20px;" id="absent-wrapper">
-            <h2 class="text-center">List of Absentees</h2>
-            <table class="table table-hover table-dark table-striped" id="abstable">
-                <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Year</th>
-                        <th>Branch</th>
-                        <th>Room No.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    {% for student in absent_list %}
-                        <tr>
-                            <td>{{student.info.regd_no}}</td>
-                            <td>{{student.info.name}}</td>
-                            <td>{{student.info.year}}</td>
-                            <td>{{student.info.branch}}</td>
-                            <td>{{student.block.floor}}, {{student.block.room_no}}</td>
-                        </tr>
-                    {% empty %}
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="table-container attendance-container container pb-5">
+                        <h2 class="text-center">List of Present Students</h2>
+                        <table class="table table-hover table-dark table-striped attendance_table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No.</th>
+                                    <th>Name</th>
+                                    <th>Year</th>
+                                    <th>Branch</th>
+                                    <th>Room</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for student in present_list %}
+                                    <tr>
+                                        <td>{{student.info.regd_no}}</td>
+                                        <td>{{student.info.name}}</td>
+                                        <td>{{student.info.year}}</td>
+                                        <td>{{student.info.branch}}</td>
+                                        <td>{{student.block.floor|slice:"0:1"}}-{{student.block.room_no}}</td>
+                                    </tr>
+                                {% empty %}
+            
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            No Present Students!
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                No Absentees!
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                <div class="col">
+                    <div class="table-container attendance-container container pb-5" >
+                        <h2 class="text-center">List of Absentees</h2>
+                        <table class="table table-hover table-dark table-striped attendance_table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No.</th>
+                                    <th>Name</th>
+                                    <th>Year</th>
+                                    <th>Branch</th>
+                                    <th>Room</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for student in absent_list %}
+                                    <tr>
+                                        <td>{{student.info.regd_no}}</td>
+                                        <td>{{student.info.name}}</td>
+                                        <td>{{student.info.year}}</td>
+                                        <td>{{student.info.branch}}</td>
+                                        <td>{{student.block.floor|slice:"0:1"}}-{{student.block.room_no}}</td>
+                                    </tr>
+                                {% empty %}
+            
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            No Absentees!
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="table1-container" style="padding: 20px;" id="present-wrapper">
-            <h2 class="text-center">List of Present Students</h2>
-            <table class="table table-hover table-dark table-striped" id="abstable">
-                <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Year</th>
-                        <th>Branch</th>
-                        <th>Room No.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    {% for student in present_list %}
-                        <tr>
-                            <td>{{student.info.regd_no}}</td>
-                            <td>{{student.info.name}}</td>
-                            <td>{{student.info.year}}</td>
-                            <td>{{student.info.branch}}</td>
-                            <td>{{student.block.floor}}, {{student.block.room_no}}</td>
-                        </tr>
-                    {% empty %}
-
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                No Present Students!
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-
-        <div class="table-container">
-            <div class="container" id="complaints-wrapper">
-                <h2 style="text-align: center;">Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped" id="abstable">
+        <div class="table-container container pb-3">
+            <h2 style="text-align: center;">Complaints Registered</h2>
+            <form method="POST" action="{% url 'officials:official_home' %}">
+                <table class="table table-hover table-dark table-striped" id="complaints_table">
                     <thead>
                         <tr>
-                            <th>Count</th>
                             <th>Complainant</th>
                             <th>Type</th>
                             <th>Complainee</th>
@@ -161,7 +202,6 @@
 
                         </tr>
                     </thead>
-                    <form method="POST" action="{% url 'officials:official_home' %}">
                     {% csrf_token %}
                     {% if messages %}
                                    
@@ -176,14 +216,13 @@
                             
                             {% for item in complaints %}
                             <tr>
-                                <td>{{forloop.counter}} </td>
                                 <td>{{item.regd_no}}</td>
                                 <td>{{item.type}}</td>
                                 <td>{{item.complainee}}</td>
                                 <td>{{item.summary}}</td>
                                 <td>{{item.date}}</td>
                                 <td>                            
-                                    <select class="form-control w-75" id="{{item.id}}" name="{{item.id}}" required>
+                                    <select class="" id="{{item.id}}" name="{{item.id}}" required>
                                         <option value="">Status</option>
                                         <option value="Registered">Registered</option>
                                         <option value="Processing">Processing</option>
@@ -206,19 +245,37 @@
                             </script>
 
                             {% endfor %}
-                            <tr>
-                                <td colspan="9" style="text-align: center;">
-                                    <input type="submit" class="btn-success" id="sub-btn" style="border: none; border-radius: 10px; height: 3.5em; padding: 1em; transition: 0.7s;">
-                                </td>
-                            </tr>
                     </tbody>
-                    </form>
                 </table>
-            </div>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-success mt-2 p-3">
+                </div>
+            </form>
+        </div>
     </div>
 
 
     </div>
+
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('table.attendance_table').DataTable({
+                "pageLength": 6,
+                "lengthChange": false,
+                "info":false,
+                "dom": '<"row"<f"col"><"col"p>>t'
+            });
+            $('#complaints_table').DataTable({
+                "pageLength": 6,
+                "lengthChange": false,
+                "dom": '<"row"<f"col"><"col"p>>'
+            });
+
+            
+        } );
+    </script>
 
 
 </body>

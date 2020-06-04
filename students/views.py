@@ -13,7 +13,7 @@ def student_home(request):
     dates = current.split(',')
     abse = len(list(filter(lambda x: (x.startswith('X')), dates)))
     pres = len(list(filter(lambda x: not (x.startswith('X')), dates)))
-    complaints=user_details.complaints.all()
+    complaints=list(user_details.complaints.filter(status="Registered")) + list(user_details.complaints.filter(status="Processing"))
 
     return render(request, 'students/student-home.html', {'user_details': user_details, 'pres':pres, 'abse':abse, 'complaints':complaints})
 
@@ -25,7 +25,7 @@ def outing_app(request):
         toDate = request.POST['toDate']
         toTime = request.POST['toTime']
         purpose = request.POST['purpose']
-        parents_mobile = request.POST['parents_mobile']
+        parents_mobile = Institutestd.objects.get(regd_no=reg_no).ph_phone
 
         print(reg_no, fromDate, fromTime, toDate, toTime, purpose, parents_mobile)
 

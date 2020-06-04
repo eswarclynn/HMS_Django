@@ -12,8 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href=" {% static 'officials/chiefs-profile.css' %} " rel="stylesheet"> <!--Layout.css-->
-  <script src = "{% static 'officials/chiefs-profile.js' %}"></script>
+  <link href=" {% static 'officials/style_main.css' %} " rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/sidenav.js' %}"></script>
 
 </head>
 
@@ -35,6 +35,10 @@
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
         <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
+        <a href="{% url 'officials:register' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:registeremp' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
@@ -49,7 +53,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th colspan="2">Your Details</th>
+                            <th colspan="2" class="text-center" style="background-color: darkgray;">Your Details</th>
                         </tr>
                     </thead>
 
@@ -80,22 +84,15 @@
                         <tr>
                             <td class="field">Contact Number</td>
                             <td class="field-item" id="phone-field">{{user_details.phone}}</td>
-                            <td><span class="edit-icon" id="phone-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
                         </tr>
                         <tr>
                             <td class="field">e-Mail ID</td>
                             <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
-                            <td><span class="edit-icon" id="mail-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
                         </tr>
                         <tr>
                             <td class="field">Address</td>
                             <td class="field-item" id="address-field">{{user_details.address}}</td>
-                            <td><span class="edit-icon" id="address-icon" onclick="editDetails(this.id)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span></td>
                         </tr>
-                        <tr  id="subbtn">
-                            <td colspan="3" style="text-align: center;"> <input type="submit" class="btn-primary" style="border: 0; height: 2.5em; padding: 10px;"></td>
-                        </tr>
-
 
                     </tbody>
                 </table>

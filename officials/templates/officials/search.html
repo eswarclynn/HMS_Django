@@ -9,10 +9,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href="{% static 'officials/search.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <link href="{% static 'officials/style_main.css' %}" rel="stylesheet"> <!--Layout.css-->
   <script src = "{% static 'officials/search.js' %}"></script>
 
 </head>
@@ -25,7 +26,7 @@
         </div>
 
         <div>
-            <span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span>
+            <a href="{% url 'officials:chiefsProfile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
         </div>
     </nav>
 
@@ -35,9 +36,15 @@
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
         <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
+        <a href="{% url 'officials:register' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:registeremp' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
+
+    <br> <br> <br> <br>
     
     <div class="container main-container">
         <h2 class="text-center">Search Student</h2>
@@ -45,24 +52,22 @@
         <form method="POST" action="{% url 'officials:search' %}">
 
             <div class="row text-center">
-                <div class="col">Registration No.: <input type="checkbox" class="checkBox ml-3" id="regCheck" onclick="setEnabled()"></div>
+                <div class="col">Roll No.: <input type="checkbox" class="checkBox ml-3" id="regCheck" onclick="setEnabled()"></div>
                 <div class="col">Block: <input type="checkbox" class="checkBox ml-3" id="blockCheck" onclick="setEnabled()"></div>
             </div>
             
             <div class="row mt-4">
-                <div class="col-sm-6 text-right pr-5">
-                    <label for="regno"><strong>Registration No. :</strong></span>
+                <div class="col-md-3 text-md-right">
+                    <label for="regno"><strong>Roll No. :</strong></span>
                 </div>
-                <div class="col-sm-6 form-group">
-                    <input type="text" id="regno" name="regno" class="form-control w-50" placeholder="Enter Registration No." disabled required/>
+                <div class="col-md-3 form-group">
+                    <input type="text" id="regno" name="regno" class="form-control " placeholder="Enter Registration No." disabled required/>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 text-right pr-5">
+                <div class="col-md-2 text-md-right">
                     <label for="block"><strong> Block :</strong></span>
                 </div>
-                <div class="col-sm-6 form-group">
-                    <select class="form-control w-50" id="block" name="block" disabled required>
+                <div class="col-md-3 form-group ">
+                    <select class="form-control " id="block" name="block" disabled required>
                         <option value="">Select Block</option>
                         {% for block in send_blocks %}
                         <option value="{{block.block_id}}">{{block.block_name}}</option>
@@ -77,11 +82,8 @@
             </div>
         </form>
 <br><br>
-
-            
         
-            
-        <div class="container">
+        <div class="table-container container">
             <table class="table table-hover table-dark table-striped">
                 <thead>
                     <th>Student ID</th>
@@ -103,7 +105,7 @@
                         <td>{{item.stud.branch}}</td>
                         <td>{{item.stud.phone}}</td>
                         <td>{{item.block_name}}</td>
-                        <td>{{item.block_details.floor}},{{item.block_details.room_no}}</td>
+                        <td>{{item.block_details.floor|slice:"0:1"}}-{{item.block_details.room_no}}</td>
                         <td>{{item.isPresent}}</td>
                         
 
@@ -117,8 +119,15 @@
 
     </div>
 
-
-
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('table').DataTable({
+                
+            });
+        } );
+    </script>
 
 </body>
 </html>

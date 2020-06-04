@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Attendance - Hostel Management System</title>
+  <title>Blockwise Layout - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href="{% static 'officials/roomLayout.css' %}" rel="stylesheet"> <!--attendance.css-->
-  <script src = "{% static 'officials/attendance.js' %}"></script>
+  <script src = "{% static 'officials/sidenav.js' %}"></script>
 
 </head>
 
@@ -25,7 +25,7 @@
         </div>
 
         <div>
-            <a href="profile.html"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+            <a href="{% url 'officials:chiefsProfile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
         </div>
     </nav>
 
@@ -35,6 +35,10 @@
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
         <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
+        <a href="{% url 'officials:register' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:registeremp' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
@@ -58,218 +62,82 @@
                     </select>
                 </div>
                 <div class="col d-flex-inline justify-content-start">
-                    <input type="submit" class="btn btn-primary" style="transition: 0.5s;"/>
+                    <input type="submit" name="submit" class="btn btn-primary" style="transition: 0.5s;"/>
                 </div>
             </div>        
         </form>
         
 
-        <div class="row">
-            <div class="col p-2 d-flex justify-content-end pr-5">
+        <div class="row text-center">
+            <div class="col">
                 Block: <strong>{{block_name}}</strong>
             </div>
-            <div class="col p-2">
-                Capacity: <strong>{{cap_room}} rooms - {{cap_stud}} students</strong>
-                
-            </div>
-        </div>
-        <div class="row">
-            <div class="col p-2 d-flex justify-content-end pr-5">
+            <div class="col">
                 Room Type: <strong> {{room_type}} </strong>
             </div>
-            <div class="col p-2">
-                Filled: <strong>{{pres_room}} rooms - {{pres_stud}} students</strong>                
-            </div>
-        </div>
-        <div class="row">
-            <div class="col p-2 d-flex justify-content-end pr-5">
+            <div class="col">
                 Gender: <strong>{{block_gender}}</strong>
             </div>
-            <div class="col p-2">
-                Vacant: <strong>{{vacant_room}} rooms</strong>
-                
-            </div>
-        </div>
-        <div class="row">
-            <div class="col p-2 d-flex justify-content-end pr-5">
+            <div class="col">
                 Caretaker: <strong>{{block_care}}</strong>
             </div>
-            <div class="col p-2">
-                Partially Vacant: <strong>{{partial_room}} rooms</strong>
-                
+        </div>
+        <div class="row text-center mt-3">
+            <div class="col ">
+                Capacity: <strong>{{cap_room}} rooms - {{cap_stud}} students</strong>
+            </div>
+            <div class="col">
+                Filled: <strong><span id="filled_room"></span> rooms - {{pres_stud}} students</strong>                
+            </div>
+            <div class="col ">
+                Vacant: <strong><span id="vacant_room"></span> rooms</strong>
+            </div>
+            <div class="col">
+                Partially Vacant: <strong><span id="partial_room"></span> rooms</strong>
             </div>
         </div>
-        
 
-        <div class="row d-flex justify-content-end mr-2">
-            <div >
+        <div class="row d-flex justify-content-end mr-2 mt-4">
+            <span class="mr-2 mt-1">Select Floor: </span>
+            <div>
                 <select name="floor" id="floor" class="form-control d-inline bg-info text-white" onchange="showFloor()">
-                    <option value="ground">Ground</option>
-                    <option value="first">First</option>
-                    <option value="second">Second</option>
+                    <option value="ground">Ground Floor</option>
+                    <option value="first">First Floor</option>
+                    <option value="second">Second Floor</option>
                 </select>
             </div>
         </div>
-        
-        <div class="container-fluid floor-con p-4 mt-2" id="ground-con">
-            <div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-1</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-2</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-3</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-4</div>
-                <div class=" stairs d-inline-block ml-2 text-center py-3" >Entrance</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-5</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-6</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-7</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-8</div>
-                <div class=" restroom d-inline-block ml-2 text-center py-3" >Restrooms</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-9</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-10</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-11</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-12</div>
-                <div class=" stairs d-inline-block ml-2 text-center py-3" >Entrance</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-13</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-14</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-15</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip" >G-16</div>
-            </div>
-            <div class="my-5 d-flex">
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-            </div>
-            <div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-17</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-18</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-19</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-20</div>
-                <div class=" stairs d-inline-block ml-2 text-center py-3" >Stairs</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-21</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-22</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-23</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-24</div>
-                <div class=" restroom d-inline-block ml-2 text-center py-3" >Restrooms</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-25</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-26</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-27</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-28</div>
-                <div class=" stairs d-inline-block ml-2 text-center py-3" >Stairs</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-29</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-30</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-31</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">G-32</div>
-            </div>
 
-        </div>
+        {% if messages %}
+                                   
+        {% for message in messages %}
+             <script>
+                  alert('{{message}}');
+             </script>
+        {% endfor %}
+             
+        {% endif %}
         
-        <div class="container-fluid floor-con p-4 mt-2" id="first-con">
+        {% if room_type == '4S' %}
             <div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-1</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-2</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-3</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-4</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >RR</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-5</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-6</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-7</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-8</div>
-                <div class="restroom d-inline-block ml-2 text-center py-3" >Restrooms</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-9</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-10</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-11</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-12</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >Gym</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-13</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-14</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-15</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-16</div>
+                {% include 'officials/4SB.html' %}
             </div>
-            <div class="my-5 d-flex">
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-            </div>
+        {% endif %}
+        {% if room_type == '2S' %}
             <div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-17</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-18</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-19</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-20</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >Stairs</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-21</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-22</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-23</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-24</div>
-                <div class="restroom d-inline-block ml-2 text-center py-3" >Restrooms</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-25</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-26</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-27</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-28</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >Stairs</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-29</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-30</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-31</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">F-32</div>
+                {% include 'officials/2SB.html' %}
             </div>
-
-        </div>
-        
-        <div class="container-fluid floor-con p-4 mt-2" id="second-con">
+        {% endif %}        
+        {% if room_type == '1S' %}
             <div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-1</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-2</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-3</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-4</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >RR</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-5</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-6</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-7</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-8</div>
-                <div class="restroom d-inline-block ml-2 text-center py-3" >Restrooms</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-9</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-10</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-11</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-12</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >Gym</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-13</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-14</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-15</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-16</div>
+                {% include 'officials/2SB.html' %}
             </div>
-            <div class="my-5 d-flex">
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-                <span class="mx-auto">Pathway</span>
-            </div>
-            <div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-17</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-18</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-19</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-20</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >Stairs</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-21</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-22</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-23</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-24</div>
-                <div class="restroom d-inline-block ml-2 text-center py-3" >Restrooms</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-25</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-26</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-27</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-28</div>
-                <div class="stairs d-inline-block ml-2 text-center py-3" >Stairs</div> 
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-29</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-30</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-31</div>
-                <div class="room-card d-inline-block ml-2 text-center py-3" onmouseover="showRoll(this)"  onclick="showDetails(this)" data-toggle="tooltip">S-32</div>
-            </div>
-
-        </div>
+        {% endif %}
 
         
         
         <div class="container-fluid mt-4 d-none" id="table-con">
+            <form method="POST" action="{% url 'officials:blockSearch' %}">
             <table class="table table-hover table-dark table-striped">
                 <thead>
                     <th>Student ID</th>
@@ -277,14 +145,14 @@
                     <th>Year</th>
                     <th>Branch</th>
                     <th>Phone</th>
-                    <th>Block</th>
                     <th>Room No.</th>
                     <th>In Campus?</th>
+                    <th>Allot Room to <br><small>(Enter 'None' to remove student from room)</small></th>
                 </thead>
                 <tbody id="table_list">
-                        
                 </tbody>
             </table>
+            </form>
         </div>
 
 
@@ -296,7 +164,9 @@
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
 
-
+            var filled_count = 0;
+            var partial_count = 0;
+            var vacant_count = 0;
 
             $('.room-card').each(function(){
                 room = this.innerHTML;
@@ -322,20 +192,21 @@
                 {% endfor %}
                 
                 if(count == parseInt('{{room_type|slice:"0:1"}}')){
+                    filled_count += 1;
 
                 }else if(0<count && count<parseInt('{{room_type|slice:"0:1"}}')){
-                    
                     $(this).addClass("partial");
-
+                    partial_count += 1;
                     
                 }else if(count == 0){
                     $(this).addClass('vacant');
-                    
+                    vacant_count += 1;
                 }
             });
 
-
-
+            document.getElementById('filled_room').innerHTML = filled_count;
+            document.getElementById('partial_room').innerHTML = partial_count;
+            document.getElementById('vacant_room').innerHTML = vacant_count;
         });
     </script>
 
@@ -433,24 +304,34 @@
 
             $('tbody').empty();
 
-            {% for item in items_list %}               
-                
+            let count = 0;
+            {% for item in items_list %}  
+
                 if( (floor == '{{item.block_details.floor}}') && (no == '{{item.block_details.room_no}}') ){
-                    var element = ( "<tr><td>{{item.stud.regd_no}}</td><td>{{item.stud.name}}</td><td>{{item.stud.year}}</td><td>{{item.stud.branch}}</td><td>{{item.stud.phone}}</td><td>{{item.block_name}}</td><td>{{item.block_details.floor}},{{item.block_details.room_no}}</td><td>{{item.isPresent}}</td></tr>");               
-                    $('tbody').append(element);
-                    
+                    const template = document.createElement('template');
+                    template.innerHTML = "<tr><td>{{item.stud.regd_no}}</td><td>{{item.stud.name}}</td><td>{{item.stud.year}}</td><td>{{item.stud.branch}}</td><td>{{item.stud.phone}}</td><td>{{item.block_details.floor|slice:'0:1'}}-{{item.block_details.room_no}}</td><td>{{item.isPresent}}</td><td><input type='text' name='{{item.stud.regd_no}}'/><input type='hidden' name='block' value='{{block_name}}' /></td></tr>";
+                    document.getElementById('table_list').appendChild(template.content.firstElementChild);
+                    count++;
                 }
     
             {% endfor %}
 
+                if(count < parseInt('{{room_type|slice:"0:1"}}')){
+                    const template = document.createElement('template');
+                    template.innerHTML ="<tr ><td colspan='10' class='text-center'>Add Student to room :<input type='text' name='roll' class='ml-4'> <input type='hidden' name='room' value='{{block_name}}-"+floor+"-"+no+"'><input type='submit' name='Add' value='Add' class='btn btn-primary ml-5'></td></tr>";
+                    document.getElementById('table_list').appendChild(template.content.firstElementChild);
+
+                }
+
+                if(count > 0){
+                    const template = document.createElement('template');
+                    template.innerHTML = "<tr><td colspan='10' class='text-center'><input type='submit' name='change' value='Change Rooms' class='btn btn-warning' /></td></tr>";
+                    document.getElementById('table_list').appendChild(template.content.firstElementChild);
+                }
 
         }
 
     </script>
 
-
-    
 </body>
 </html>
-
-

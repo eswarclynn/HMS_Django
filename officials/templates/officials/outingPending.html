@@ -9,11 +9,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href="{% static 'officials/outingPending.css' %} " rel="stylesheet"> <!--Layout.css-->
-  <script src = "{% static 'officials/outingPending.js' %}"></script>
+  <link href="{% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/sidenav.js' %}"></script>
 
 </head>
 
@@ -34,7 +35,11 @@
         <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
         <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
-        <a href="#"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+        <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
+        <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+        <a href="{% url 'officials:watercan' %}"><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
         <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
@@ -62,7 +67,7 @@
                 <table class="table table-hover table-dark table-striped" >
                     <thead>
                         <tr>
-                            <th>Reg No.</th>
+                            <th>Roll No.</th>
                             <th>Student Name</th>
                             <th>Year</th>
                             <th>Branch</th>
@@ -108,17 +113,25 @@
                             </script>
 
                         {% endfor %}
-                        <tr>
-                            <td colspan="9" style="text-align: center;">
-                                <input type="submit" class="btn-success" id="sub-btn" style="border: none; border-radius: 10px; height: 3.5em; padding: 1em; transition: 0.7s;">
-                            </td>
-                        </tr>
-                    </tbody>
                 </table>
+                <div class="d-flex justify-content-center">
+                    <input type="submit" class="btn btn-success p-3" id="sub-btn" >
+                </div>
             </form>
 
         </div>
     </div>
+
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.table-dark').DataTable({
+                "dom": '<"row"<"col-3"l><"col"f><"col"p>>'
+            });
+
+        } );
+    </script>
 
 
 </body>
