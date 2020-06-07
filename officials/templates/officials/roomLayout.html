@@ -15,7 +15,11 @@
   {% load static %}
   <link href="{% static 'officials/roomLayout.css' %}" rel="stylesheet"> <!--attendance.css-->
   <script src = "{% static 'officials/sidenav.js' %}"></script>
-
+<style>
+    .main-container{
+        width: 1535px;
+    }
+</style>
 </head>
 
 <body>
@@ -25,7 +29,7 @@
         </div>
 
         <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
         
@@ -127,10 +131,15 @@
              
         {% endif %}
         
-        {% if room_type == '4S' %}
+        {% if room_type == '4S' and block_gender == 'Male' %}
             <div>
                 {% include 'officials/4SB.html' %}
             </div>
+        {% endif %}
+        {% if room_type == '4S' and block_gender == 'Female' %}
+        <div class="text-center">
+            {% include 'officials/4SG.html' %}
+        </div>
         {% endif %}
         {% if room_type == '2S' %}
             <div>
@@ -147,7 +156,7 @@
         
         <div class="container-fluid mt-4 d-none" id="table-con">
             <form method="POST" action="{% url 'officials:blockSearch' %}">
-            <table class="table table-hover table-dark table-striped">
+            <table class="table table-hover table-muted table-striped">
                 <thead>
                     <th>Student ID</th>
                     <th>Name</th>

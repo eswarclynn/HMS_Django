@@ -25,7 +25,7 @@
         </div>
 
         <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
         
@@ -62,19 +62,19 @@
 
                     <tbody id="tbody">
                         <tr>
-                            <th class="field">Name</th>
+                            <td class="field font-weight-bold">Name</th>
                             <td class="field-item">{{user_details.name}}</td>
                         </tr>
                         <tr>
-                            <th class="field">Staff No.</td>
+                            <td class="field font-weight-bold">Staff No.</td>
                             <td class="field-item">{{user_details.emp_id}}</td>
                         </tr>
                         <tr>
-                            <th class="field">Designation</td>
+                            <td class="field font-weight-bold">Designation</td>
                             <td class="field-item">{{user_details.designation}}</td>
                         </tr>
                         <tr>
-                            <th class="field">Block</td>
+                            <td class="field font-weight-bold">Block</td>
                             <td class="field-item">
                                 {% for block in block_details %}
                                     {{block.block_name}},
@@ -82,17 +82,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <th class="field">Contact Number</td>
+                            <td class="field font-weight-bold">Contact Number</td>
                             <td class="field-item" id="phone-field">{{user_details.phone}}</td>
                         </tr>
                         <tr>
-                            <th class="field">e-Mail ID</td>
+                            <td class="field font-weight-bold">e-Mail ID</td>
                             <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
                         </tr>
-                        <tr>
-                            <th class="field">Address</td>
-                            <td class="field-item" id="address-field">{{user_details.address}}</td>
-                        </tr>
+
                     </tbody>
                 </table>
 
@@ -101,7 +98,7 @@
         <div class="table-container">
             <div class="container" id="complaints-wrapper">
                 <h2 style="text-align: center;">Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped" id="abstable">
+                <table class="table table-hover table-muted table-striped" id="abstable">
                     <thead>
                         <tr>
                             <th class="text-center">Sl. No.</th>

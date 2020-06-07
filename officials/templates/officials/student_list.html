@@ -27,7 +27,7 @@
         </div>
 
         <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
         
@@ -59,9 +59,20 @@
         <div class="table1-container" >
 
             <h1 style="text-align: center;">List of Students</h1>
+            <div id="filters" class="row mb-4">
+                <span class="col-md"></span>
+                <span class="col-md"></span>
+                Year:<span class="col-md"></span>
+                Gender:<span class="col-md"></span>
+                Block:<span class="col-md"></span>
+                <span class="col-md"></span>
+                <span class="col-md"></span>
+                <span class="col-md"></span>
+
+            </div>
 
             <form method="POST" action="{% url 'officials:studentdelete' %}">
-            <table class="table table-hover table-dark table-striped" id="att-table">
+            <table class="table table-hover table-muted table-striped" id="att-table">
                 {% csrf_token %}
 
                 {% if messages %}
@@ -123,7 +134,29 @@
             $('table').DataTable({
                 "lengthMenu": [[10, 25, 50, 100, 250, 500, 1000, -1], [10, 25, 50, 100, 250, 500, 1000, "All"]],
                 "info":false,
-                "dom": '<"row"<"col-3"l><"col"f><"col"p>>t'
+                "dom": '<"row"<"col-3"l><"col"f><"col"p>>t',
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        if (column.index() == 2 || column.index() == 3 || column.index() == 4) {   
+                            var select = $('<select class="form-control"><option value=""></option></select>')
+                                .appendTo($("#filters").find("span").eq(column.index()))
+                                .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val());                                     
+
+                                column.search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+                        
+
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>')
+                            });
+                        }
+                    });
+                }
             });
         } );
     </script>

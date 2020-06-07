@@ -55,15 +55,16 @@ def official_home(request):
         complaints = list(Complaints.objects.filter(status='Registered', regd_no__in=stud_roll)) + list(Complaints.objects.filter(status='Processing', regd_no__in=stud_roll))
 
         if request.method == 'POST':
-            for item in complaints:
-                newComplaint = Complaints.objects.get(id=item.id)
-                if newComplaint.status != request.POST[str(item.id)] and newComplaint.remark != request.POST['RE'+str(item.id)]:
-                    newComplaint.status = request.POST[str(item.id)]
-                    newComplaint.remark = request.POST['RE'+str(item.id)]
-                    newComplaint.save()
-            else:
-                messages.success(request, 'Successfully Complaints updated!')
-                return redirect('officials:official_home') 
+            for i in request.POST:
+                if i == 'update':
+                    comp_id = request.POST[i]
+                    newComplaint = Complaints.objects.get(id=comp_id)
+                    if newComplaint.status != request.POST[comp_id] or newComplaint.remark != request.POST['RE'+comp_id]:
+                        newComplaint.status = request.POST[comp_id]
+                        newComplaint.remark = request.POST['RE'+comp_id]
+                        newComplaint.save()
+                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
+                        return redirect('officials:official_home') 
 
         return render(request, 'officials/caretaker-home.html', {'user_details': user_details, 'block_details':block_details,'present_list':present_list,'absent_list':absent_list, 'complaints':complaints})
 
@@ -96,25 +97,26 @@ def official_home(request):
         offComplaints = list(OfficialComplaints.objects.filter(status='Registered')) + list(OfficialComplaints.objects.filter(status='Processing'))
         complaints_list = complaints + offComplaints
         if request.method == 'POST':
-            print(complaints)
-            for item in complaints_list:
-                if isinstance(item, Complaints) :
-                    newComplaint = Complaints.objects.get(id=item.id)
-                    if newComplaint.status != request.POST['SC'+str(item.id)] and newComplaint.remark != request.POST['SCRE'+str(item.id)]:
-                        newComplaint.status = request.POST['SC'+str(item.id)]
-                        newComplaint.remark = request.POST['SCRE'+str(item.id)]
+            for i in request.POST:
+                if i == 'SCupdate':
+                    comp_id = request.POST[i]
+                    newComplaint = Complaints.objects.get(id=comp_id)
+                    if newComplaint.status != request.POST['SC'+comp_id] or newComplaint.remark != request.POST['SCRE'+comp_id]:
+                        newComplaint.status = request.POST['SC'+comp_id]
+                        newComplaint.remark = request.POST['SCRE'+comp_id]
                         newComplaint.save()
+                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
+                        return redirect('officials:official_home') 
 
-                elif isinstance(item, OfficialComplaints):
-                    newComplaint = OfficialComplaints.objects.get(id=item.id)
-                    if newComplaint.status != request.POST['OC'+str(item.id)] and newComplaint.remark != request.POST['OCRE'+str(item.id)]:
-                        newComplaint.status = request.POST['OC'+str(item.id)]
-                        newComplaint.remark = request.POST['OCRE'+str(item.id)]
+                if i == 'OCupdate':
+                    comp_id = request.POST[i]
+                    newComplaint = OfficialComplaints.objects.get(id=comp_id)
+                    if newComplaint.status != request.POST['OC'+comp_id] or newComplaint.remark != request.POST['OCRE'+comp_id]:
+                        newComplaint.status = request.POST['OC'+comp_id]
+                        newComplaint.remark = request.POST['OCRE'+comp_id]
                         newComplaint.save()
-                newComplaint.save()
-            else:
-                messages.success(request, 'Successfully Complaints updated!')
-                return redirect('officials:official_home')
+                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
+                        return redirect('officials:official_home') 
 
         return render(request, 'officials/chiefs-home.html', {'user_details': user_details, 'present':present, 'absent':absent, 'complaints':complaints,'complaints_list':complaints_list , 'offComplaints':offComplaints})
 
@@ -124,7 +126,7 @@ def profile(request):
     name = request.COOKIES['username_off']
     user_details = Officials.objects.get(emp_id=str(name))
     block_details = Blocks.objects.filter(emp_id_id=str(name))
-    complaints=user_details.offComplaints.all()
+    complaints=list(user_details.offComplaints.filter(status='Registered')) + list(user_details.offComplaints.filter(status='Processing'))
 
     return render(request, 'officials/profile.html', {'user_details': user_details,'block_details':block_details, 'complaints':complaints})
 
@@ -132,7 +134,7 @@ def chiefsProfile(request):
     name = request.COOKIES['username_off']
     user_details = Officials.objects.get(emp_id=str(name))
     block_details = Blocks.objects.filter(emp_id_id=str(name))
-    complaints=user_details.offComplaints.all()
+    complaints=list(user_details.offComplaints.filter(status='Registered')) + list(user_details.offComplaints.filter(status='Processing'))
 
     return render(request, 'officials/chiefs-profile.html', {'user_details': user_details, 'complaints':complaints})
 
@@ -391,14 +393,24 @@ def grantOuting(request):
 
 
     if request.method == 'POST':
-        for stud in stud_list:
-            if request.POST[str(stud['outing'].id)] !='':
-                updateOuting = OUTINGDB.objects.get(id=stud['outing'].id)
-                updateOuting.permission = request.POST[str(stud['outing'].id)]
+        for i in request.POST:
+            if i == 'HIS':
+                user_details = Institutestd.objects.get(regd_no=str(request.POST[i]))
+                outing_details = OUTINGDB.objects.filter(regd_no=str(request.POST[i]))
+                return render(request, 'officials/outingHisto.html', {'user_details': user_details, 'outing_details':outing_details})
+            if i == 'GR':
+                updateOuting = OUTINGDB.objects.get(id=str(request.POST[i]))
+                updateOuting.permission = 'Granted'
                 updateOuting.save()
-        else:
-            messages.success(request, 'Selected Outing requests updated!')
-            return redirect('officials:grantOuting') 
+                messages.success(request, 'Granted Outing permission to '+updateOuting.regd_no.name+'!')
+                return redirect('officials:grantOuting')
+
+            if i == 'RE':
+                updateOuting = OUTINGDB.objects.get(id=str(request.POST[i]))
+                updateOuting.permission = 'Rejected'
+                updateOuting.save()
+                messages.success(request, 'Rejected Outing permission to '+updateOuting.regd_no.name+'!')
+                return redirect('officials:grantOuting')
 
     return render(request, 'officials/outingPending.html', {'off_details':off_details, 'stud_list':stud_list})
 
@@ -453,6 +465,8 @@ def blockSearch(request):
         block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
         cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)*3
         room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
+        block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
+        print(block_name_lower)
         
         if room_type == '4S':   cap_stud = cap_room*3
         elif room_type == '2S': cap_stud = cap_room*2
@@ -707,6 +721,7 @@ def student_list(request):
                 'name':stud.name,
                 'ph':str(stud.phone),
                 'year':str(stud.year),
+                'branch':str(stud.branch),
                 'gender':str(stud.gender),
                 'floor':details.objects.get(regd_no=str(stud.regd_no)).floor,
                 'room_no':details.objects.get(regd_no=str(stud.regd_no)).room_no,
@@ -722,6 +737,7 @@ def student_list(request):
                 'name':stud.name,
                 'ph':str(stud.phone),
                 'year':str(stud.year),
+                'branch':str(stud.branch),
                 'gender':str(stud.gender),
                 'floor':"None",
                 'room_no':"None",
@@ -826,7 +842,7 @@ def registerworker(request):
             s.save()
             messages.success(request,"Successfully registered!")
     std=Blocks.objects.all()
-    return render(request,"officials/register_Staff.html",{'std':std})
+    return render(request,"officials/register_staff.html",{'std':std})
 
 def workers_list(request):
     worker=Workers.objects.all()
@@ -905,10 +921,12 @@ def watercan(request):
             if WaterCan.objects.filter(block=block_details, date=date).exists():
                 current = WaterCan.objects.get(block=block_details, date=date)
                 current.received = received
+                current.given = given
                 current.save()
             else:
-                newCan = WaterCan(block=block_details, date=date, received=received)
+                newCan = WaterCan(block=block_details, date=date, received=received, given=given)
                 newCan.save()
+            messages.success(request, 'Water Cans Info updated')
             return redirect('officials:watercan')
 
         elif request.POST.get('count_btn'):
@@ -920,7 +938,7 @@ def watercan(request):
                 else:
                     dateRec = -10
                     dateGiven = -10
-                return render(request, 'officials/water-can.html', {'dateRec':dateRec, 'dateGiven':dateGiven, 'dateUsed':dateRec-dateGiven})
+                return render(request, 'officials/water-can.html', {'dateRec':dateRec, 'dateGiven':dateGiven, 'dateUsed':dateGiven})
 
             elif request.POST.get('month_hist'):
                 month = int(request.POST.get('month_hist').split('-')[1])
@@ -928,7 +946,7 @@ def watercan(request):
                     month_set = WaterCan.objects.filter(block=block_details, date__month=month).order_by('-date')
                     month_rec = month_set.aggregate(Sum('received'))['received__sum']
                     month_given = month_set.aggregate(Sum('given'))['given__sum']
-                    month_used = month_rec - month_given
+                    month_used = month_given
                     return render(request, 'officials/water-can.html', {'month':request.POST.get('month_hist'), 'month_empty':False, 'month_set':month_set, 'month_rec':month_rec, 'month_given':month_given, 'month_used':month_used})
                 else:
                     return render(request, 'officials/water-can.html', {'month_empty':True})

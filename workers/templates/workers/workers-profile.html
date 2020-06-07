@@ -25,7 +25,7 @@
         </div>
 
         <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
         
@@ -96,19 +96,23 @@
 
         </div>
 
-        
+        <script>var modal_items=[];</script>
         {% if complaints|length > 0 %}
             
         <div class="table-container">
             <div class="container" id="complaints-wrapper">
                 <h2 style="text-align: center;">Students Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped">
+                <table class="table table-hover table-muted table-striped">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>
-                            <th>Registered By</th>
+                            <th>Roll No.</th>
+                            <th>Name</th>
+                            <th>Room</th>
+                            <th>Block</th>
                             <th>Type</th>
                             <th>Summary</th>
+                            <th>Details</th>
                             
                         </tr>
                     </thead>
@@ -117,11 +121,27 @@
                         {% for item in complaints %}
                         <tr>
                             <td class="text-center">{{forloop.counter}} </td>
-                            <td class="text-center">{{item.regd_no}}</td>
+                            <td class="text-center text-primary" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" data-regd="{{item.regd_no}}" >{{item.regd_no}}</td>
+                            <td class="text-center">{{item.regd_no.name}}</td>
+                            <td class="text-center">{{item.regd_no.details.floor|slice:"0:1"}}-{{item.regd_no.details.room_no}}</td>
+                            <td class="text-center">{{item.regd_no.details.block_id.block_name}}</td>
                             <td class="text-center">{{item.type}}</td>
                             <td class="text-center">{{item.summary}}</td>                   
+                            <td class="text-center">{{item.detailed}}</td>                   
                         </tr>
-                        
+                        <script>
+                            modal_items.push({
+                                roll_no: '{{item.regd_no}}',
+                                name: '{{item.regd_no.name}}',
+                                year: '{{item.regd_no.year}}',
+                                branch: '{{item.regd_no.branch}}',
+                                gender: '{{item.regd_no.gender}}',
+                                phone: '{{item.regd_no.phone}}',
+                                room: '{{item.regd_no.details.floor|slice:"0:1"}}-{{item.regd_no.details.room_no}}',
+                                block: '{{item.regd_no.details.block_id.block_name}}',
+                                name: '{{item.regd_no.name}}',
+                            })
+                        </script>
                         {% empty %}
                         <tr>
                             <td colspan="5" class="text-center"> No complaints registered! </td>
@@ -138,11 +158,13 @@
         <div class="table-container">
             <div class="container" id="off_complaints-wrapper">
                 <h2 style="text-align: center;">Officials Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped">
+                <table class="table table-hover table-muted table-striped">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>
                             <th>Registered By</th>
+                            <th>Name</th>
+                            <th>Block</th>
                             <th>Type</th>
                             <th>Summary</th>
                             
@@ -153,10 +175,25 @@
                         {% for item in off_complaints %}
                         <tr>
                             <td class="text-center">{{forloop.counter}} </td>
-                            <td class="text-center">{{item.regd_no}}</td>
+                            <td class="text-center text-primary" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" data-regd="{{item.regd_no}}" >{{item.regd_no}}</td>
+                            <td class="text-center">{{item.regd_no.name}}</td>
+                            <td class="text-center">{{item.regd_no.blocks.block_name}}</td>
                             <td class="text-center">{{item.type}}</td>
                             <td class="text-center">{{item.summary}}</td>                   
                         </tr>
+                        <script>
+                            modal_items.push({
+                                roll_no: '{{item.regd_no}}',
+                                name: '{{item.regd_no.name}}',
+                                year: '{{item.regd_no.year}}',
+                                branch: '{{item.regd_no.branch}}',
+                                gender: '{{item.regd_no.gender}}',
+                                phone: '{{item.regd_no.phone}}',
+                                room: '{{item.regd_no.details.floor|slice:"0:1"}}-{{item.regd_no.details.room_no}}',
+                                block: '{{item.regd_no.details.block_id.block_name}}',
+                                name: '{{item.regd_no.name}}',
+                            })
+                        </script>
                         
                         {% empty %}
                         <tr>
@@ -186,7 +223,7 @@
                 {% endfor %}
                      
                 {% endif %} 
-                <table class="table table-hover table-dark table-striped">
+                <table class="table table-hover table-muted table-striped">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>
@@ -206,7 +243,7 @@
                         {% for item in medical %}
                         <tr>
                             <td class="text-center">{{forloop.counter}} </td>
-                            <td class="text-center">{{item.comp.regd_no}}</td>
+                            <td class="text-center text-primary" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" data-regd="{{item.comp.regd_no}}" >{{item.comp.regd_no}}</td>
                             <td class="text-center">{{item.designation}}</td>
                             <td class="text-center">{{item.name}}</td>
                             <td class="text-center">{{item.floor|slice:"0:1"}}-{{item.room}}</td>
@@ -221,6 +258,20 @@
                             </td>
                             <td><input type="text" name="RE{{item.comp.id}}" id="RE{{item.comp.id}}" placeholder="Enter Remark..."></td>                
                         </tr>
+                        <script>
+                            
+                            modal_items.push({
+                                roll_no: '{{item.info.regd_no}}',
+                                name: '{{item.info.name}}',
+                                year: '{{item.info.year}}',
+                                branch: '{{item.info.branch}}',
+                                gender: '{{item.info.gender}}',
+                                phone: '{{item.info.phone}}',
+                                room: '{{item.info.details.floor|slice:"0:1"}}-{{item.info.details.room_no}}',
+                                block: '{{item.info.details.block_id.block_name}}',
+                                name: '{{item.info.name}}',
+                            })
+                        </script>
                         
                         {% empty %}
                         <tr>
@@ -237,6 +288,39 @@
             </div>
         </div>
         {% endif %}
+  
+  <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Student Information</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        <script>
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) 
+                var regd = button.data('regd')
+                var item = modal_items.find((item)=> (item.roll_no == regd))
+                var modal = $(this)
+                modal.find('.modal-title').text('Student Information: ' + regd)
+                var text = modal.find('.modal-body');
+                text[0].innerHTML = '';
+                for (var field in item) {
+                    text[0].innerHTML += '<p class="row"><span class="col text-capitalize font-weight-bold">'+field+'</span><span class="col">'+item[field]+'</span></p>';
+                }
+            })
+        </script>
         
     </body>
 </html>

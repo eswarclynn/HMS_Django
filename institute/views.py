@@ -65,3 +65,6 @@ def hostels(request):
 
 def contact(request):
     return render (request,'institute/contact.html')
+
+def information(request):
+    return render(request,'institute/information.html',{})

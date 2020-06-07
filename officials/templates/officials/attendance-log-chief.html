@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
         
@@ -68,16 +68,27 @@
         {% endfor %}
              
         {% endif %}
-            <div class="row text-center">
-                <div class="col-sm-12 col-lg-6 form-group">
-                    <label for="date" class="ml-5  mr-5">Attendance by Date:</label>
-                    <input type="date" name="date" id="datefield" class="d-inline" onclick="setEnabled(this)">
-                </div>                        
-                <div class="col-sm-12 col-lg-6 form-group">
-                    <label for="regno" class="ml-5 mr-4">Attendance by ID/Regd. No:</label>
-                    <input type="text" name="regno" id="regno" style="width: 120px;" onclick="setEnabled(this)" >
-                </div>
+        <div class="row text-center mt-4">
+            <div class="col-sm-12 col-lg-4 form-group">
+                <label for="date" class="mr-5">Attendance by Date:</label>
+                <input type="date" name="date" id="date" class="d-inline" onclick="setEnabled(this)">
+
+            </div>                        
+            <div class="col-sm-12 col-lg-5 form-group">
+                <label for="regno" class="mr-4">Attendance by ID/Regd. No:</label>
+                <input type="text" name="regno" id="regno" style="width: 120px;" onclick="setEnabled(this)" >
+            </div>
+            <div class="col-sm-12 col-lg-3 text-left form-group">
+                <label for="stud_month">Month:</label>
+                <input type="month" name="stud_month" id="stud_month" onchange="showDates()">
                 
+                {% if pres_dates %}        
+                    <br>
+                    <small>Total details displayed. Change month to get month-wise!</small>
+
+                {% endif %}
+            </div>
+            
             </div>
             <div class="row text-center">
                 <div class="col-12">
@@ -88,8 +99,8 @@
             
         {% if pres_stud %}
         <div class="row">
-            <div class="col">
-                <table class="table table-hover table-dark table-striped" id="stud-pres-table">
+            <div class="col-12 col-lg-6" >
+                <table class="table table-hover table-muted table-striped" id="stud-pres-table">
                     <h3 class="text-center">Present Students</h3>
                     <thead>
                         <tr>
@@ -113,8 +124,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col" >
-                <table class="table table-hover table-dark table-striped" id="stud-abs-table">
+            <div class="col-12 col-lg-6" >
+                <table class="table table-hover table-muted table-striped" id="stud-abs-table">
                     <h3 class="text-center">Absent Students</h3>
                     <thead>
                         <tr>
@@ -144,34 +155,28 @@
         
         {% if pres_dates %}
         <div class="row">
-            <div class="col" >
-                <table class="table table-hover table-dark table-striped" id="dates-pres-table">
-                    <h3 class="text-center">Present Dates</h3>
-                    <tbody>
-                        <tr>
-                            <td>
-                                {% for stud in pres_dates %}
-                                    {{stud}}, 
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col-12 col-lg-6" >
+                <h3 class="text-center">Present count : <span class="font-weight-bold" id="present_count_con">{{pres_dates|length}}</span></h3>
+                <script>
+                    var present_dates = []
+                    {% for stud in pres_dates %}
+                        present_dates.push('{{stud}}')
+                    {% endfor %}
+
+                </script>
+                Present Dates : <span id="present_dates_con">{{pres_dates}} </span>
+
             </div>
-            <div class="col">
-                <table class="table table-hover table-dark table-striped" id="dates-abs-table">
-                    <h3 class="text-center">Absent Dates</h3>
-                    
-                    <tbody>
-                        <tr>
-                            <td>
-                                {% for stud in abse_dates %}
-                                    {{stud}}, 
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col-12 col-lg-6" >
+                <script>
+                    var absent_dates = []
+                    {% for stud in abse_dates %}
+                        absent_dates.push('{{stud}}')
+                    {% endfor %}
+
+                </script>
+                    <h3 class="text-center">Absent count : <span class="font-weight-bold" id="absent_count_con">{{abse_dates|length}}</span></h3>
+                    Absent Dates : <span id="absent_dates_con">{{abse_dates}}</span>
             </div>
         </div>
         {% endif %}
@@ -204,6 +209,17 @@
             else if(x.name == "regno"){
                 document.getElementById("date").value="";
             }
+        }
+        
+
+        function showDates(){
+            getMonth = document.getElementById('stud_month').value;
+            mon_pres = present_dates.filter(item => item.startsWith(getMonth))
+            mon_abse = absent_dates.filter(item => item.startsWith(getMonth))
+            document.getElementById('present_count_con').innerHTML = mon_pres.length
+            document.getElementById('present_dates_con').innerHTML = mon_pres.toString()
+            document.getElementById('absent_count_con').innerHTML = mon_abse.length
+            document.getElementById('absent_dates_con').innerHTML = mon_abse.toString()
         }
     </script>
 

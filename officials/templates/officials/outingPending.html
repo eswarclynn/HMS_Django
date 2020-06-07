@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
         
@@ -69,7 +69,7 @@
                 {% endfor %}
                      
                 {% endif %}
-                <table class="table table-hover table-dark table-striped" >
+                <table class="table table-hover table-muted table-striped" >
                     <thead>
                         <tr>
                             <th>Roll No.</th>
@@ -80,6 +80,7 @@
                             <th>To Date</th>
                             <th>Purpose of Visit</th>
                             <th>Parent's Mobile</th>
+                            <th>View History</th>
                             <th>Allow?</th>
                         </tr>
                     </thead>
@@ -94,34 +95,18 @@
                                 <td>{{stud.outing.toDate}}</td>
                                 <td>{{stud.outing.purpose}}</td>
                                 <td>{{stud.outing.parent_mobile}}</td>
+                                <td><button type="submit" value="{{stud.info.regd_no}}" class="btn btn-primary" name="HIS">View History</button></td>
                                 <td>
-                                    <select class="form-control" id="{{stud.outing.id}}" name="{{stud.outing.id}}">
-                                        <option value="">Select Permission</option>
-                                        <option value="Granted">Granted</option>
-                                        <option value="Rejected">Rejected</option>
-                                    </select>
+                                    <button type="submit" value="{{stud.outing.id}}" class="btn btn-success" name="GR">Grant</button>
+                                    <button type="submit" value="{{stud.outing.id}}" class="btn btn-danger ml-xl-3" name="RE">Reject</button>
                                 </td>
                             
                             </tr>
 
                         {% empty %}
 
-                            <tr>
-                                <td colspan="9" class="text-center">
-                                    No Pending Outing Requests!
-                                </td>
-                            </tr>
-                            <script>
-                                window.onload = function(){
-                                    document.getElementById("sub-btn").disabled = true;
-                                }
-                            </script>
-
                         {% endfor %}
                 </table>
-                <div class="d-flex justify-content-center">
-                    <input type="submit" class="btn btn-success p-3" id="sub-btn" >
-                </div>
             </form>
 
         </div>
@@ -131,7 +116,7 @@
     <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.table-dark').DataTable({
+            $('.table-muted').DataTable({
                 "dom": '<"row"<"col-3"l><"col"f><"col"p>>'
             });
 

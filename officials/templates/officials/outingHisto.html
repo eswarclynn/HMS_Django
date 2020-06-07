@@ -21,35 +21,20 @@
 <body>
     <nav class="navbar fixed-top row px-4" id="topnav">
         <div class="col-0 ">
-            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
+            <a href="{% url 'officials:grantOuting' %}" style="cursor: pointer;"><span class="fa fa-reply" style="font-size: 4vh;color: aliceblue;" ></span></a>
         </div>
 
         <div class="col-10 d-flex justify-content-center">
             <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
-        
         <div class="col-0 ">
-            <a href="{% url 'students:student_home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         </div>
     </nav>
 
 
-    <div id="mySidenav" class="sidenav">
-        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{% url 'students:student_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
-        <a href="{% url 'students:outing_app' %}"><span><i class="fa fa-map-marker"></i></span> &nbsp;&nbsp; Outing Application</a>
-        <a href="{% url 'students:attendance_history' %}"><span><i class="fa fa-list" ></i></span> &nbsp;&nbsp; Attendance History</a>
-        <a href="#"><span><i class="fa fa-history" ></i></span> &nbsp;&nbsp; Outing History</a>
-        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
-        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
-
-    </div>
-
-
     <div class="container main-container">
-        <p style="text-align: center; font-size: large;"><b>{{user_details.name}}</b>, take at look at your non-local outing history.</p><br>
+        <p style="text-align: center; font-size: large;">Take at look at the non-local outing history of <b>{{user_details.name}}</b>.</p><br>
 
 
 

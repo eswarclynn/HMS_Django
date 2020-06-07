@@ -48,7 +48,7 @@ def staff_home(request):
                     'room':room_det.room_no,
                     'floor':room_det.floor[0],
                     'block': room_det.block_id.block_name,
-                    'name': Institutestd.objects.get(regd_no=item.regd_no).name
+                    'info': Institutestd.objects.get(regd_no=item.regd_no)
                 })
                 
             except Exception as e: 
@@ -61,7 +61,7 @@ def staff_home(request):
                 medical.append({
                     'comp':item,
                     'designation': designation,
-                    'name': off_det.name
+                    'info': off_det
                 })
             except: print('Not Official')
             try:
@@ -70,7 +70,7 @@ def staff_home(request):
                 medical.append({
                     'comp':item,
                     'designation': designation,
-                    'name': work_det.name
+                    'info': work_det
                 })
             except: print('Not Staff')
             print(medical)

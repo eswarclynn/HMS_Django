@@ -26,7 +26,7 @@
             </div>
 
             <div class="col-10 d-flex justify-content-center">
-                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
                 <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
             </div>
             
@@ -59,8 +59,8 @@
         <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>, <b>Hostel Board Member</b> of NIT-AP !</p>
 
         <div class="row">
-            <div class="col-md" >
-                <div class="card" id="present">
+            <div class="col-md" data-toggle="tooltip" title="Click to get list!" >
+                <div class="card" id="present" data-toggle="collapse" data-target=".attendance-container" aria-expanded="false" aria-controls="attendance-container">
                     <div class="row">
                         <div class="col-8">
                             <span class="row atttext">Number of inmates present.</span>
@@ -72,8 +72,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md">
-                <div class="card" id="absent">
+            <div class="col-md"  data-toggle="tooltip" title="Click to get list!">
+                <div class="card" id="absent" data-toggle="collapse" data-target=".attendance-container" aria-controls="attendance-container" >
                     <div class="row">
                         <div class="col-8">
                             <span class="row atttext">Number of inmates absent.</span>
@@ -113,9 +113,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col">
-                    <div class="table-container attendance-container container pb-3" >
+                    <div class="table-container attendance-container container pb-3 collapse" >
                 <h2 class="text-center">List of Absentees</h2>
-                <table class="table table-hover table-dark table-striped attendance_table">
+                <table class="table table-hover table-muted table-striped attendance_table">
                     <thead>
                         <tr>
                             <th>Roll No.</th>
@@ -137,19 +137,16 @@
                             <td>{{stud.block.block_id_id}}</td>
                             <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
                         </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center"> No Absentees! </td>
-                        </tr>                        
+                        {% empty %}                      
                         {% endfor %}   
                     </tbody>
                 </table>
                     </div>
                 </div>
                 <div class="col">
-                    <div class="table-container attendance-container container pb-3">
+                    <div class="table-container attendance-container container pb-3 collapse">
                 <h2 class="text-center">List of Present Students</h2>
-                <table class="table table-hover table-dark table-striped attendance_table" >
+                <table class="table table-hover table-muted table-striped attendance_table" >
                     <thead>
                         <tr>
                             <th>Roll No.</th>
@@ -172,9 +169,7 @@
                             <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
                         </tr>
                         {% empty %}
-                        <tr>
-                            <td colspan="6" class="text-center"> No Present students! </td>
-                        </tr>                        
+
                         {% endfor %}
                     </tbody>
                 </table>
@@ -202,18 +197,19 @@
         <div class="table-container container-fluid mt-4 pb-4">
             <form method="POST" action="{% url 'officials:official_home' %}">
                 <h2 style="text-align: center;">Complaints Registered</h2>
-                <table class="table table-hover table-dark table-striped " id="complaints_table">
+                <table class="table table-hover table-muted table-striped " id="complaints_table">
                     <thead>
                         <tr class="text-center">
                             <th>Sl. No.</th>
-                            <th>Roll No.</th>
-                            <th>Type</th>
-                            <th>Complainee</th>
-                            <th>Summary</th>
-                            <th>Date Registered</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                            <th>Remark</th>
+                            <th class="text-center overflow-hidden">Roll No.</th>
+                            <th class="text-center overflow-hidden">Type</th>
+                            <th class="text-center overflow-hidden">Complainee</th>
+                            <th class="text-center overflow-hidden">Summary</th>
+                            <th class="text-center overflow-hidden">Date Registered</th>
+                            <th class="text-center overflow-hidden">Status</th>
+                            <th class="text-center overflow-hidden">Action</th>
+                            <th class="text-center overflow-hidden">Remark</th>
+                            <th class="text-center overflow-hidden">Update</th>
                         </tr>
                     </thead>
                         {% csrf_token %}
@@ -236,32 +232,30 @@
                                 <td>{{item.type}}</td>
                                 <td>{{item.complainee}}</td>
                                 <td>{{item.summary}}</td>
-                                <td>{{item.date}}</td>
+                                <td>{{item.date|date:'d-m-Y'}}</td>
                                 <td>{{item.status}}</td>
                                 <td>                            
                                     <select id="SC{{item.id}}" name="SC{{item.id}}">
-                                        <option value="Registered">Registered</option>
-                                        <option value="Processing">Processing</option>
+                                        {% if item.status == 'Registered' %}
+                                            <option value="Registered" selected>Registered</option>   
+                                        {% else %}
+                                            <option value="Registered">Registered</option>
+                                        {% endif %}
+                                        
+                                        {% if item.status == 'Processing' %}
+                                            <option value="Processing" selected>Processing</option>
+                                        {% else %}
+                                            <option value="Processing">Processing</option>
+                                        {% endif %}  
                                         <option value="Resolved">Resolved</option>
                                     </select>
                                 </td>
                                 <td><input type="text" name="SCRE{{item.id}}" id="SCRE{{item.id}}" placeholder="Enter Remark..."></td>
+                                <td><button type="submit" name="SCupdate" value="{{item.id}}" class="btn btn-primary">Update</button></td>
                             </tr>
                             
                             {% empty %}
                             
-                            <tr>
-                                <td></td>
-                                <td colspan="9" class="text-center">
-                                    No Complaints!
-                                </td>
-                            </tr>
-                            <script>
-                                window.onload = function(){
-                                    document.getElementById("sub-btn").disabled = true;
-                                }
-                            </script>
-
                             {% endfor %}
                             {% endif %}
                             {% if offComplaints %}
@@ -276,37 +270,36 @@
                                 <td>{{item.status}}</td>
                                 <td>                            
                                     <select id="OC{{item.id}}" name="OC{{item.id}}">
-                                        <option value="Registered">Registered</option>
-                                        <option value="Processing">Processing</option>
+                                        {% if item.status == 'Registered' %}
+                                            <option value="Registered" selected>Registered</option>   
+                                        {% else %}
+                                            <option value="Registered">Registered</option>
+                                        {% endif %}
+                                        
+                                        {% if item.status == 'Processing'  %}
+                                            <option value="Processing" selected>Processing</option>
+                                        {% else %}
+                                            <option value="Processing">Processing</option>
+                                        {% endif %}  
                                         <option value="Resolved">Resolved</option>
                                     </select>
                                 </td>
                                 <td><input type="text" name="OCRE{{item.id}}" id="OCRE{{item.id}}" placeholder="Enter Remark..."></td>
+                                <td><button type="submit" name="OCupdate" value="{{item.id}}" class="btn btn-primary">Update</button></td>
                             </tr>
                             
                             {% empty %}
                             
-                            <tr>
-                                <td></td>
-                                <td colspan="9" class="text-center">
-                                    No Complaints!
-                                </td>
-                            </tr>
-
                             {% endfor %}
                             {% endif %}
                             
                         </tbody>
                     </table>
-                </div>
-                <div class="row justify-content-center">
-                    <input type="submit" class="btn btn-success ">
-                </div>
-            </form>
+                </form>
+        </div>
     </div>
 
 
-    </div>
 
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
@@ -324,7 +317,7 @@
                 "dom": '<"row"<"col-3"i><"col"f><"col"p>>'
             });
 
-            
+            $('[data-toggle="tooltip"]').tooltip();
         } );
     </script>
 

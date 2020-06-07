@@ -12,3 +12,6 @@ body{
     font-size:x-large;
 }
 
+#topnav div{
+    line-height: 0 !important;
+}

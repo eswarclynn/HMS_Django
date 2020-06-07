@@ -21,36 +21,66 @@
 <body>
     <nav class="navbar fixed-top row px-4" id="topnav">
         <div class="col-12 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">National Institute Of Technology, Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>   
    </nav>
 
-    <div class="main-container container ">
-        <div class="search">
-            <h1 style="color: aliceblue; font-weight:800; margin-bottom: 1.3em;">NIT ANDHRA PRADESH - HOSTELS</h1>
-
-
-            <div class="search-box ">
-                <form method="POST" action="{% url 'institute:search' %}">
-                    <input class="search-ph " name="regno" placeholder="Search here...">
-                    <input type="submit"  value="&#xf002;" id="search-btn"/>
-                    
-                </form>
+    <div class=" d-none d-md-block main-container container">
+        <div class="row ">
+            <div class="col-sm d-flex align-items-center">
+                <img src="{% static 'institute/bg.jpeg' %}" alt="Institute_Arch" class="img-thumbnail" style="width:inherit;">
             </div>
-
+            <div class="col-sm p-5">
+                <h4 style="color: black; font-weight:800; margin-bottom: 1.3em;" class="text-center">NATIONAL INSTITUTE OF TECHNOLOGY, ANDHRA PRADESH<br> - HOSTEL MANAGEMENT SYSTEM</h4>
+                <!-- <div class="search">
+                    <div class="search-box ">
+                        <form method="POST" action="{% url 'institute:search' %}">
+                            <input class="search-ph " name="regno" placeholder="Search here...">
+                            <input type="submit"  value="&#xf002;" id="search-btn"/>
+                        </form>
+                    </div>
+                </div> -->
+                
+                <div class="links">
+                    <a href="{% url 'authenticate:login'%}"><button class="link-item  mx-auto">Log in</button></a>
+                    <a href="{% url 'authenticate:signup' %}"><button class="link-item  ml-5">Sign in</button></a>
+                </div>
+                <div class="links mt-5">
+                    <a href="{% url 'institute:gallery' %}" class="small"><button class="link-item d-block mx-auto">Gallery - Take a look</button></a>
+                    <a href="{% url 'institute:hostels' %}" class="small"><button class="link-item d-block mx-auto mt-2">Blocks Informations</button></a>
+                    <a href="{% url 'institute:contact' %}" class="small"><button class="link-item d-block mx-auto mt-2">Contact Us!</button></a>
+                </div>
+            </div>
+            
         </div>
+    </div>
 
-        <div class="links row d-flex justify-content-center">
-                <a href="{% url 'authenticate:login'%}" class="link-item">Log in</a> &nbsp; &nbsp;
-                <a href="{% url 'authenticate:signup' %}" class="link-item">Sign in</a> &nbsp; &nbsp;
+    <div class=" d-block d-md-none container pt-5">
+        <div class="row ">
+            <div class="col-sm p-5">
+                <h5 style="color: black; font-weight:800; margin-bottom: 1.3em;" class="text-center">NATIONAL INSTITUTE OF TECHNOLOGY, ANDHRA PRADESH<br> - HOSTEL MANAGEMENT SYSTEM</h5>
+                <!-- <div class="search">
+                    <div class="search-box ">
+                        <form method="POST" action="{% url 'institute:search' %}">
+                            <input class="search-ph " name="regno" placeholder="Search here...">
+                            <input type="submit"  value="&#xf002;" id="search-btn"/>
+                        </form>
+                    </div>
+                </div> -->
+                
+                <div class="links">
+                    <a href="{% url 'authenticate:login'%}"><button class="link-item  mx-auto">Log in</button></a>
+                    <a href="{% url 'authenticate:signup' %}"><button class="link-item  ml-5">Sign in</button></a>
+                </div>
+                <div class="links mt-5">
+                    <a href="{% url 'institute:gallery' %}" class="small"><button class="link-item d-block mx-auto">Gallery - Take a look</button></a>
+                    <a href="{% url 'institute:hostels' %}" class="small"><button class="link-item d-block mx-auto mt-2">Blocks Informations</button></a>
+                    <a href="{% url 'institute:contact' %}" class="small"><button class="link-item d-block mx-auto mt-2">Contact Us!</button></a>
+                </div>
+            </div>
+            
         </div>
-        <div class="links row d-flex justify-content-center mt-3">
-            <a href="{% url 'institute:gallery' %}" class="link-item small">Gallery - Take a look</a> &nbsp; &nbsp;
-            <a href="{% url 'institute:hostels' %}" class="link-item small">Blocks Informations</a> &nbsp; &nbsp;
-            <a href="{% url 'institute:contact' %}" class="link-item small">Contact Us!</a> &nbsp; &nbsp;            
-        </div>
-
     </div>
 
 

@@ -1,6 +1,6 @@
 body{
-  background: url('bg4.jpg') no-repeat center center fixed;
-  background-size: cover;
+  background: linear-gradient(to top, #dfe9f3 0%, white 100%) no-repeat center center fixed;
+  
 }
 
 .gallery-block.grid-gallery .heading{

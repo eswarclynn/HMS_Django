@@ -5,9 +5,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Gallery - Hostel Management System</title>
+        <meta charset="utf-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
         <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         {% load static %}
         <link rel="stylesheet" href="{% static 'institute/grid-gallery.css' %}">
@@ -17,10 +19,14 @@
     <body>
 
         <nav class="navbar fixed-top row px-4" id="topnav">
-            <div class="col-12 d-flex justify-content-center">
-                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT AP - Hostel Management System</span>
+            <div class="col-0 ">
+                <a href="{% url 'institute:index' %}" style="cursor: pointer;"><span class="fa fa-reply" style="font-size: 4vh;color: aliceblue;" ></span></a>
+            </div>
+            <div class="col-10 d-flex justify-content-center">
+                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
                 <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
             </div>   
+            <div class="col-0"></div>
        </nav>
 
         <br><br>
@@ -28,7 +34,7 @@
         <section class="gallery-block grid-gallery"  style="padding-top: 40px;">
             <div class="container">
                 <div class="heading">
-                    <h2 style="color: aliceblue;">NIT AP Hostels Gallery</h2>
+                    <h2 style="color: rgb(70, 25, 100);">NIT AP Hostels Gallery</h2>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-lg-4 item">
