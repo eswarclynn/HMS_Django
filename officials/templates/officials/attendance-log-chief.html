@@ -70,16 +70,16 @@
         {% endif %}
         <div class="row text-center mt-4">
             <div class="col-sm-12 col-lg-4 form-group">
-                <label for="date" class="mr-5">Attendance by Date:</label>
+                <label for="date" class="">Attendance by Date:</label><br>
                 <input type="date" name="date" id="date" class="d-inline" onclick="setEnabled(this)">
 
             </div>                        
-            <div class="col-sm-12 col-lg-5 form-group">
-                <label for="regno" class="mr-4">Attendance by ID/Regd. No:</label>
+            <div class="col-sm-12 col-lg-4 form-group">
+                <label for="regno" class="">Attendance by ID/Regd. No:</label><br>
                 <input type="text" name="regno" id="regno" style="width: 120px;" onclick="setEnabled(this)" >
             </div>
-            <div class="col-sm-12 col-lg-3 text-left form-group">
-                <label for="stud_month">Month:</label>
+            <div class="col-sm-12 col-lg-4 form-group">
+                <label for="stud_month">Month:</label><br>
                 <input type="month" name="stud_month" id="stud_month" onchange="showDates()">
                 
                 {% if pres_dates %}        

@@ -30,7 +30,7 @@
             <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif; line-height: 0 !important;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>   
-        <div class="d-none d-md-block" style="position: absolute; top: 15px; right: 10px;"><a href="{% url 'institute:developer-team' %}" class="btn waves-effect waves-light blue">Developer's Team</a></div>
+        <div class="d-none d-md-block" style="position: absolute; top: 15px; right: 10px;"><a href="{% url 'institute:developer-team' %}" class="btn waves-effect waves-light blue">Developer Team</a></div>
         <div class="d-block d-md-none" style="position: absolute; top: 8px; right: 10px;"><a href="{% url 'institute:developer-team' %}" class="btn-floating waves-effect waves-light blue"><i class="fa fa-code" aria-hidden="true"></i></a></div>
         
     </nav>
@@ -41,11 +41,59 @@
                 <h2 style="color: rgb(70, 25, 100);">NIT AP Hostel Committee</h2>
             </div>
             <div class="row d-flex justify-content-center">
-                <div class="col-md-5 col-lg-3 item">
-                    <div class="main" style=" height:auto;width:18.5rem ">
-                        <div class="card">
+                <div class="col-md-5 col-lg-2 d-flex justify-content-center item" >
+                    <div class="main" >
+                        <div class="card" style="height: 410px !important;">
                             <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 240px;">
+                                <div class="activator" style="width: auto; height: 280px;">
+                                    <img class="activator" src="{% static 'institute/DIN.jpg' %}">
+                                </div> 
+                            </div>
+                            <div class="card-content">
+                                <span class="card-title activator grey-text text-darken-4">Dr. Dinesh P Sankar Reddy<i class="material-icons right">more_vert</i></span>
+                                <p>Registrar</p>
+                            </div>
+                            <div class="card-reveal">
+                                <span class="card-title grey-text text-darken-4">Dr. Dinesh P Sankar Reddy<i class="material-icons right">close</i></span>
+                                <span class="card-title"><small>Registrar</small></span><br>
+                                <h5>Contact:</h5>
+                                <p>
+                                    Phone: +91-7975624892<br>
+                                    eMail ID: <a href="mailto:registrar@nitandhra.ac.in">registrar@nitandhra.ac.in</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 col-lg-2 d-flex justify-content-center item">
+                    <div class="main" >
+                        <div class="card" style="height: 410px !important;">
+                            <div class="card-image waves-effect waves-block waves-light">
+                                <div class="activator" style="width: auto; height: 280px;">
+                                    <img class="activator" src="{% static 'institute/TR.jpg' %}">
+                                </div> 
+                            </div>
+                            <div class="card-content">
+                                <span class="card-title activator grey-text text-darken-4">Dr. Tejavathu Ramesh<i class="material-icons right">more_vert</i></span>
+                                <p>Deputy Registrar (Hostels)</p>
+                            </div>
+                            <div class="card-reveal">
+                                <span class="card-title grey-text text-darken-4">Dr. Tejavathu Ramesh<i class="material-icons right">close</i></span>
+                                <span class="card-title"><small>Deputy Registrar (Hostels)</small></span><br>
+                                <h5>Contact:</h5>
+                                <p>
+                                    Phone: +91-9034003377<br>
+                                    eMail ID: <a href="mailto:dr_hostels@nitandhra.ac.in">dr_hostels@nitandhra.ac.in</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 col-lg-2 d-flex justify-content-center item">
+                    <div class="main" >
+                        <div class="card" style="height: 410px !important;">
+                            <div class="card-image waves-effect waves-block waves-light">
+                                <div class="activator" style="width: auto; height: 280px;">
                                     <img class="activator" src="{% static 'institute/JKM.jpg' %}">
                                 </div> 
                             </div>
@@ -65,11 +113,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5 col-lg-3 item "  >
-                    <div class="main" style=" height:auto;width:18.5rem ">
-                        <div class="card">
+                <div class="col-md-5 col-lg-2 d-flex justify-content-center item "  >
+                    <div class="main" >
+                        <div class="card" style="height: 410px !important;">
                             <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 240px;">
+                                <div class="activator" style="width: auto; height: 280px;">
                                     <img class="activator" src="{% static 'institute/SRL.jpg' %}">
                                 </div> 
                             </div>
@@ -89,11 +137,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5 col-lg-3 item "  >
-                    <div class="main" style=" height:auto;width:18.5rem ">
-                        <div class="card">
+                <div class="col-md-5 col-lg-2 d-flex justify-content-center item "  >
+                    <div class="main" >
+                        <div class="card" style="height: 410px !important;">
                             <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 240px;">
+                                <div class="activator" style="width: auto; height: 280px;">
                                     <img class="activator " src="{% static 'institute/RMD.jpg' %}">
                                 </div> 
                             </div>
@@ -118,12 +166,12 @@
                 <h2 style="color: rgb(70, 25, 100);">Incharges</h2>
             </div>
             <div class="row d-flex justify-content-center">
-                <div class="col-md-5 col-lg-3 item">
-                    <div class="main" style=" height:auto;width:18.5rem ">
+                <div class="col-md-5 col-lg-3 d-flex justify-content-center item">
+                    <div class="main" >
                         <div class="card">
                             <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 240px;">
-                                    <img class="activator" src="{% static 'institute/img4.jpg' %}">
+                                <div class="activator" style="width: auto; height: 280px;">
+                                    <img class="activator" src="{% static 'institute/placeholder.jpeg' %}">
                                 </div> 
                             </div>
                             <div class="card-content">
@@ -141,12 +189,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5 col-lg-3 item "  >
-                    <div class="main" style=" height:auto;width:18.5rem ">
+                <div class="col-md-5 col-lg-3 d-flex justify-content-center item "  >
+                    <div class="main">
                         <div class="card">
                             <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 240px;">
-                                    <img class="activator" src="{% static 'institute/img4.jpg' %}">
+                                <div class="activator" style="width: auto; height: 280px;">
+                                    <img class="activator" src="{% static 'institute/placeholder.jpeg' %}">
                                 </div> 
                             </div>
                             <div class="card-content">
@@ -164,12 +212,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5 col-lg-3 item "  >
-                    <div class="main" style=" height:auto;width:18.5rem ">
+                <div class="col-md-5 col-lg-3 d-flex justify-content-center item "  >
+                    <div class="main" >
                         <div class="card">
                             <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 240px;">
-                                    <img class="activator " src="{% static 'institute/img4.jpg' %}">
+                                <div class="activator" style="width: auto; height: 280px;">
+                                    <img class="activator " src="{% static 'institute/placeholder.jpeg' %}">
                                 </div> 
                             </div>
                             <div class="card-content">

@@ -73,7 +73,7 @@ body{
     background: rgb(80,251,186);
     background: radial-gradient(circle, rgb(12, 209, 134) 0%, rgb(14, 129, 6) 100%);
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
     transition:  0.5s;
     color: aliceblue;
@@ -97,7 +97,7 @@ body{
 .stairs {
 
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
     transition:  0.5s;
     color: aliceblue;
@@ -110,7 +110,7 @@ body{
     background: rgb(80,251,186);
     background: radial-gradient(circle, rgb(12, 209, 134) 0%, rgb(14, 129, 6) 100%);
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
     transition:  0.5s;
     color: aliceblue;
@@ -121,12 +121,12 @@ body{
 
 .balcony {
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     background-color: rgb(221, 150, 124);
 }
 
 .staff {
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     background-color: cadetblue;
 }

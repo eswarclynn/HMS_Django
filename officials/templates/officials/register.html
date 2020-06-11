@@ -767,6 +767,7 @@
                               </div>
                          </form>
                               <div class="row justify-content-center">
+                                   <button class="btn float-right sign_btn mr-5" onclick="myPrint()">Print</button></a>
                                    <a href="{% url 'officials:register' %}"><button class="btn float-right sign_btn">Cancel</button></a>
                               </div>
                               
@@ -841,7 +842,16 @@
                     recp.disabled=false;
                }
           }
-     
+
+          function myPrint(){
+               var printContents = document.getElementsByTagName('form')[0].children;
+               console.log(printContents)
+               w=window.open();
+               w.document.write(printContents);
+               w.print();
+               w.close();
+           }
+
       </script>
 
 

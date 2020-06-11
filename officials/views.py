@@ -417,28 +417,69 @@ def grantOuting(request):
 
 @csrf_exempt
 def search(request):
-    send_blocks = Blocks.objects.all()
-    if request.method == 'POST':
-        if request.POST.get('regno'):
-            stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
-            block_details = details.objects.get(regd_no=stud)
-            block = Blocks.objects.get(block_id=block_details.block_id_id)
-            if attendance.objects.get(regd_no=stud).status=='':isPresent = 'Absent'
-            else: isPresent = attendance.objects.get(regd_no=stud).status
-            items={
-                'stud':stud,
-                'block_details':block_details,
-                'block_name':block.block_name,
-                'isPresent':isPresent
-            }
-            items_list = list()
-            items_list.append(items)
+    name = request.COOKIES['username_off']
+    off_details = Officials.objects.get(emp_id=str(name))
+    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
+        send_blocks = Blocks.objects.all()
+        if request.method == 'POST':
+            if request.POST.get('regno'):
+                stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
+                block_details = details.objects.get(regd_no=stud)
+                block = Blocks.objects.get(block_id=block_details.block_id_id)
+                if attendance.objects.get(regd_no=stud).status=='':isPresent = 'Absent'
+                else: isPresent = attendance.objects.get(regd_no=stud).status
+                items={
+                    'stud':stud,
+                    'block_details':block_details,
+                    'block_name':block.block_name,
+                    'isPresent':isPresent
+                }
+                items_list = list()
+                items_list.append(items)
 
-            return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
+                return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
 
-        else:
+            else:
+                block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
+                studs = details.objects.filter(block_id=request.POST['block'])
+                items_list = list()
+                for stud in studs:
+                    info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
+                    block_details = details.objects.get(regd_no=info)
+                    if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
+                    else: isPresent = attendance.objects.get(regd_no=info).status
+                    items={
+                        'stud':info,
+                        'block_details':block_details,
+                        'block_name':block_name,
+                        'isPresent':isPresent
+                    }
+                    items_list.append(items)
+                return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
+
+        return render(request, 'officials/search.html',{'send_blocks':send_blocks})
+
+@csrf_exempt
+def blockSearch(request):
+    name = request.COOKIES['username_off']
+    off_details = Officials.objects.get(emp_id=str(name))
+    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
+        send_blocks = Blocks.objects.all()
+        if request.POST.get('submit'):
             block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
+            block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
+            block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
+            cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)
+            room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
+            block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
+            print(block_name_lower)
+            block_name='Bhima Hall Of Residence'
+            if room_type == '4S':   cap_stud = cap_room*4
+            elif room_type == '2S': cap_stud = cap_room*2
+            elif room_type == '1S': cap_stud = cap_room
+            
             studs = details.objects.filter(block_id=request.POST['block'])
+            pres_stud = studs.count()
             items_list = list()
             for stud in studs:
                 info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
@@ -448,134 +489,99 @@ def search(request):
                 items={
                     'stud':info,
                     'block_details':block_details,
-                    'block_name':block_name,
                     'isPresent':isPresent
                 }
                 items_list.append(items)
-            return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
-
-    return render(request, 'officials/search.html',{'send_blocks':send_blocks})
-
-@csrf_exempt
-def blockSearch(request):
-    send_blocks = Blocks.objects.all()
-    if request.POST.get('submit'):
-        block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
-        block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
-        block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
-        cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)*3
-        room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
-        block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
-        print(block_name_lower)
-        
-        if room_type == '4S':   cap_stud = cap_room*3
-        elif room_type == '2S': cap_stud = cap_room*2
-        elif room_type == '1S': cap_stud = cap_room
-        
-        studs = details.objects.filter(block_id=request.POST['block'])
-        pres_stud = studs.count()
-        items_list = list()
-        for stud in studs:
-            info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
-            block_details = details.objects.get(regd_no=info)
-            if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
-            else: isPresent = attendance.objects.get(regd_no=info).status
-            items={
-                'stud':info,
-                'block_details':block_details,
-                'isPresent':isPresent
-            }
-            items_list.append(items)
-
-        return render(request, 'officials/roomLayout.html', {
-            'items_list':(items_list), 
-            'send_blocks':send_blocks, 
-            'block_name':block_name,
-            'cap_room': cap_room,
-            'room_type' : room_type,
-            'cap_stud' : cap_stud,
-            'block_gender':block_gender,
-            'block_care':block_care,
-            'pres_stud':pres_stud,
-            'pres_room': (int(pres_stud))//(int(room_type[0])),
-            'vacant_room':cap_room - (int(pres_stud))//(int(room_type[0])) - (int(pres_stud))%(int(room_type[0])),
-            'partial_room':(int(pres_stud))%(int(room_type[0])),
-            })
-
-    if request.POST.get('Add'):
-        roll = (request.POST.get('roll'))
-        location = (request.POST.get('room')).split('-')
-        placing_block = location[0]
-        placing_floor = location[1]
-        placing_room = location[2]
-        print(placing_block)
-
-        if details.objects.filter(regd_no=roll).exists():
-            student = details.objects.get(regd_no=roll)
-            if student.block_id_id != None and student.room_no != None and student.floor != None:
-                messages.error(request, 'Student : '+str(roll)+' already alloted room!')
-                return redirect('officials:blockSearch')
-            else:
-                block_req = Blocks.objects.get(block_name=placing_block)
-                stud_req = Institutestd.objects.get(regd_no=roll)
-                if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
-                    student.block_id = Blocks.objects.get(block_name=placing_block)
-                    student.room_no = int(placing_room)
-                    student.floor = placing_floor
-
-                    student.save()
-                    messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+placing_block+'!')
+    
+            return render(request, 'officials/roomLayout.html', {
+                'items_list':(items_list), 
+                'send_blocks':send_blocks, 
+                'block_name':block_name,
+                'cap_room': cap_room,
+                'room_type' : room_type,
+                'cap_stud' : cap_stud,
+                'block_gender':block_gender,
+                'block_care':block_care,
+                'pres_stud':pres_stud,
+                'pres_room': (int(pres_stud))//(int(room_type[0])),
+                'vacant_room':cap_room - (int(pres_stud))//(int(room_type[0])) - (int(pres_stud))%(int(room_type[0])),
+                'partial_room':(int(pres_stud))%(int(room_type[0])),
+                })
+    
+        if request.POST.get('Add'):
+            roll = (request.POST.get('roll'))
+            location = (request.POST.get('room')).split('-')
+            placing_block = location[0]
+            placing_floor = location[1]
+            placing_room = location[2]
+            print(placing_block)
+    
+            if details.objects.filter(regd_no=roll).exists():
+                student = details.objects.get(regd_no=roll)
+                if student.block_id_id != None and student.room_no != None and student.floor != None:
+                    messages.error(request, 'Student : '+str(roll)+' already alloted room!')
                     return redirect('officials:blockSearch')
                 else:
-                    messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
-                    return redirect('officials:blockSearch')
-
-
-        else:
-            messages.error(request, 'No Student with roll no. : '+str(roll)+' found!')
-            return redirect('officials:blockSearch')
-
-    if request.POST.get('change'):
-        block_name = request.POST.get('block')
-        block_req = Blocks.objects.get(block_name=block_name)
-        studs = details.objects.filter(block_id=block_req)
-        for stud in studs:
-            if request.POST.get(str(stud.regd_no)):
-                if request.POST.get(str(stud.regd_no)) == 'None':
-                    stud.block_id = None
-                    stud.room_no = None
-                    stud.floor = None
-                    stud.save()
-
-                    messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
-                    return redirect('officials:blockSearch')
-
-
-                else:
-                    roll = request.POST.get(str(stud.regd_no))
+                    block_req = Blocks.objects.get(block_name=placing_block)
                     stud_req = Institutestd.objects.get(regd_no=roll)
-                    student = details.objects.get(regd_no=roll)
                     if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
-                        student.block_id = stud.block_id
-                        student.room_no = stud.room_no
-                        student.floor = stud.floor
+                        student.block_id = Blocks.objects.get(block_name=placing_block)
+                        student.room_no = int(placing_room)
+                        student.floor = placing_floor
+    
                         student.save()
-
-                        stud.block_id = None
-                        stud.room_no = None
-                        stud.floor = None
-                        stud.save()
-
-                        messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+block_name+'!')
-                        messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
+                        messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+placing_block+'!')
                         return redirect('officials:blockSearch')
                     else:
                         messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
                         return redirect('officials:blockSearch')
-
-
-
-    return render(request, 'officials/roomLayout.html',{'send_blocks':send_blocks})
+    
+    
+            else:
+                messages.error(request, 'No Student with roll no. : '+str(roll)+' found!')
+                return redirect('officials:blockSearch')
+    
+        if request.POST.get('change'):
+            block_name = request.POST.get('block')
+            block_req = Blocks.objects.get(block_name=block_name)
+            studs = details.objects.filter(block_id=block_req)
+            for stud in studs:
+                if request.POST.get(str(stud.regd_no)):
+                    if request.POST.get(str(stud.regd_no)) == 'None':
+                        stud.block_id = None
+                        stud.room_no = None
+                        stud.floor = None
+                        stud.save()
+    
+                        messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
+                        return redirect('officials:blockSearch')
+    
+    
+                    else:
+                        roll = request.POST.get(str(stud.regd_no))
+                        stud_req = Institutestd.objects.get(regd_no=roll)
+                        student = details.objects.get(regd_no=roll)
+                        if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
+                            student.block_id = stud.block_id
+                            student.room_no = stud.room_no
+                            student.floor = stud.floor
+                            student.save()
+    
+                            stud.block_id = None
+                            stud.room_no = None
+                            stud.floor = None
+                            stud.save()
+    
+                            messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+block_name+'!')
+                            messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
+                            return redirect('officials:blockSearch')
+                        else:
+                            messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
+                            return redirect('officials:blockSearch')
+    
+    
+    
+        return render(request, 'officials/roomLayout.html',{'send_blocks':send_blocks})
 
 
 
@@ -708,45 +714,48 @@ def registeremp (request):
      
 
 def student_list(request):
-    students=Institutestd.objects.all()
-    list_of_students=list()
-    for stud in students :
-        x=details.objects.filter(regd_no=stud)
-        try :
-            block_id=str(details.objects.get(regd_no=str(stud.regd_no)).block_id)
-            block=int(re.search(r'\d+', block_id).group(0))
-            print(stud.gender)
-            list_of_students.append({
-                'regd_no':str(stud.regd_no),
-                'name':stud.name,
-                'ph':str(stud.phone),
-                'year':str(stud.year),
-                'branch':str(stud.branch),
-                'gender':str(stud.gender),
-                'floor':details.objects.get(regd_no=str(stud.regd_no)).floor,
-                'room_no':details.objects.get(regd_no=str(stud.regd_no)).room_no,
-                'block_id':details.objects.get(regd_no=str(stud.regd_no)).block_id,
-                'block':Blocks.objects.get(block_id=str(block)).block_name,
+    name = request.COOKIES['username_off']
+    off_details = Officials.objects.get(emp_id=str(name))
+    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
+        students=Institutestd.objects.all()
+        list_of_students=list()
+        for stud in students :
+            x=details.objects.filter(regd_no=stud)
+            try :
+                block_id=str(details.objects.get(regd_no=str(stud.regd_no)).block_id)
+                block=int(re.search(r'\d+', block_id).group(0))
+                print(stud.gender)
+                list_of_students.append({
+                    'regd_no':str(stud.regd_no),
+                    'name':stud.name,
+                    'ph':str(stud.phone),
+                    'year':str(stud.year),
+                    'branch':str(stud.branch),
+                    'gender':str(stud.gender),
+                    'floor':details.objects.get(regd_no=str(stud.regd_no)).floor,
+                    'room_no':details.objects.get(regd_no=str(stud.regd_no)).room_no,
+                    'block_id':details.objects.get(regd_no=str(stud.regd_no)).block_id,
+                    'block':Blocks.objects.get(block_id=str(block)).block_name.split(' ')[0],
 
-            })
-            
-        except:
-            #messages.error(request,"No students are there!")
-            list_of_students.append({
-                'regd_no':str(stud.regd_no),
-                'name':stud.name,
-                'ph':str(stud.phone),
-                'year':str(stud.year),
-                'branch':str(stud.branch),
-                'gender':str(stud.gender),
-                'floor':"None",
-                'room_no':"None",
-                'block_id':"None",
-                'block':"None",
+                })
+                
+            except:
+                #messages.error(request,"No students are there!")
+                list_of_students.append({
+                    'regd_no':str(stud.regd_no),
+                    'name':stud.name,
+                    'ph':str(stud.phone),
+                    'year':str(stud.year),
+                    'branch':str(stud.branch),
+                    'gender':str(stud.gender),
+                    'floor':"None",
+                    'room_no':"None",
+                    'block_id':"None",
+                    'block':"None",
 
-            })
-            
-    return render(request,'officials/student_list.html',{'list_of_students':list_of_students})
+                })
+                
+        return render(request,'officials/student_list.html',{'list_of_students':list_of_students})
 def studentdelete (request):
     students=Institutestd.objects.all()
     if request.method=='POST':
@@ -771,19 +780,22 @@ def studentdelete (request):
                 return render(request,'officials/register.html',{'std':std})
 
 def emp_list(request):
-    emp=Officials.objects.all()
-    list_of_emp=list()
-    if emp == None:
-        messages.error(request,"No officials are present!")
-        return redirect("official:registeremp")
-    for em in emp:
-        print("came")
-        try :
-            block=Blocks.objects.get(emp_id=em).block_name
-            list_of_emp.append({'block':block,'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
-        except:
-            list_of_emp.append({'block':"",'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
-    return render(request,'officials/emp_list.html',{'emp':list_of_emp})
+    name = request.COOKIES['username_off']
+    off_details = Officials.objects.get(emp_id=str(name))
+    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
+        emp=Officials.objects.all()
+        list_of_emp=list()
+        if emp == None:
+            messages.error(request,"No officials are present!")
+            return redirect("official:registeremp")
+        for em in emp:
+            print("came")
+            try :
+                block=Blocks.objects.get(emp_id=em).block_name.split(' ')[0]
+                list_of_emp.append({'block':block,'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
+            except:
+                list_of_emp.append({'block':"",'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
+        return render(request,'officials/emp_list.html',{'emp':list_of_emp})
         
 def empdelete (request):
     emp=Officials.objects.all()
@@ -845,29 +857,32 @@ def registerworker(request):
     return render(request,"officials/register_staff.html",{'std':std})
 
 def workers_list(request):
-    worker=Workers.objects.all()
-    if worker == None:
-        messages.error(request,"Workers list is empty !")
-        return render(request,"official/workerslist.html",{'emp':worker})
-    list_of_emp=list()
-    for em in worker:
-        print("came in")
-        try:
-            
-            block=Blocks.objects.get(block_id=em.block_id).block_name
-        except:
-            block="None"
-            print(block)
-        list_of_emp.append({
-            'staff_id':em.staff_id,
-            'name':em.name,
-            'desig':em.designation,
-            'gender':em.gender,
-            'ph':em.phone,
-            'block':block,
-            
-        })
-    return render(request,"officials/workerslist.html",{'emp':list_of_emp})
+    name = request.COOKIES['username_off']
+    off_details = Officials.objects.get(emp_id=str(name))
+    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
+        worker=Workers.objects.all()
+        if worker == None:
+            messages.error(request,"Workers list is empty !")
+            return render(request,"official/workerslist.html",{'emp':worker})
+        list_of_emp=list()
+        for em in worker:
+            print("came in")
+            try:
+
+                block=Blocks.objects.get(block_id=em.block_id).block_name.split(' ')[0]
+            except:
+                block="None"
+                print(block)
+            list_of_emp.append({
+                'staff_id':em.staff_id,
+                'name':em.name,
+                'desig':em.designation,
+                'gender':em.gender,
+                'ph':em.phone,
+                'block':block,
+
+            })
+        return render(request,"officials/workerslist.html",{'emp':list_of_emp})
 
 
 def workerdelete (request):
