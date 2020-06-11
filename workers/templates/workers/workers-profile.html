@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Staff Home - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -88,6 +88,11 @@
                         <tr>
                             <td class="field">e-Mail ID</td>
                             <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="text-center">
+                                <a href="{% url 'authenticate:reset_password' %}"><button class="btn btn-primary">Reset Password</button></a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

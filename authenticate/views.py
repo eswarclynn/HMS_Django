@@ -138,3 +138,112 @@ def forgot(request):
             return redirect('authenticate:forgot')    
 
     return render(request, 'authenticate/forgot.html')
+
+    
+def reset_password(request):
+    state=0
+    if request.method == 'POST':
+        try:
+            print("enetred std")
+            user=request.COOKIES['username_std']
+            if credentials.objects.filter(regd_no = str(user)):
+                state=1
+                new = credentials.objects.get(regd_no=str(user))
+                print(new.password)
+                print(request.POST['curr-pass'])
+                if new.password == request.POST['curr-pass']:
+                    new.password=request.POST['conf-pass']
+                    new.save()
+                    messages.success(request,"Password has been changed Successfully!")
+                    us=Institutestd.objects.get(regd_no=str(user))
+                    email=us.email_id
+                    subject="NIT AP Hostel Management System-Changed Password!"
+                    message="The password for the username \n"+str(user)+"  has been changed successfully!"+"\n If it is not you please report to admin of National Institute of Technology – Hostel Management System" +"\n This is computer generated  message please don't reply !"
+                    recepient=str(email)
+                    send_mail(subject,message,EMAIL_HOST_USER,[recepient],fail_silently=False)
+
+
+                else:
+                    state=1
+                    us=Institutestd.objects.get(regd_no=str(user))
+                    email=us.email_id
+                    subject="NIT AP Hostel Management System-Invalid access to change password!"
+                    message="The reset password option for the username \n"+str(user)+"  has been tried by someone and attempt has been failed please try to change it!"+"\n If it is not you please report to admin of National Institute of Technology – Hostel Management System" +"\n This is computer generated  message please don't reply !"
+                    recepient=str(email)
+                    send_mail(subject,message,EMAIL_HOST_USER,[recepient],fail_silently=False)
+
+                    messages.error(request,"Wrong password!Try Again")
+                    return redirect('authenticate:reset_password')
+        except:
+            pass
+            
+        try:
+            
+            print("enetred off")
+            user=request.COOKIES['username_off']
+            if credentials.objects.filter(emp_id = str(user)):
+                new = credentials.objects.get(emp_id=str(user))
+                if new.password == str(request.POST['curr-pass']):
+                    state=1
+                    print(new.password)
+                    print(request.POST['curr-pass'])
+                    new.password=request.POST['conf-pass']
+                    new.save()
+                    messages.success(request,"Password has been changed Successfully!")
+                    us=Officials.objects.get(emp_id=str(user))
+                    print(us.email_id)
+                    email=us.email_id
+                    subject="NIT AP Hostel Management System-Changed Password!"
+                    message="The password for the username \n"+str(user)+"  has been changed successfully!"+"\n If it is not you please report to admin of National Institute of Technology – Hostel Management System" +"\n This is computer generated  message please don't reply !"
+                    recepient=str(email)
+                    send_mail(subject,message,EMAIL_HOST_USER,[recepient],fail_silently=False)
+
+
+                else:
+                    state=1
+                    us=Officials.objects.get(emp_id=str(user))
+                    print(us.email_id)
+                    email=us.email_id
+                       
+                    subject="NIT AP Hostel Management System-Invalid access to change password!"
+                    message="The reset password option for the username \n"+str(user)+"  has been tried by someone and attempt has been failed please try to change it!"+"\n If it is not you please report to admin of National Institute of Technology – Hostel Management System" +"\n This is computer generated  message please don't reply !"
+                    recepient=str(email)
+                    send_mail(subject,message,EMAIL_HOST_USER,[recepient],fail_silently=False)
+
+                    messages.error(request,"Wrong password!Try Again")
+                    return redirect('authenticate:reset_password')
+        except:
+            pass
+        try:
+            print("enetred staff")
+            user=request.COOKIES['username_staff']
+            if credentials.objects.get(staff_id=str(user)).exists():
+                new = credentials.objects.get(staff_id=str(user))
+                if new.password == request.POST['curr-pass']:
+                    state=1
+                    new.password=request.POST['conf-pass']
+                    new.save()
+                    messages.success(request,"Password has been changed Successfully!")
+                    us=Workers.objects.get(staff_id=str(user))
+                    email=us.email_id
+                    subject="NIT AP Hostel Management System-Changed Password!"
+                    message="The password for the username \n"+str(user)+"  has been changed successfully!"+"\n If it is not you please report to admin of National Institute of Technology – Hostel Management System" +"\n This is computer generated  message please don't reply !"
+                    recepient=str(email)
+                    send_mail(subject,message,EMAIL_HOST_USER,[recepient],fail_silently=False)
+
+
+                else:
+                    state=1
+                    us=Workers.objects.get(staff_id=str(user))
+                    email=us.email_id
+                    subject="NIT AP Hostel Management System-Invalid access to change password!"
+                    message="The reset password option for the username \n"+str(user)+"  has been tried by someone and attempt has been failed please try to change it!"+"\n If it is not you please report to admin of National Institute of Technology – Hostel Management System" +"\n This is computer generated  message please don't reply !"
+                    recepient=str(email)
+                    send_mail(subject,message,EMAIL_HOST_USER,[recepient],fail_silently=False)
+
+                    messages.error(request,"Wrong password!Try Again")
+                    return redirect('authenticate:reset_password')
+        except:
+            if state ==0 :
+                messages.error(request,"Invalid access!Try by logging in ")
+    return render(request,'authenticate/reset-password.html',{})

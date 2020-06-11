@@ -16,6 +16,7 @@ from officials.models import WaterCan
 from django.db.models import Sum
 from authenticate.models import credentials
 import re
+from officials.forms import PostForm
 
 
 # Create your views here.
@@ -355,6 +356,9 @@ def attendance_log(request):
 
         elif(request.POST["regno"]):
             regno = request.POST["regno"]
+            if not Institutestd.objects.get(regd_no=str(regno)).exists():
+                messages.error(request, 'Invalid Student Roll No.')
+                return redirect('officials:attendance_log')
             user_details = Institutestd.objects.get(regd_no=str(regno))
             current = attendance.objects.get(regd_no_id=regno).dates
             dates = current.split(',')
@@ -473,7 +477,7 @@ def blockSearch(request):
             room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
             block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
             print(block_name_lower)
-            block_name='Bhima Hall Of Residence'
+            
             if room_type == '4S':   cap_stud = cap_room*4
             elif room_type == '2S': cap_stud = cap_room*2
             elif room_type == '1S': cap_stud = cap_room
@@ -506,6 +510,7 @@ def blockSearch(request):
                 'pres_room': (int(pres_stud))//(int(room_type[0])),
                 'vacant_room':cap_room - (int(pres_stud))//(int(room_type[0])) - (int(pres_stud))%(int(room_type[0])),
                 'partial_room':(int(pres_stud))%(int(room_type[0])),
+                'block_name_lower':block_name_lower
                 })
     
         if request.POST.get('Add'):
@@ -590,8 +595,10 @@ def blockSearch(request):
 
 def register (request):
     if request.method == 'POST':
-        print(request.POST)
+        # print(request.POST)
+        print(request.FILES)
         if request.POST.get("submit"):
+            form=PostForm(request.POST,request.FILES)
             regdno=request.POST["regno"]
             rollno=request.POST["rollno"]
             name=request.POST["name"]
@@ -611,20 +618,20 @@ def register (request):
             ph_p=request.POST["ph_p"]
             ph_emr=request.POST["ph_emr"]
             address=request.POST["address"]
-            photo=request.POST["photo"]
+            photo=request.FILES["photo"]
             hosteller=request.POST["hosteller"]
             if pwd =="Yes":
                  pwd='Y'
             else :
                  pwd='N'
             try :
-                 amount=request.POST["amount"]
-                 bank=request.POST["bank"]
-                 ch_no=request.POST["ch_no"]
-                 dop=request.POST['dop']
-                 appli=request.POST["application"]
-                 undertake=request.POST["undertake"]
-                 recipt=request.POST["recipt"]
+                amount=request.POST["amount"]
+                bank=request.POST["bank"]
+                ch_no=request.POST["ch_no"]
+                dop=request.POST['dop']
+                appli=request.FILES["application"]
+                undertake=request.FILES["undertake"]
+                recipt=request.FILES["recipt"]
             except :
                  amount=None
                  bank=None
@@ -634,7 +641,7 @@ def register (request):
                  undertake=None
                  recipt=None
             try :
-                 afd=request.POST["afd"]
+                    afd=request.FILES["afd"]
             except :
                     afd=None
 
@@ -663,13 +670,36 @@ def register (request):
             else :
                  messages.error(request, 'Invalid Registration!')
                  return redirect('officials:register')
-            acc=Institutestd(regd_no=regdno,roll_no=rollno,name=name,year=year,branch=branch,gender=gender,pwd=pwd,caste=cast,dob=dob,bgp=bgp,email_id=email,phone=ph_std,ph_phone=ph_p,emr_phone=ph_emr,address=address,photo=photo,hosteller=hosteller,amount=amount,bank=bank,ch_no=ch_no,dop=dop,application=appli,undertake=undertake,recipt=recipt,paid=temp)
+            acc = form.save(commit=False)
+            #acc=Institutestd(regdno,rollno,name,branch,gender,pwd,cast,year,dob,bgp,email,ph_std,ph_p,ph_emr,address,photo,hosteller,amount,bank,ch_no,dop,appli,undertake,recipt,afd,temp)
+            acc.regd_no=regdno
+            acc.roll_no=rollno
+            acc.name=name
+            acc.branch=branch
+            acc.gender=gender
+            acc.pwd=pwd
+            acc.caste=cast
+            acc.year=year
+            acc.dob=dob
+            acc.bgp=bgp
+            acc.email_id=email
+            acc.phone=ph_std
+            acc.ph_phone=ph_p
+            acc.emr_phone=ph_emr
+            acc.address=address
+            acc.hosteller=hosteller
+            acc.amount=amount
+            acc.bank=bank
+            acc.ch_no=ch_no
+            acc.dop=dop
+            acc.paid=temp
+            
+                    
             acc.save()
+            print(acc)
             messages.success(request, ' Registration Successful!')
-            if hosteller =='N':
-                return redirect('officials:register')
-            else :
-                return redirect('officials:blockSearch')
+            return redirect('officials:register')
+
     return render(request,'officials/register.html',{})
 
 def registeremp (request):
@@ -735,7 +765,7 @@ def student_list(request):
                     'floor':details.objects.get(regd_no=str(stud.regd_no)).floor,
                     'room_no':details.objects.get(regd_no=str(stud.regd_no)).room_no,
                     'block_id':details.objects.get(regd_no=str(stud.regd_no)).block_id,
-                    'block':Blocks.objects.get(block_id=str(block)).block_name.split(' ')[0],
+                    'block':Blocks.objects.get(block_id=str(block)).block_name,
 
                 })
                 
@@ -791,7 +821,7 @@ def emp_list(request):
         for em in emp:
             print("came")
             try :
-                block=Blocks.objects.get(emp_id=em).block_name.split(' ')[0]
+                block=Blocks.objects.get(emp_id=em).block_name
                 list_of_emp.append({'block':block,'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
             except:
                 list_of_emp.append({'block':"",'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
@@ -868,8 +898,8 @@ def workers_list(request):
         for em in worker:
             print("came in")
             try:
-
-                block=Blocks.objects.get(block_id=em.block_id).block_name.split(' ')[0]
+                
+                block=Blocks.objects.get(block_id=em.block_id).block_name
             except:
                 block="None"
                 print(block)
@@ -880,7 +910,7 @@ def workers_list(request):
                 'gender':em.gender,
                 'ph':em.phone,
                 'block':block,
-
+                
             })
         return render(request,"officials/workerslist.html",{'emp':list_of_emp})
 

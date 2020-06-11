@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
     {% load static %}
     <link rel="stylesheet" href="{% static 'institute/grid-gallery.css' %}">
@@ -27,12 +27,11 @@
             <a href="{% url 'institute:index' %}" style="cursor: pointer; line-height: 0 !important;"><span class="fa fa-reply" style="font-size: 4vh;color: aliceblue;" ></span></a>
         </div>
         <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif; line-height: 0 !important;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">National Institute Of Technology, Andhra Pradesh - Hostel Management System</span>
             <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif; line-height: 0 !important;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>   
         <div class="col-0"></div>
    </nav>
-   
 
     <section class="gallery-block grid-gallery" style="padding-top: 60px;">
         <div class="container-fluid" >
@@ -56,16 +55,16 @@
                                 <h5>Description</h5>
                     <ul >
                 <li >• First year Girls hostel</li>
-                <li >• Room Capacity is 4 students <li>
+                <li >• Room type: 4 students per room<li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 100 students-50 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
 
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Krishna Hall of Residence'%}
+                            {%if em.block == 'Krishnaveni Hall Of Residence'%}
                             <p>{{em.name}} : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -85,7 +84,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img3.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Tungabhadra Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -96,9 +95,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Second year Girls hostel </li>
-                <li >• Room Capacity is 2 students <li>
+                <li >• Room type: 2 students per room <li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 200 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -124,7 +123,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img4.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Bhima Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -135,9 +134,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Third year Girls hostel </li>
-                <li >• Room Capacity is 2 students <li>
+                <li >• Room type: 2 students per room<li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 200 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -163,7 +162,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img5.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Munneru Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -174,9 +173,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Fourth year Girls hostel Block A</li>
-                <li >• Room Capacity is 1 students <li>
+                <li >• Room type: 1 student per room<li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 100 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -202,7 +201,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img8.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">GhataPrabha Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -213,9 +212,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Fourth year Girls hostel Block B</li>
-                <li >• Room Capacity is 1 students <li>
+                <li >• Room type: 1 student per room <li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 100 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -244,7 +243,7 @@
     <section class="gallery-block grid-gallery">
         <div class="container-fluid" >
             <div class="heading">
-                <h2 style="color: rgb(70, 25, 100);">NIT AP Boys Hostel</h2>
+                <h2  style="color: rgb(70, 25, 100);">NIT AP Boys Hostel</h2>
             </div>
             <div class="row d-flex justify-content-center">
                 <div class="col-md-5 col-lg-3 item "  >
@@ -253,7 +252,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img7.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Godavari Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -264,9 +263,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• First year Boys hostel</li>
-                <li >• Room Capacity is 4 students <li>
+                <li >• Room type: 4 students per room <li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 304 students-76 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -292,7 +291,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img6.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Sabari Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -303,9 +302,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Second year Boys hostel  Block A</li>
-                <li >• Room type: 4 students per room <li>
-                    <li >• There are 3 floors</li>
-                <li >• Capacity: 304 students-76 rooms</li>
+                <li >• Room Type: 2 students per room<li>
+                <li >• There are 3 floors</li>
+                <li >• Capacity: 200 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -331,7 +330,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img1.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Pranahita Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -342,9 +341,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Second year Boys hostel Block B</li>
-                <li >• Room Capacity is 2 students <li>
+                <li >• Room type: 2 students per room <li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 200 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -370,7 +369,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img3.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Indravathi Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -381,9 +380,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Third year Boys hostel Block A</li>
-                <li >• Room Capacity is 2 students <li>
+                <li >• Room type: 2 students per room<li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 200 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -409,7 +408,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img5.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Banganga Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -420,9 +419,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Fourth year Boys hostel Block A</li>
-                <li >• Room Capacity is 1 students <li>
+                <li >• Room type: 1 student per room <li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 100 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -448,7 +447,7 @@
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                     <div class="activator" style="width: auto; height: 250px;">
-                        <img class="activator" src="{% static 'institute/img2.jpg' %}">
+                        <img class="activator" src="{% static 'institute/img8.jpg' %}">
                     </div>                    </div>
                     <div class="card-content">
                     <span class="card-title activator grey-text text-darken-4">Purna Hall Of Residence<i class="material-icons right">more_vert</i></span>
@@ -459,9 +458,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Fourth year Boys hostel Block B</li>
-                <li >• Room Capacity is 1 students <li>
+                <li >• Room type: 1 student per room <li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 100 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>
@@ -498,9 +497,9 @@
                     <h5>Description</h5>
                     <ul >
                 <li >• Fourth year Boys hostel Block B</li>
-                <li >• Room Capacity is 1 students <li>
+                <li >• Room Type: 1 student per room <li>
                 <li >• There are 3 floors</li>
-                <li >• Capacity: </li>
+                <li >• Capacity: 100 students-100 rooms</li>
                 <li >• Equiped with solar power</li>
                 </ul>
                 <h5>Caretaker Contact: </h5>

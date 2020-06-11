@@ -1,6 +1,7 @@
 body{
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(to top, #dfe9f3 0%, white 100%) no-repeat center center fixed;
+    background: linear-gradient(to top, #dfe9f3 0%, white 100%) no-repeat center center fixed;    
+
 
 }
 #topnav {
@@ -9,7 +10,7 @@ body{
     box-shadow: 0 8px 6px -6px rgb(37, 34, 68);
 }
 #title{
-    font-size:x-large;
+    font-size:xx-large;
 }
 
 .container{
@@ -88,7 +89,11 @@ input:active{
     color: black;
     background-color: white;
 }
-
+    
+.links{
+    color: cornflowerblue;
+    transition: 0.3s;
+}
 .links:hover{
     color:rgb(194, 194, 194);
 }

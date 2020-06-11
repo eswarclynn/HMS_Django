@@ -23,22 +23,22 @@
 <body>
      <nav class="navbar fixed-top row px-4" id="topnav">
           <div class="col-0 ">
-              <a href="{% url 'institute:index' %}" style="cursor: pointer;"><span class="fa fa-reply" style="font-size: 4vh;color: aliceblue;" ></span></a>
-          </div>
-          <div class="col-10 d-flex justify-content-center">
-               <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">National Institute Of Technology, Andhra Pradesh - Hostel Management System</span>
-               <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-          </div>   
-          <div class="col-0"></div>
-     </nav>
+               <a href="{% url 'institute:index' %}" style="cursor: pointer;"><span class="fa fa-reply" style="font-size: 4vh;color: aliceblue;" ></span></a>
+           </div>
+           <div class="col-10 d-flex justify-content-center">
+                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">National Institute Of Technology, Andhra Pradesh - Hostel Management System</span>
+                <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+           </div>   
+           <div class="col-0"></div>
+      </nav>
 
     
     <div class="container">
         <div class="d-flex justify-content-center h-100">
              <div class="card">
                   <div class="card-header">
-                       <h3 style="text-align: center;" class="text-warning">Login</h3>
-                  </div>
+                    <h3 style="text-align: center;" class="text-warning">Login</h3>
+               </div>
 
                   <div class="card-body">
                        <form action=" {% url 'authenticate:login' %} " method="POST"> 

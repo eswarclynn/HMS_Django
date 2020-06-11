@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Profile - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -63,7 +63,7 @@
                     <tbody id="tbody">
                         <tr>
                             <td class="field font-weight-bold">Name</th>
-                            <td class="field-item">{{user_details.name}}</td>
+                                <td class="field-item">{{user_details.name}}</td>
                         </tr>
                         <tr>
                             <td class="field font-weight-bold">Staff No.</td>
@@ -89,6 +89,11 @@
                             <td class="field font-weight-bold">e-Mail ID</td>
                             <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
                         </tr>
+                        <tr>
+                            <td colspan="2" class="text-center">
+                                <a href="{% url 'authenticate:reset_password' %}"><button class="btn btn-primary">Reset Password</button></a>
+                            </td>
+                        </tr>
 
                     </tbody>
                 </table>
@@ -107,6 +112,7 @@
                             <th class="text-center">Summary</th>
                             <th class="text-center">Date Registered</th>
                             <th class="text-center">Status</th>
+                            <th class="text-center">Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,9 +123,9 @@
                                 <td class="text-center">{{item.type}}</td>
                                 <td class="text-center">{{item.complainee}}</td>
                                 <td class="text-center">{{item.summary}}</td>
-                                <td class="text-center">{{item.date}}</td>
+                                <td class="text-center">{{item.date|date:'d-m-Y'}}</td>
                                 <td class="text-center">{{item.status}}</td>
-
+                                <td class="text-center">{{item.remark}}</td>
                             </tr>
                             
                         {% empty %}

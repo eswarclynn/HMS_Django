@@ -31,6 +31,9 @@ class attendance(models.Model):
     dates = models.TextField()
     status = models.CharField(max_length=10,default='')
 
+    def __str__(self):
+        return str(self.regd_no)
+
 class outing(models.Model):
     PERMIT_OPTIONS = (
         ('Pending','Pending'),

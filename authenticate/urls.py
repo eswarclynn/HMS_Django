@@ -7,5 +7,7 @@ app_name= 'authenticate'
 urlpatterns = [
     path('login/', views.login, name='login'),
     path('signup/', views.signup, name='signup'),
-    path('forgot-password/', views.forgot, name='forgot')
+    path('forgot-password/', views.forgot, name='forgot'),
+    path('reset-password/', views.reset_password, name='reset_password')
+
 ]
