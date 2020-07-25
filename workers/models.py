@@ -22,7 +22,7 @@ class Workers(models.Model):
     designation = models.CharField(max_length=50,choices=EMP)
     gender=models.CharField(max_length=10,choices=GENDER,default="Male")
     phone = models.CharField(max_length=12,null=False)
-    email_id = models.CharField(max_length=50, null=True, blank=True)
+    email_id = models.CharField(max_length=50, unique=True)
     block = models.ForeignKey(Blocks, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):

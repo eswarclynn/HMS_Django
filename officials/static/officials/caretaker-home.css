@@ -45,6 +45,18 @@ body{
     transition: 0.3s;
 }
 
+.sidenav::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}   
+.sidenav::-webkit-scrollbar-track {
+    background: #ddd;
+}
+   
+.sidenav::-webkit-scrollbar-thumb {
+    background: #666; 
+}
+
 .sidenav a:hover {
     color: #b766ec;
 }
