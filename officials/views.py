@@ -15,7 +15,6 @@ from workers.models import attendance as ATTWORKER
 from django.db.models import QuerySet
 from officials.models import WaterCan
 from django.db.models import Sum
-from authenticate.models import credentials
 import re
 
 def official_check(user):

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Profile - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -58,7 +58,6 @@
 
 
         <div class="table-container profile">
-            <form>
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -68,12 +67,12 @@
 
                     <tbody id="tbody">
                         <tr>
-                            <td class="field font-weight-bold">Name</td>
+                            <td class="field font-weight-bold">Name</th>
                             <td class="field-item">{{user_details.name}}</td>
                         </tr>
                         <tr>
                             <td class="field font-weight-bold">Staff No.</td>
-                            <td class="field-item">{{user_details.emp_id}}</td>
+                                <td class="field-item">{{user_details.emp_id}}</td>
                         </tr>
                         <tr>
                             <td class="field font-weight-bold">Designation</td>
@@ -81,13 +80,10 @@
                         </tr>
                         <tr>
                             <td class="field font-weight-bold">Block</td>
-                            <td class="field-item">
-                                
+                                <td class="field-item">
                                 {% for block in block_details %}
                                     {{block.block_name}},
                                 {% endfor %}
-                                    
-
                             </td>
                         </tr>
                         <tr>
@@ -98,11 +94,14 @@
                             <td class="field font-weight-bold">e-Mail ID</td>
                             <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
                         </tr>
+                        <tr>
+                            <td colspan="2" class="text-center">
+                                <a href="{% url 'django_auth:password_reset' %}"><button class="btn btn-primary">Reset Password</button></a>
+                            </td>
+                        </tr>
 
                     </tbody>
                 </table>
-            </form>
-
 
         </div>
 
@@ -112,30 +111,31 @@
                 <table class="table table-hover table-muted table-striped" id="abstable">
                     <thead>
                         <tr>
-                            <th>Count</th>
-                            <th>Type</th>
-                            <th>Complainee</th>
-                            <th>Summary</th>
-                            <th>Date Registered</th>
-
+                            <th class="text-center">Sl. No.</th>
+                            <th class="text-center">Type</th>
+                            <th class="text-center">Complainee</th>
+                            <th class="text-center">Summary</th>
+                            <th class="text-center">Date Registered</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
                         
                         {% for item in complaints %}
                             <tr>
-                                <td>{{forloop.counter}} </td>
-                                <td>{{item.type}}</td>
-                                <td>{{item.complainee}}</td>
-                                <td>{{item.summary}}</td>
-                                <td>{{item.date}}</td>
-
-
+                                <td class="text-center">{{forloop.counter}} </td>
+                                <td class="text-center">{{item.type}}</td>
+                                <td class="text-center">{{item.complainee}}</td>
+                                <td class="text-center">{{item.summary}}</td>
+                                <td class="text-center">{{item.date|date:'d-m-Y'}}</td>
+                                <td class="text-center">{{item.status}}</td>
+                                <td class="text-center">{{item.remark}}</td>
                             </tr>
                             
                         {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center"> No complaints registered! </td>
+                                <td colspan="8" class="text-center"> No complaints registered! </td>
                             </tr>
                         {% endfor %}
         
