@@ -1,5 +1,5 @@
 from django.urls import path
-from django.views.generic import FormView
+from django.views.generic import FormView, DeleteView
 from . import views
 from .forms import StudentForm
 
@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('register-student/', views.StudentRegisterView.as_view(), name='register_student'),
     path('edit-student/<int:pk>', views.StudentUpdateView.as_view(), name='edit_student'),
+    path('delete-student/<int:pk>', views.StudentDeleteView.as_view(), name='delete_student'),
     path('register-official/', views.OfficialRegisterView.as_view(), name='register_official'),
     path('edit-official/<int:pk>', views.OfficialUpdateView.as_view(), name='edit_official'),
     path('register-staff/', views.WorkerRegisterView.as_view(), name='register_worker'),

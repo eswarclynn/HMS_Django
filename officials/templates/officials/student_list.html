@@ -71,7 +71,6 @@
 
             </div>
 
-            <form method="POST" action="{% url 'officials:studentdelete' %}">
             <table class="table table-hover table-muted table-striped" id="att-table">
                 {% csrf_token %}
 
@@ -109,8 +108,10 @@
                             <td>{{stud.floor|slice:"0:1"}}-{{stud.room_no}}</td>
                             <td>{{stud.ph}}</td>
                             <td>
-                                <input type="submit" name="e{{stud.regd_no}}" class="btn btn-success px-3" value ="Edit" >
-                                <input type="submit" name="d{{stud.regd_no}}" class="btn btn-danger ml-3" value="Delete" onclick="alert('Are you sure you want to delete {{stud.regd_no}} ?')">
+                                <a href="{% url 'officials:edit_student' %}" class="btn btn-success px-3">Edit</a>
+                                <form onsubmit="return confirm('Are you sure you want to delete {{stud.regd_no}}?');">
+                                    <input type="submit" class="btn btn-danger ml-3" value="Delete" />
+                                </form>
                             </td>
                         </tr>
                         {% empty %}

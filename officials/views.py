@@ -435,7 +435,11 @@ def search(request):
     send_blocks = Blocks.objects.all()
     if request.method == 'POST':
         if request.POST.get('regno'):
-            stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
+            try:
+                stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
+            except Institutestd.DoesNotExist:
+                messages.error(request, 'Student with registration no. does not exist!')
+                return redirect('officials:search')
             block_details = details.objects.get(regd_no=stud)
             block = Blocks.objects.get(block_id=block_details.block_id_id)
             if attendance.objects.get(regd_no=stud).status=='':isPresent = 'Absent'
@@ -599,8 +603,7 @@ def blockSearch(request):
      
 @user_passes_test(chief_warden_check)
 def student_list(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
+    off_details = Officials.objects.get(email_id= request.user.email)
     if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
         students=Institutestd.objects.all()
         list_of_students=list()
@@ -642,34 +645,32 @@ def student_list(request):
                 
         return render(request,'officials/student_list.html',{'list_of_students':list_of_students})
 
-@user_passes_test(chief_warden_check)
-def studentdelete (request):
-    students=Institutestd.objects.all()
-    if request.method=='POST':
-        print(request.POST)
-        for stud in students:
-            if request.POST.get("d"+str(stud.regd_no)):
-                print(stud.regd_no)
-                try:
-                    Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
-                    #Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
-                    credentials.objects.get(regd_no=str(stud.regd_no)).delete()
-                    attendance.objects.get(regd_no=str(stud.regd_no)).delete()
-                except:
-                    pass
-                messages.success(request,str(stud.regd_no)+" is deleted!")
-                return redirect('officials:student_list')
-            elif request.POST.get("e"+str(stud.regd_no)):
-                #response=redirect('officials:register_edit')
-                #response.set_cookie('regd_no_edit',str(stud.regd_no))
-                #return response
-                std=Institutestd.objects.get(regd_no=str(stud.regd_no))
-                return render(request,'officials/register.html',{'std':std})
+# @user_passes_test(chief_warden_check)
+# def studentdelete (request):
+#     students=Institutestd.objects.all()
+#     if request.method=='POST':
+#         print(request.POST)
+#         for stud in students:
+#             if request.POST.get("d"+str(stud.regd_no)):
+#                 print(stud.regd_no)
+#                 try:
+#                     Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
+#                     # User.objects.get(regd_no=str(stud.regd_no)).delete()
+#                     attendance.objects.get(regd_no=str(stud.regd_no)).delete()
+#                 except:
+#                     pass
+#                 messages.success(request,str(stud.regd_no)+" is deleted!")
+#                 return redirect('officials:student_list')
+#             elif request.POST.get("e"+str(stud.regd_no)):
+#                 #response=redirect('officials:register_edit')
+#                 #response.set_cookie('regd_no_edit',str(stud.regd_no))
+#                 #return response
+#                 std=Institutestd.objects.get(regd_no=str(stud.regd_no))
+#                 return render(request,'officials/register.html',{'std':std})
 
 @user_passes_test(chief_warden_check)
 def emp_list(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
+    off_details = Officials.objects.get(email_id= request.user.email)
     if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
         emp=Officials.objects.all()
         list_of_emp=list()
@@ -699,7 +700,7 @@ def empdelete (request):
                 Officials.objects.get(emp_id=str(stud.emp_id)).delete()
                 #Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
                 try:
-                    credentials.objects.get(emp_id=str(stud.emp_id)).delete()
+                    # credentials.objects.get(emp_id=str(stud.emp_id)).delete()
                     Blocks.objects.get(emp_id=stud).delete()
                 except:
                     pass
@@ -721,8 +722,7 @@ def empdelete (request):
 
 @user_passes_test(chief_warden_check)
 def workers_list(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
+    off_details = Officials.objects.get(email_id= request.user.email)
     if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
         worker=Workers.objects.all()
         if worker == None:
@@ -761,11 +761,11 @@ def workerdelete (request):
                 print(stud.staff_id)
                 Workers.objects.get(staff_id=str(stud.staff_id)).delete()
                 #Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
-                try:
-                    credentials.objects.get(staff_id=str(stud.staff_id)).delete()
+                # try:
+                    # credentials.objects.get(staff_id=str(stud.staff_id)).delete()
                     
-                except:
-                    pass
+                # except:
+                #     pass
                 messages.success(request,str(stud.staff_id)+" is deleted!")
                 return redirect('officials:workers_list')
             elif request.POST.get("e"+str(stud.staff_id)):
@@ -837,7 +837,7 @@ def watercan(request):
 
 
 from .forms import StudentForm
-from django.views.generic import FormView, CreateView, UpdateView
+from django.views.generic import FormView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
@@ -880,6 +880,10 @@ class StudentUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
         context['title'] = 'Edit Student Details'
         return context
 
+class StudentDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
+    model = Institutestd
+    success_url = reverse_lazy('officials:student_list')
+
 class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
     model = Officials
@@ -902,6 +906,9 @@ class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
         context['title'] = 'Edit Official Details'
         return context
 
+class OfficialDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
+    model = Officials
+    success_url = reverse_lazy('officials:emp_list')
 
 class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
@@ -924,4 +931,8 @@ class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Edit Staff Details'
         return context
+
+class WorkerDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
+    model = Workers
+    success_url = reverse_lazy('officials:workers_list')
 
