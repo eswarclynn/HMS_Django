@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Student Home - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -138,6 +138,14 @@
                                     <td class="field-item">{{user_details.branch}}</td>
                                 </tr>
                                 <tr>
+                                    <td class="field">Room</td>
+                                    <td class="field-item" id="phone-field">{{user_details.details.floor|slice:"0:1"}}-{{user_details.details.room_no}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="field">Block</td>
+                                    <td class="field-item" id="phone-field">{{user_details.details.block_id.block_name}}</td>
+                                </tr>
+                                <tr>
                                     <td class="field">Contact Number</td>
                                     <td class="field-item" id="phone-field">{{user_details.phone}}</td>
                                 </tr>
@@ -148,6 +156,11 @@
                                 <tr>
                                     <td class="field">Address</td>
                                     <td class="field-item" id="address-field">{{user_details.address}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <a href="{% url 'authenticate:reset_password' %}"><button class="btn btn-primary">Reset Password</button></a>
+                                    </td>
                                 </tr>
         
         
@@ -167,6 +180,9 @@
                                     <th class="text-center">Complainee</th>
                                     <th class="text-center">Summary</th>
                                     <th class="text-center">Date Registered</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Remarks</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -177,11 +193,13 @@
                                         <td class="text-center">{{item.type}}</td>
                                         <td class="text-center">{{item.complainee}}</td>
                                         <td class="text-center">{{item.summary}}</td>
-                                        <td class="text-center">{{item.date}}</td>
+                                        <td class="text-center">{{item.date|date:'d-m-Y'}}</td>
+                                        <td class="text-center">{{item.status}}</td>
+                                        <td class="text-center">{{item.remark}}</td>
                                     </tr>
                                 {% empty %}
                                     <tr>
-                                        <td colspan="5" class="text-center"> No complaints registered! </td>
+                                        <td colspan="7" class="text-center"> No complaints registered! </td>
                                     </tr>                           
                                 {% endfor %}
                             </tbody>

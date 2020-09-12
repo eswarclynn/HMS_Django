@@ -96,12 +96,12 @@
                             <td>{{stud.ph}}</td>
                             <td>{{stud.block}}</td>
                             <td>
-                                <input type="submit" name="e{{stud.staff_id}}" class="btn btn-success" value ="Edit">
+                                <input type="submit" name="e{{stud.staff_id}}" class="btn btn-primary" value ="Edit">
                                 <input type="submit" name="d{{stud.staff_id}}" class="btn btn-danger ml-3" value="Delete" onclick="alert('Are you sure you want to delete {{stud.staff_id}} ?')" >
                             </td>
                         </tr>
                         {% empty %}
-                            <td colspan="10" class="text-center">No workers are present</td>
+
                         {% endfor %}
                             
                           

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Official Home - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -137,7 +137,7 @@
                             <td>{{stud.block.block_id_id}}</td>
                             <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
                         </tr>
-                        {% empty %}                      
+                        {% empty %}
                         {% endfor %}   
                     </tbody>
                 </table>
@@ -169,7 +169,7 @@
                             <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
                         </tr>
                         {% empty %}
-
+                       
                         {% endfor %}
                     </tbody>
                 </table>
@@ -266,7 +266,7 @@
                                 <td>{{item.type}}</td>
                                 <td>{{item.complainee}}</td>
                                 <td>{{item.summary}}</td>
-                                <td>{{item.date}}</td>
+                                <td>{{item.date|date:'d-m-Y'}}</td>
                                 <td>{{item.status}}</td>
                                 <td>                            
                                     <select id="OC{{item.id}}" name="OC{{item.id}}">
@@ -289,14 +289,14 @@
                             </tr>
                             
                             {% empty %}
-                            
+
                             {% endfor %}
                             {% endif %}
                             
                         </tbody>
                     </table>
                 </form>
-        </div>
+            </div>
     </div>
 
 

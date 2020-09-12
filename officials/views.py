@@ -16,6 +16,7 @@ from django.db.models import QuerySet
 from officials.models import WaterCan
 from django.db.models import Sum
 import re
+from officials.forms import PostForm
 
 def official_check(user):
     return user.is_authenticated and user.is_official
@@ -367,6 +368,9 @@ def attendance_log(request):
 
         elif(request.POST["regno"]):
             regno = request.POST["regno"]
+            if not Institutestd.objects.get(regd_no=str(regno)).exists():
+                messages.error(request, 'Invalid Student Roll No.')
+                return redirect('officials:attendance_log')
             user_details = Institutestd.objects.get(regd_no=str(regno))
             current = attendance.objects.get(regd_no_id=regno).dates
             dates = current.split(',')
@@ -457,6 +461,17 @@ def search(request):
 
         else:
             block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
+            block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
+            block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
+            cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)
+            room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
+            block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
+            print(block_name_lower)
+            
+            if room_type == '4S':   cap_stud = cap_room*4
+            elif room_type == '2S': cap_stud = cap_room*2
+            elif room_type == '1S': cap_stud = cap_room
+            
             studs = details.objects.filter(block_id=request.POST['block'])
             items_list = list()
             for stud in studs:
@@ -623,7 +638,7 @@ def student_list(request):
                     'floor':details.objects.get(regd_no=str(stud.regd_no)).floor,
                     'room_no':details.objects.get(regd_no=str(stud.regd_no)).room_no,
                     'block_id':details.objects.get(regd_no=str(stud.regd_no)).block_id,
-                    'block':Blocks.objects.get(block_id=str(block)).block_name.split(' ')[0],
+                    'block':Blocks.objects.get(block_id=str(block)).block_name,
 
                 })
                 
@@ -680,7 +695,7 @@ def emp_list(request):
         for em in emp:
             print("came")
             try :
-                block=Blocks.objects.get(emp_id=em).block_name.split(' ')[0]
+                block=Blocks.objects.get(emp_id=em).block_name
                 list_of_emp.append({'block':block,'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
             except:
                 list_of_emp.append({'block':"",'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
@@ -732,8 +747,8 @@ def workers_list(request):
         for em in worker:
             print("came in")
             try:
-
-                block=Blocks.objects.get(block_id=em.block_id).block_name.split(' ')[0]
+                
+                block=Blocks.objects.get(block_id=em.block_id).block_name
             except:
                 block="None"
                 print(block)
@@ -744,7 +759,7 @@ def workers_list(request):
                 'gender':em.gender,
                 'ph':em.phone,
                 'block':block,
-
+                
             })
         return render(request,"officials/workerslist.html",{'emp':list_of_emp})
 

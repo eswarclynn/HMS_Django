@@ -11,7 +11,7 @@ class Complaints(models.Model):
         ('Room Cleaning','Room Cleaning'),
         ('Restroom Cleaning','Restroom Cleaning'),
         ('Indisciplinary','Indisciplinary'),
-        ('Discrimination/Harassment','Discrimination/Harassment'),
+        ('Discrimination/ Harassment','Discrimination/ Harassment'),
         ('Damage to property','Damage to property')
     )
     STATUS = (
@@ -37,7 +37,7 @@ class OfficialComplaints(models.Model):
         ('Room Cleaning','Room Cleaning'),
         ('Restroom Cleaning','Restroom Cleaning'),
         ('Indisciplinary','Indisciplinary'),
-        ('Discrimination/Harassment','Discrimination/Harassment'),
+        ('Discrimination/ Harassment','Discrimination/ Harassment'),
         ('Damage to property','Damage to property'),
         ('Latecomer','Latecomer')
     )

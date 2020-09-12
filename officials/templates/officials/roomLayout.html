@@ -15,11 +15,7 @@
   {% load static %}
   <link href="{% static 'officials/roomLayout.css' %}" rel="stylesheet"> <!--attendance.css-->
   <script src = "{% static 'officials/sidenav.js' %}"></script>
-<style>
-    .main-container{
-        width: 1535px;
-    }
-</style>
+
 </head>
 
 <body>
@@ -136,7 +132,7 @@
                 {% include 'officials/Tunga.html' %}
             </div>
         {% endif %}
-        {% if block_name == 'Krishnaveni Hall of Residence'  %}
+        {% if block_name == 'Krishnaveni Hall Of Residence'  %}
             <div>
                 {% include 'officials/Krishnaveni.html' %}
             </div>
@@ -191,7 +187,7 @@
                 {% include 'officials/Sabari.html' %}
             </div>
         {% endif %}
-
+    
         
         
         <div class="container-fluid mt-4 d-none" id="table-con">

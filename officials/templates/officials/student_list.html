@@ -63,6 +63,7 @@
                 <span class="col-md"></span>
                 <span class="col-md"></span>
                 Year:<span class="col-md"></span>
+                Branch:<span class="col-md"></span>
                 Gender:<span class="col-md"></span>
                 Block:<span class="col-md"></span>
                 <span class="col-md"></span>
@@ -90,6 +91,7 @@
                         <th>Roll No</th>
                         <th>Name</th>
                         <th>Year</th>
+                        <th>Branch</th>
                         <th>Gender</th>
                         <th>Block</th>
                         <th>Room No</th>
@@ -103,6 +105,7 @@
                             <td>{{stud.regd_no}}</td>
                             <td>{{stud.name}}</td>
                             <td>{{stud.year}}</td>
+                            <td>{{stud.branch}}</td>
                             <td>{{stud.gender}}</td>
                             <td>{{stud.block}}</td>
                             <td>{{stud.floor|slice:"0:1"}}-{{stud.room_no}}</td>
@@ -115,9 +118,7 @@
                             </td>
                         </tr>
                         {% empty %}
-                            <tr>
-                                <td colspan="10" class="text-center">No students are present</td>
-                            </tr>
+                        
                         {% endfor %}
                     </tbody>
 
@@ -139,7 +140,7 @@
                 initComplete: function () {
                     this.api().columns().every(function () {
                         var column = this;
-                        if (column.index() == 2 || column.index() == 3 || column.index() == 4) {   
+                        if (column.index() == 2 || column.index() == 3 || column.index() == 4 || column.index() == 5) {   
                             var select = $('<select class="form-control"><option value=""></option></select>')
                                 .appendTo($("#filters").find("span").eq(column.index()))
                                 .on('change', function () {
