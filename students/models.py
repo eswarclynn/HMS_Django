@@ -1,5 +1,4 @@
 from django.db import models
-from institute.models import Blocks, Institutestd
 
 # Create your models here.
 class details(models.Model):
@@ -10,13 +9,23 @@ class details(models.Model):
     )
 
     regd_no = models.OneToOneField(
-        Institutestd,
+        'institute.Institutestd',
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    block_id = models.ForeignKey(Blocks,on_delete=models.CASCADE, null=True, blank=True)
+    block_id = models.ForeignKey('institute.Blocks',on_delete=models.CASCADE, null=True, blank=True)
     room_no = models.IntegerField(null=True, blank=True)
     floor = models.CharField(max_length=10, choices=FLOOR_OPTIONS, null=True, blank=True)
+
+    def __str__(self):
+        block = self.block_id or "None"
+        floor = self.floor or "None"
+        return "{regd_no}<{block}: {floor}-{room}>".format(
+            regd_no = self.regd_no, 
+            block = block,
+            floor = floor,
+            room = self.room_no or 0
+        )
 
 class attendance(models.Model):
     OPTIONS = (
@@ -24,7 +33,7 @@ class attendance(models.Model):
         ('Absent','Absent')
     )
     regd_no = models.OneToOneField(
-        Institutestd,
+        'institute.Institutestd',
         on_delete=models.CASCADE,
         primary_key=True,
     )
@@ -41,7 +50,7 @@ class outing(models.Model):
         ('Rejected', 'Rejected')
     )
 
-    regd_no = models.ForeignKey(Institutestd, on_delete=models.CASCADE, null=False)
+    regd_no = models.ForeignKey('institute.Institutestd', on_delete=models.CASCADE, null=False)
     fromDate = models.DateField(null=False)
     fromTime = models.TimeField(null=False)
     toDate = models.DateField(null=False)

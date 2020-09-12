@@ -36,7 +36,7 @@
                          <h3>Staff Registration Form</h3>
                     </div>
                     <div class="card-body">
-                         <form class="form-horizontal" action="{% url 'officials:registerworker' %}" method="POST">
+                         <form class="form-horizontal" action="{% url 'officials:register_worker' %}" method="POST">
                           {% csrf_token %}
                               
                               {% if messages %}

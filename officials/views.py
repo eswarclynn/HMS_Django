@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_exempt
 from institute.models import Blocks, Institutestd, Officials
 from students.models import attendance as ATT
@@ -14,19 +15,29 @@ from workers.models import attendance as ATTWORKER
 from django.db.models import QuerySet
 from officials.models import WaterCan
 from django.db.models import Sum
-from authenticate.models import credentials
 import re
 from officials.forms import PostForm
 
+def official_check(user):
+    return user.is_authenticated and user.is_official
+
+
+def chief_warden_check(user):
+    if official_check(user):
+        official = Officials.objects.get(email_id = user.email)
+        chief_check = official.designation == 'Deputy Chief-Warden' or official.designation == 'Chief-Warden'
+    return official_check(user) and chief_check
+
 
 # Create your views here.
-@csrf_exempt
+@user_passes_test(official_check)
+@csrf_exempt 
 def official_home(request):
-    name = request.COOKIES['username_off']
-    user_details = Officials.objects.get(emp_id=str(name))
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
     if(user_details.designation == 'Caretaker' or user_details.designation == 'Warden'):
         try:
-            block_details = Blocks.objects.get(emp_id_id=str(name))
+            block_details = Blocks.objects.get(emp_id = user_details)
         except Blocks.DoesNotExist:
             raise Http404("You are currently not appointed any block! Please contact Admin")
 
@@ -70,8 +81,6 @@ def official_home(request):
         return render(request, 'officials/caretaker-home.html', {'user_details': user_details, 'block_details':block_details,'present_list':present_list,'absent_list':absent_list, 'complaints':complaints})
 
     else:
-        name = request.COOKIES['username_off']
-        user_details = Officials.objects.get(emp_id=str(name))
         pres = attendance.objects.filter(status='Present')
         present=list()
         for item in pres:
@@ -122,28 +131,30 @@ def official_home(request):
         return render(request, 'officials/chiefs-home.html', {'user_details': user_details, 'present':present, 'absent':absent, 'complaints':complaints,'complaints_list':complaints_list , 'offComplaints':offComplaints})
 
 
-
+@user_passes_test(official_check)
 def profile(request):
-    name = request.COOKIES['username_off']
-    user_details = Officials.objects.get(emp_id=str(name))
-    block_details = Blocks.objects.filter(emp_id_id=str(name))
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
+    block_details = Blocks.objects.filter(emp_id = user_details)
     complaints=list(user_details.offComplaints.filter(status='Registered')) + list(user_details.offComplaints.filter(status='Processing'))
 
     return render(request, 'officials/profile.html', {'user_details': user_details,'block_details':block_details, 'complaints':complaints})
 
+@user_passes_test(chief_warden_check)
 def chiefsProfile(request):
-    name = request.COOKIES['username_off']
-    user_details = Officials.objects.get(emp_id=str(name))
-    block_details = Blocks.objects.filter(emp_id_id=str(name))
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
+    block_details = Blocks.objects.filter(emp_id = user_details)
     complaints=list(user_details.offComplaints.filter(status='Registered')) + list(user_details.offComplaints.filter(status='Processing'))
 
     return render(request, 'officials/chiefs-profile.html', {'user_details': user_details, 'complaints':complaints})
 
+@user_passes_test(official_check)
 @csrf_exempt
 def takeAttendance(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
-    block_details = Blocks.objects.get(emp_id_id=str(name))
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
+    block_details = Blocks.objects.filter(emp_id = user_details)
     students = details.objects.filter(block_id=block_details.block_id)
     
     stud_list = list()
@@ -219,17 +230,18 @@ def takeAttendance(request):
                         stud['att'] = 'Absent'
                     else:
                         stud['att'] = 'Present'
-            return render(request, 'officials/attendance.html', {'off_details':off_details, 'block_details':block_details, 'stud_list':stud_list, 'get_date':get_date})
+            return render(request, 'officials/attendance.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list, 'get_date':get_date})
               
 
-    return render(request, 'officials/attendance.html', {'off_details':off_details, 'block_details':block_details, 'stud_list':stud_list})
+    return render(request, 'officials/attendance.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list})
 
 
+@user_passes_test(official_check)
 @csrf_exempt
 def attendance_workers(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
-    block_details = Blocks.objects.get(emp_id_id=str(name))
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
+    block_details = Blocks.objects.filter(emp_id = user_details)
     students = Workers.objects.filter(block=block_details.block_id)
     
     stud_list = list()
@@ -304,18 +316,18 @@ def attendance_workers(request):
                         stud['att'] = 'Absent'
                     else:
                         stud['att'] = 'Present'
-            return render(request, 'officials/attendance-workers.html', {'off_details':off_details, 'block_details':block_details, 'stud_list':stud_list, 'get_date':get_date})
+            return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list, 'get_date':get_date})
               
 
-    return render(request, 'officials/attendance-workers.html', {'off_details':off_details, 'block_details':block_details, 'stud_list':stud_list})
+    return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list})
 
 
-
+@user_passes_test(official_check)
 def attendance_log(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
     try:
-        block_details = Blocks.objects.get(emp_id_id=str(name))
+        block_details = Blocks.objects.filter(emp_id = user_details)
         stud_set = block_details.details_set.all()
     except:
         block_details = None
@@ -348,10 +360,10 @@ def attendance_log(request):
                             })
                 except ValueError:
                     pos = -1
-            if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
-                return render(request, 'officials/attendance-log-chief.html', {'off_details':off_details, 'block_details':block_details, 'pres_stud':pres_stud, 'abse_stud':abse_stud})
+            if user_details.designation == 'Deputy Chief-Warden' or user_details.designation == 'Chief-Warden':
+                return render(request, 'officials/attendance-log-chief.html', {'off_details':user_details, 'block_details':block_details, 'pres_stud':pres_stud, 'abse_stud':abse_stud})
             else:
-                return render(request, 'officials/attendance-log.html', {'off_details':off_details, 'block_details':block_details, 'pres_stud':pres_stud, 'abse_stud':abse_stud})
+                return render(request, 'officials/attendance-log.html', {'off_details':user_details, 'block_details':block_details, 'pres_stud':pres_stud, 'abse_stud':abse_stud})
 
 
         elif(request.POST["regno"]):
@@ -366,22 +378,22 @@ def attendance_log(request):
             pres = list(filter(lambda x: not (x.startswith('X')), dates))
             abse = list(map(lambda x: x.replace('X',''), abse))
 
-            if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
-                return render(request, 'officials/attendance-log-chief.html', {'off_details':off_details, 'block_details':block_details, 'pres_dates':pres, 'abse_dates':abse})
+            if user_details.designation == 'Deputy Chief-Warden' or user_details.designation == 'Chief-Warden':
+                return render(request, 'officials/attendance-log-chief.html', {'off_details':user_details, 'block_details':block_details, 'pres_dates':pres, 'abse_dates':abse})
             else:
-                return render(request, 'officials/attendance-log.html', {'off_details':off_details, 'block_details':block_details, 'pres_dates':pres, 'abse_dates':abse})
+                return render(request, 'officials/attendance-log.html', {'off_details':user_details, 'block_details':block_details, 'pres_dates':pres, 'abse_dates':abse})
 
             
-    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
-        return render(request, 'officials/attendance-log-chief.html', {'off_details':off_details, 'block_details':block_details,})
+    if user_details.designation == 'Deputy Chief-Warden' or user_details.designation == 'Chief-Warden':
+        return render(request, 'officials/attendance-log-chief.html', {'off_details':user_details, 'block_details':block_details,})
     else:
-        return render(request, 'officials/attendance-log.html', {'off_details':off_details, 'block_details':block_details,})
+        return render(request, 'officials/attendance-log.html', {'off_details':user_details, 'block_details':block_details,})
 
-
+@user_passes_test(official_check)
 def grantOuting(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
-    block_details = Blocks.objects.get(emp_id_id=str(name))
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
+    block_details = Blocks.objects.filter(emp_id = user_details)
     students = details.objects.filter(block_id=block_details.block_id)
 
     stud_list = list()
@@ -416,60 +428,38 @@ def grantOuting(request):
                 messages.success(request, 'Rejected Outing permission to '+updateOuting.regd_no.name+'!')
                 return redirect('officials:grantOuting')
 
-    return render(request, 'officials/outingPending.html', {'off_details':off_details, 'stud_list':stud_list})
+    return render(request, 'officials/outingPending.html', {'off_details':user_details, 'stud_list':stud_list})
 
 
+@user_passes_test(chief_warden_check)
 @csrf_exempt
 def search(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
-    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
-        send_blocks = Blocks.objects.all()
-        if request.method == 'POST':
-            if request.POST.get('regno'):
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
+    send_blocks = Blocks.objects.all()
+    if request.method == 'POST':
+        if request.POST.get('regno'):
+            try:
                 stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
-                block_details = details.objects.get(regd_no=stud)
-                block = Blocks.objects.get(block_id=block_details.block_id_id)
-                if attendance.objects.get(regd_no=stud).status=='':isPresent = 'Absent'
-                else: isPresent = attendance.objects.get(regd_no=stud).status
-                items={
-                    'stud':stud,
-                    'block_details':block_details,
-                    'block_name':block.block_name,
-                    'isPresent':isPresent
-                }
-                items_list = list()
-                items_list.append(items)
+            except Institutestd.DoesNotExist:
+                messages.error(request, 'Student with registration no. does not exist!')
+                return redirect('officials:search')
+            block_details = details.objects.get(regd_no=stud)
+            block = Blocks.objects.get(block_id=block_details.block_id_id)
+            if attendance.objects.get(regd_no=stud).status=='':isPresent = 'Absent'
+            else: isPresent = attendance.objects.get(regd_no=stud).status
+            items={
+                'stud':stud,
+                'block_details':block_details,
+                'block_name':block.block_name,
+                'isPresent':isPresent
+            }
+            items_list = list()
+            items_list.append(items)
 
-                return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
+            return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
 
-            else:
-                block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
-                studs = details.objects.filter(block_id=request.POST['block'])
-                items_list = list()
-                for stud in studs:
-                    info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
-                    block_details = details.objects.get(regd_no=info)
-                    if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
-                    else: isPresent = attendance.objects.get(regd_no=info).status
-                    items={
-                        'stud':info,
-                        'block_details':block_details,
-                        'block_name':block_name,
-                        'isPresent':isPresent
-                    }
-                    items_list.append(items)
-                return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
-
-        return render(request, 'officials/search.html',{'send_blocks':send_blocks})
-
-@csrf_exempt
-def blockSearch(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
-    if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
-        send_blocks = Blocks.objects.all()
-        if request.POST.get('submit'):
+        else:
             block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
             block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
             block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
@@ -483,7 +473,6 @@ def blockSearch(request):
             elif room_type == '1S': cap_stud = cap_room
             
             studs = details.objects.filter(block_id=request.POST['block'])
-            pres_stud = studs.count()
             items_list = list()
             for stud in studs:
                 info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
@@ -493,259 +482,143 @@ def blockSearch(request):
                 items={
                     'stud':info,
                     'block_details':block_details,
+                    'block_name':block_name,
                     'isPresent':isPresent
                 }
                 items_list.append(items)
-    
-            return render(request, 'officials/roomLayout.html', {
-                'items_list':(items_list), 
-                'send_blocks':send_blocks, 
-                'block_name':block_name,
-                'cap_room': cap_room,
-                'room_type' : room_type,
-                'cap_stud' : cap_stud,
-                'block_gender':block_gender,
-                'block_care':block_care,
-                'pres_stud':pres_stud,
-                'pres_room': (int(pres_stud))//(int(room_type[0])),
-                'vacant_room':cap_room - (int(pres_stud))//(int(room_type[0])) - (int(pres_stud))%(int(room_type[0])),
-                'partial_room':(int(pres_stud))%(int(room_type[0])),
-                'block_name_lower':block_name_lower
-                })
-    
-        if request.POST.get('Add'):
-            roll = (request.POST.get('roll'))
-            location = (request.POST.get('room')).split('-')
-            placing_block = location[0]
-            placing_floor = location[1]
-            placing_room = location[2]
-            print(placing_block)
-    
-            if details.objects.filter(regd_no=roll).exists():
-                student = details.objects.get(regd_no=roll)
-                if student.block_id_id != None and student.room_no != None and student.floor != None:
-                    messages.error(request, 'Student : '+str(roll)+' already alloted room!')
+            return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
+
+    return render(request, 'officials/search.html',{'send_blocks':send_blocks})
+
+@user_passes_test(chief_warden_check)
+@csrf_exempt
+def blockSearch(request):
+    user = request.user
+    user_details = Officials.objects.get(email_id = user.email)
+    send_blocks = Blocks.objects.all()
+    if request.POST.get('submit'):
+        block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
+        block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
+        block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
+        cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)
+        room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
+        block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
+        print(block_name_lower)
+        block_name='Bhima Hall Of Residence'
+        if room_type == '4S':   cap_stud = cap_room*4
+        elif room_type == '2S': cap_stud = cap_room*2
+        elif room_type == '1S': cap_stud = cap_room
+        
+        studs = details.objects.filter(block_id=request.POST['block'])
+        pres_stud = studs.count()
+        items_list = list()
+        for stud in studs:
+            info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
+            block_details = details.objects.get(regd_no=info)
+            if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
+            else: isPresent = attendance.objects.get(regd_no=info).status
+            items={
+                'stud':info,
+                'block_details':block_details,
+                'isPresent':isPresent
+            }
+            items_list.append(items)
+
+        return render(request, 'officials/roomLayout.html', {
+            'items_list':(items_list), 
+            'send_blocks':send_blocks, 
+            'block_name':block_name,
+            'cap_room': cap_room,
+            'room_type' : room_type,
+            'cap_stud' : cap_stud,
+            'block_gender':block_gender,
+            'block_care':block_care,
+            'pres_stud':pres_stud,
+            'pres_room': (int(pres_stud))//(int(room_type[0])),
+            'vacant_room':cap_room - (int(pres_stud))//(int(room_type[0])) - (int(pres_stud))%(int(room_type[0])),
+            'partial_room':(int(pres_stud))%(int(room_type[0])),
+            })
+
+    if request.POST.get('Add'):
+        roll = (request.POST.get('roll'))
+        location = (request.POST.get('room')).split('-')
+        placing_block = location[0]
+        placing_floor = location[1]
+        placing_room = location[2]
+        print(placing_block)
+
+        if details.objects.filter(regd_no=roll).exists():
+            student = details.objects.get(regd_no=roll)
+            if student.block_id_id != None and student.room_no != None and student.floor != None:
+                messages.error(request, 'Student : '+str(roll)+' already alloted room!')
+                return redirect('officials:blockSearch')
+            else:
+                block_req = Blocks.objects.get(block_name=placing_block)
+                stud_req = Institutestd.objects.get(regd_no=roll)
+                if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
+                    student.block_id = Blocks.objects.get(block_name=placing_block)
+                    student.room_no = int(placing_room)
+                    student.floor = placing_floor
+
+                    student.save()
+                    messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+placing_block+'!')
                     return redirect('officials:blockSearch')
                 else:
-                    block_req = Blocks.objects.get(block_name=placing_block)
+                    messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
+                    return redirect('officials:blockSearch')
+
+
+        else:
+            messages.error(request, 'No Student with roll no. : '+str(roll)+' found!')
+            return redirect('officials:blockSearch')
+
+    if request.POST.get('change'):
+        block_name = request.POST.get('block')
+        block_req = Blocks.objects.get(block_name=block_name)
+        studs = details.objects.filter(block_id=block_req)
+        for stud in studs:
+            if request.POST.get(str(stud.regd_no)):
+                if request.POST.get(str(stud.regd_no)) == 'None':
+                    stud.block_id = None
+                    stud.room_no = None
+                    stud.floor = None
+                    stud.save()
+
+                    messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
+                    return redirect('officials:blockSearch')
+
+
+                else:
+                    roll = request.POST.get(str(stud.regd_no))
                     stud_req = Institutestd.objects.get(regd_no=roll)
+                    student = details.objects.get(regd_no=roll)
                     if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
-                        student.block_id = Blocks.objects.get(block_name=placing_block)
-                        student.room_no = int(placing_room)
-                        student.floor = placing_floor
-    
+                        student.block_id = stud.block_id
+                        student.room_no = stud.room_no
+                        student.floor = stud.floor
                         student.save()
-                        messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+placing_block+'!')
-                        return redirect('officials:blockSearch')
-                    else:
-                        messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
-                        return redirect('officials:blockSearch')
-    
-    
-            else:
-                messages.error(request, 'No Student with roll no. : '+str(roll)+' found!')
-                return redirect('officials:blockSearch')
-    
-        if request.POST.get('change'):
-            block_name = request.POST.get('block')
-            block_req = Blocks.objects.get(block_name=block_name)
-            studs = details.objects.filter(block_id=block_req)
-            for stud in studs:
-                if request.POST.get(str(stud.regd_no)):
-                    if request.POST.get(str(stud.regd_no)) == 'None':
+
                         stud.block_id = None
                         stud.room_no = None
                         stud.floor = None
                         stud.save()
-    
+
+                        messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+block_name+'!')
                         messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
                         return redirect('officials:blockSearch')
-    
-    
                     else:
-                        roll = request.POST.get(str(stud.regd_no))
-                        stud_req = Institutestd.objects.get(regd_no=roll)
-                        student = details.objects.get(regd_no=roll)
-                        if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
-                            student.block_id = stud.block_id
-                            student.room_no = stud.room_no
-                            student.floor = stud.floor
-                            student.save()
-    
-                            stud.block_id = None
-                            stud.room_no = None
-                            stud.floor = None
-                            stud.save()
-    
-                            messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+block_name+'!')
-                            messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
-                            return redirect('officials:blockSearch')
-                        else:
-                            messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
-                            return redirect('officials:blockSearch')
-    
-    
-    
-        return render(request, 'officials/roomLayout.html',{'send_blocks':send_blocks})
+                        messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
+                        return redirect('officials:blockSearch')
 
 
 
+    return render(request, 'officials/roomLayout.html',{'send_blocks':send_blocks})
 
-    
-
-def register (request):
-    if request.method == 'POST':
-        # print(request.POST)
-        print(request.FILES)
-        if request.POST.get("submit"):
-            form=PostForm(request.POST,request.FILES)
-            regdno=request.POST["regno"]
-            rollno=request.POST["rollno"]
-            name=request.POST["name"]
-            year=request.POST["year"]
-            branch=request.POST["branch"]
-            gender=request.POST["type"]
-            print(gender)
-            pwd=request.POST["pwd"]
-            print(pwd)
-            cast=request.POST["caste"]
-            dob=request.POST["dob"]
-            print("hi")
-            print(type(dob))
-            bgp=request.POST["blood"]
-            email=request.POST["email"]
-            ph_std=request.POST["ph_std"]
-            ph_p=request.POST["ph_p"]
-            ph_emr=request.POST["ph_emr"]
-            address=request.POST["address"]
-            photo=request.FILES["photo"]
-            hosteller=request.POST["hosteller"]
-            if pwd =="Yes":
-                 pwd='Y'
-            else :
-                 pwd='N'
-            try :
-                amount=request.POST["amount"]
-                bank=request.POST["bank"]
-                ch_no=request.POST["ch_no"]
-                dop=request.POST['dop']
-                appli=request.FILES["application"]
-                undertake=request.FILES["undertake"]
-                recipt=request.FILES["recipt"]
-            except :
-                 amount=None
-                 bank=None
-                 ch_no=None
-                 dop=None
-                 appli=None
-                 undertake=None
-                 recipt=None
-            try :
-                    afd=request.FILES["afd"]
-            except :
-                    afd=None
-
-               
-            if hosteller == "H":
-                    hosteller="Y"
-            else:
-                hosteller="N"
-            
-            if Institutestd.objects.filter(regd_no=regdno).exists():
-                messages.error(request, 'Student already registered. Details will be updated!')
-                sstd=Institutestd.objects.filter(regd_no=regdno).delete()
-
-            temp="N"
-            if amount !=None and hosteller == "Y":
-                temp="Y"
-            if hosteller == "N": #bank == None and ch_no == None and dop==None and appli ==None and undertake ==None and recipt == None:
-                 bank="null"
-                 ch_no="null"
-                 dop= None
-                 appli="null"
-                 undertake="null"
-                 recipt="null"
-            elif hosteller == "Y": #bank != None and ch_no != None and dop!=None and appli !=None and undertake !=None and recipt != None and afd==None:
-                 afd="null"
-            else :
-                 messages.error(request, 'Invalid Registration!')
-                 return redirect('officials:register')
-            acc = form.save(commit=False)
-            #acc=Institutestd(regdno,rollno,name,branch,gender,pwd,cast,year,dob,bgp,email,ph_std,ph_p,ph_emr,address,photo,hosteller,amount,bank,ch_no,dop,appli,undertake,recipt,afd,temp)
-            acc.regd_no=regdno
-            acc.roll_no=rollno
-            acc.name=name
-            acc.branch=branch
-            acc.gender=gender
-            acc.pwd=pwd
-            acc.caste=cast
-            acc.year=year
-            acc.dob=dob
-            acc.bgp=bgp
-            acc.email_id=email
-            acc.phone=ph_std
-            acc.ph_phone=ph_p
-            acc.emr_phone=ph_emr
-            acc.address=address
-            acc.hosteller=hosteller
-            acc.amount=amount
-            acc.bank=bank
-            acc.ch_no=ch_no
-            acc.dop=dop
-            acc.paid=temp
-            
-                    
-            acc.save()
-            print(acc)
-            messages.success(request, ' Registration Successful!')
-            return redirect('officials:register')
-
-    return render(request,'officials/register.html',{})
-
-def registeremp (request):
-    std=Blocks.objects.all()
-    if request.method == 'POST':
-        if request.POST.get("submit_btn"):
-            empid=request.POST["empid"]
-            name=request.POST["name"]
-            desig=request.POST['desig']
-            gender=request.POST["type"]
-            email=request.POST["email"]
-            ph=request.POST['ph']
-            block_id=request.POST['block']
-            branch=request.POST['branch']
-            
-            
-            if Officials.objects.filter(emp_id=empid).exists():
-                messages.error(request, 'Employee Already Registered! Details will be updated.')
-                temp=Officials.objects.get(emp_id=empid)
-                try:
-                    b=Blocks.objects.get(emp_id=temp)
-                    b.emp_id=None
-                    b.save()
-                except: pass
-                Officials.objects.get(emp_id=empid).delete()
-                  
-            acc=Officials(empid,name,desig,branch,ph,email)
-            acc.save()
-            if block_id!="null":
-                em=Blocks.objects.get(block_id=block_id)
-                print(em)
-                if em.emp_id :
-                     messages.error(request,"Block assigned to another official. Will be assigned to current official now!")
-                     em.emp_id=Officials.objects.get(emp_id=empid)
-                     em.save()
-                else:
-                     em.emp_id=Officials.objects.get(emp_id=empid)
-                     em.save()
-            messages.success(request, 'Registration Successful!')
-    return render(request,'officials/register-emp.html',{'std':std,})
 
      
-
+@user_passes_test(chief_warden_check)
 def student_list(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
+    off_details = Officials.objects.get(email_id= request.user.email)
     if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
         students=Institutestd.objects.all()
         list_of_students=list()
@@ -786,32 +659,33 @@ def student_list(request):
                 })
                 
         return render(request,'officials/student_list.html',{'list_of_students':list_of_students})
-def studentdelete (request):
-    students=Institutestd.objects.all()
-    if request.method=='POST':
-        print(request.POST)
-        for stud in students:
-            if request.POST.get("d"+str(stud.regd_no)):
-                print(stud.regd_no)
-                try:
-                    Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
-                    #Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
-                    credentials.objects.get(regd_no=str(stud.regd_no)).delete()
-                    attendance.objects.get(regd_no=str(stud.regd_no)).delete()
-                except:
-                    pass
-                messages.success(request,str(stud.regd_no)+" is deleted!")
-                return redirect('officials:student_list')
-            elif request.POST.get("e"+str(stud.regd_no)):
-                #response=redirect('officials:register_edit')
-                #response.set_cookie('regd_no_edit',str(stud.regd_no))
-                #return response
-                std=Institutestd.objects.get(regd_no=str(stud.regd_no))
-                return render(request,'officials/register.html',{'std':std})
 
+# @user_passes_test(chief_warden_check)
+# def studentdelete (request):
+#     students=Institutestd.objects.all()
+#     if request.method=='POST':
+#         print(request.POST)
+#         for stud in students:
+#             if request.POST.get("d"+str(stud.regd_no)):
+#                 print(stud.regd_no)
+#                 try:
+#                     Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
+#                     # User.objects.get(regd_no=str(stud.regd_no)).delete()
+#                     attendance.objects.get(regd_no=str(stud.regd_no)).delete()
+#                 except:
+#                     pass
+#                 messages.success(request,str(stud.regd_no)+" is deleted!")
+#                 return redirect('officials:student_list')
+#             elif request.POST.get("e"+str(stud.regd_no)):
+#                 #response=redirect('officials:register_edit')
+#                 #response.set_cookie('regd_no_edit',str(stud.regd_no))
+#                 #return response
+#                 std=Institutestd.objects.get(regd_no=str(stud.regd_no))
+#                 return render(request,'officials/register.html',{'std':std})
+
+@user_passes_test(chief_warden_check)
 def emp_list(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
+    off_details = Officials.objects.get(email_id= request.user.email)
     if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
         emp=Officials.objects.all()
         list_of_emp=list()
@@ -826,7 +700,8 @@ def emp_list(request):
             except:
                 list_of_emp.append({'block':"",'emp_id':em.emp_id,'name':em.name,'branch':em.branch,'desig':em.designation,'ph':em.phone,'email':em.email_id,})
         return render(request,'officials/emp_list.html',{'emp':list_of_emp})
-        
+
+@user_passes_test(chief_warden_check)        
 def empdelete (request):
     emp=Officials.objects.all()
     if request.method=='POST':
@@ -840,7 +715,7 @@ def empdelete (request):
                 Officials.objects.get(emp_id=str(stud.emp_id)).delete()
                 #Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
                 try:
-                    credentials.objects.get(emp_id=str(stud.emp_id)).delete()
+                    # credentials.objects.get(emp_id=str(stud.emp_id)).delete()
                     Blocks.objects.get(emp_id=stud).delete()
                 except:
                     pass
@@ -859,36 +734,10 @@ def empdelete (request):
 
                 return render(request,'officials/register-emp.html',{'std':std,'employee':employee,'block':block})
 
-def registerworker(request):
-    work=Workers.objects.all()
-    if request.method == 'POST':
-        if request.POST.get("submit_btn"):
-            print(request.POST)
-            staff_id=request.POST["empid"]
-            name=request.POST["name"]
-            gender=request.POST["type"]
-            desig=request.POST["desig"]
-            email=request.POST["email"]
-            phone=request.POST["ph"]
-            block_id=request.POST["block"]
-            print(block_id)
-            try:
-                block=int(re.search(r'\d+', block_id).group(0))
-                #block=Blocks.objects.get(block_id=block)
-            except: 
-                block=None
-            if Workers.objects.filter(staff_id=staff_id).exists():
-                Workers.objects.filter(staff_id=staff_id).delete()
-                messages.error(request,"Already staff registered. Details will be updated!")
-            s=Workers(staff_id,name,desig,gender,phone,email,block)
-            s.save()
-            messages.success(request,"Successfully registered!")
-    std=Blocks.objects.all()
-    return render(request,"officials/register_staff.html",{'std':std})
 
+@user_passes_test(chief_warden_check)
 def workers_list(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
+    off_details = Officials.objects.get(email_id= request.user.email)
     if off_details.designation == 'Deputy Chief-Warden' or off_details.designation == 'Chief-Warden':
         worker=Workers.objects.all()
         if worker == None:
@@ -927,11 +776,11 @@ def workerdelete (request):
                 print(stud.staff_id)
                 Workers.objects.get(staff_id=str(stud.staff_id)).delete()
                 #Institutestd.objects.get(regd_no=str(stud.regd_no)).delete()
-                try:
-                    credentials.objects.get(staff_id=str(stud.staff_id)).delete()
+                # try:
+                    # credentials.objects.get(staff_id=str(stud.staff_id)).delete()
                     
-                except:
-                    pass
+                # except:
+                #     pass
                 messages.success(request,str(stud.staff_id)+" is deleted!")
                 return redirect('officials:workers_list')
             elif request.POST.get("e"+str(stud.staff_id)):
@@ -951,6 +800,7 @@ def workerdelete (request):
                 return render(request,'officials/register_staff.html',{'std':std,'employee':employee,'block':block})
 
 
+@user_passes_test(chief_warden_check)
 @csrf_exempt
 def watercan(request):
     name = request.COOKIES['username_off']
@@ -999,3 +849,105 @@ def watercan(request):
 
 
     return render(request, 'officials/water-can.html')
+
+
+from .forms import StudentForm
+from django.views.generic import FormView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
+
+class OfficialTextMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_official
+
+class ChiefWardenTestMixin(OfficialTextMixin):
+    def test_func(self):
+        is_official = super().test_func() 
+        user = self.request.user
+        if is_official:
+            official = Officials.objects.get(email_id = user.email)
+            is_chief = official.designation == 'Deputy Chief-Warden' or official.designation == 'Chief-Warden'
+
+        return is_official and is_chief
+
+
+
+
+class StudentRegisterView(CreateView):
+    template_name = 'officials/student-register-form.html'
+    model = Institutestd
+    form_class = StudentForm
+    success_url = reverse_lazy('officials:student_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Register Student'
+        return context
+
+class StudentUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'officials/student-register-form.html'
+    model = Institutestd
+    form_class = StudentForm
+    success_url = reverse_lazy('officials:student_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Student Details'
+        return context
+
+class StudentDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
+    model = Institutestd
+    success_url = reverse_lazy('officials:student_list')
+
+class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
+    template_name = 'officials/official-register-form.html'
+    model = Officials
+    fields = '__all__'
+    success_url = reverse_lazy('officials:emp_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Register Official'
+        return context
+
+class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'officials/official-register-form.html'
+    model = Officials
+    fields = '__all__'
+    success_url = reverse_lazy('officials:emp_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Official Details'
+        return context
+
+class OfficialDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
+    model = Officials
+    success_url = reverse_lazy('officials:emp_list')
+
+class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
+    template_name = 'officials/official-register-form.html'
+    model = Workers
+    fields = '__all__'
+    success_url = reverse_lazy('officials:workers_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Register Staff'
+        return context
+
+class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'officials/official-register-form.html'
+    model = Workers
+    fields = '__all__'
+    success_url = reverse_lazy('officials:workers_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edit Staff Details'
+        return context
+
+class WorkerDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
+    model = Workers
+    success_url = reverse_lazy('officials:workers_list')
+

@@ -4,12 +4,18 @@ from students.models import attendance, outing
 from django.http import HttpResponse
 import datetime
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+
+def student_check(user):
+    return user.is_authenticated and user.is_student
 
 # Create your views here.
+
+@user_passes_test(student_check)
 def student_home(request):
-    name = request.COOKIES['username_std']
-    user_details = Institutestd.objects.get(regd_no=str(name))
-    current = attendance.objects.get(regd_no_id=name).dates
+    user = request.user
+    user_details = Institutestd.objects.get(email_id=user.email)
+    current = attendance.objects.get(regd_no_id=user_details.regd_no).dates
     dates = current.split(',')
     abse = len(list(filter(lambda x: (x.startswith('X')), dates)))
     pres = len(list(filter(lambda x: not (x.startswith('X')), dates)))
@@ -17,6 +23,7 @@ def student_home(request):
 
     return render(request, 'students/student-home.html', {'user_details': user_details, 'pres':pres, 'abse':abse, 'complaints':complaints})
 
+@user_passes_test(student_check)
 def outing_app(request):
     if request.method == 'POST':
         reg_no = request.COOKIES['username_std']
@@ -49,6 +56,8 @@ def outing_app(request):
 
     return render(request, 'students/OutingApp.html')
 
+
+@user_passes_test(student_check)
 def attendance_history(request):
     reg_no = request.COOKIES['username_std']
     user_details = Institutestd.objects.get(regd_no=str(reg_no))
@@ -60,6 +69,8 @@ def attendance_history(request):
 
     return render(request, 'students/attendance-history.html', {'user_details':user_details, 'pres':pres, 'abse':abse})
 
+
+@user_passes_test(student_check)
 def outing_history(request):
     reg_no = request.COOKIES['username_std']
     user_details = Institutestd.objects.get(regd_no=str(reg_no))

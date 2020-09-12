@@ -41,11 +41,11 @@
         <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
         <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-        <a href="{% url 'officials:register' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:register_student' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
         <a href="{% url 'officials:student_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp;List of Students</a>
-        <a href="{% url 'officials:registeremp' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'officials:register_official' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
         <a href="{% url 'officials:emp_list' %}"><span><i class="fa fa-file-text-o"></i></span> &nbsp;&nbsp; List of Employees</a>
-        <a href="{% url 'officials:registerworker' %}" target="_blank"><span><i class="fa fa-address-book"></i></span> &nbsp;&nbsp; Add Worker</a>
+        <a href="{% url 'officials:register_worker' %}" target="_blank"><span><i class="fa fa-address-book"></i></span> &nbsp;&nbsp; Add Worker</a>
         <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
@@ -96,7 +96,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="text-center">
-                                <a href="{% url 'authenticate:reset_password' %}"><button class="btn btn-primary">Reset Password</button></a>
+                                <a href="{% url 'django_auth:password_reset' %}"><button class="btn btn-primary">Reset Password</button></a>
                             </td>
                         </tr>
 
