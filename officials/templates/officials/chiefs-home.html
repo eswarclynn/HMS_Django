@@ -50,7 +50,7 @@
         <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
 
@@ -200,7 +200,6 @@
                 <table class="table table-hover table-muted table-striped " id="complaints_table">
                     <thead>
                         <tr class="text-center">
-                            <th>Sl. No.</th>
                             <th class="text-center overflow-hidden">Roll No.</th>
                             <th class="text-center overflow-hidden">Type</th>
                             <th class="text-center overflow-hidden">Complainee</th>
@@ -227,7 +226,6 @@
                             {% if complaints %}
                             {% for item in complaints %}
                             <tr>
-                                <td></td>
                                 <td>{{item.regd_no}}</td>
                                 <td>{{item.type}}</td>
                                 <td>{{item.complainee}}</td>
@@ -261,7 +259,6 @@
                             {% if offComplaints %}
                             {% for item in offComplaints %}
                             <tr>
-                                <td></td>
                                 <td>{{item.regd_no}}</td>
                                 <td>{{item.type}}</td>
                                 <td>{{item.complainee}}</td>

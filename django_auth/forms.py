@@ -41,7 +41,7 @@ class SignUpForm(UserCreationForm):
         if (is_worker or is_official) and (not email.endswith('@nitandhra.ac.in')):
             raise forms.ValidationError('Staff should use institute eMail ID')
 
-        if not ( Institutestd.objects.filter(email_id = email).exists() or Officials.objects.filter(email_id = email).exists or Workers.objects.filter(email_id = email).exists() ):
+        if not ( Institutestd.objects.filter(email_id = email).exists() or Officials.objects.filter(email_id = email).exists() or Workers.objects.filter(email_id = email).exists() ):
             if is_student:
                 user_type = 'Student'
             elif is_official or is_worker:

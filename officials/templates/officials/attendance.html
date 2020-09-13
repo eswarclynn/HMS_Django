@@ -43,10 +43,10 @@
         <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
         <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
         <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
-        <a href="{% url 'officials:watercan' %}"><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>
+        <!--<a href=""><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>-->
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
 
@@ -72,9 +72,9 @@
 
                 <div class="row" style="margin-bottom: 10px;">
 
-                    <span class="col-md">Block : <b>{{block_details.block_name}}</b></span>
+                    <span class="col-md d-flex justify-content-center justify-content-md-end">Block : <b>{{block_details.block_name}}</b></span>
 
-                    <span class="col-md d-flex justify-content-end">
+                    <span class="col-md d-flex justify-content-center justify-content-md-end">
                         
                         {% if get_date %}
                             Date: <input type="date"  id="datefield" value="{{get_date}}" name="datefield" class="ml-3" onchange="date_click()" required/>
@@ -114,19 +114,19 @@
                                 {% if stud.att %}
                                     
                                     {% if stud.att == 'Present' %}
-                                    <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
+                                    <select class="form-control w-50 d-inline-block is-valid" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
                                         <option value="Present" selected>Present</option>
                                         <option value="Absent">Absent</option>
                                     </select> 
                                         
                                     {% else %}
-                                    <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
+                                    <select class="form-control w-50 d-inline-block is-invalid" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
                                         <option value="Present">Present</option>
                                         <option value="Absent" selected>Absent</option>
                                     </select> 
                                         
                                     {% endif %}
-                                       
+                                    <span class="ml-3 text-primary">Editing Attendance</span>
 
                                 {% else %}
                                 <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
@@ -135,9 +135,6 @@
                                 </select>  
                                 {% endif %}
                             </td>
-                            {% if stud.att %}
-                                <td><span>Editing Attendance</span></td>
-                            {% endif %}
                         </tr>
                         {% endfor %}
                             

@@ -49,7 +49,7 @@
         <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
 
@@ -96,7 +96,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="text-center">
-                                <a href="{% url 'django_auth:password_reset' %}"><button class="btn btn-primary">Reset Password</button></a>
+                                <a href="{% url 'django_auth:change_password' %}"><button class="btn btn-primary">Change Password</button></a>
                             </td>
                         </tr>
 

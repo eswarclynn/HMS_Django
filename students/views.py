@@ -26,7 +26,6 @@ def student_home(request):
 @user_passes_test(student_check)
 def outing_app(request):
     if request.method == 'POST':
-        reg_no = request.COOKIES['username_std']
         fromDate = request.POST['fromDate']
         fromTime = request.POST['fromTime']
         toDate = request.POST['toDate']
@@ -42,7 +41,7 @@ def outing_app(request):
         toTimeObj = datetime.datetime.strptime(toTime, '%H:%M')
 
         application = outing(
-            regd_no= Institutestd.objects.get(regd_no = reg_no),
+            regd_no= Institutestd.objects.get(email_id = request.user.email),
             fromDate=fromDateObj,
             fromTime=fromTimeObj,
             toDate=toDateObj,
@@ -59,8 +58,7 @@ def outing_app(request):
 
 @user_passes_test(student_check)
 def attendance_history(request):
-    reg_no = request.COOKIES['username_std']
-    user_details = Institutestd.objects.get(regd_no=str(reg_no))
+    user_details = Institutestd.objects.get(email_id = request.user.email)
     current = attendance.objects.get(regd_no_id=reg_no).dates
     dates = current.split(',')
     abse = list(filter(lambda x: (x.startswith('X')), dates))
@@ -72,8 +70,7 @@ def attendance_history(request):
 
 @user_passes_test(student_check)
 def outing_history(request):
-    reg_no = request.COOKIES['username_std']
-    user_details = Institutestd.objects.get(regd_no=str(reg_no))
+    user_details = Institutestd.objects.get(email_id = request.user.email)
     outing_details = outing.objects.filter(regd_no=str(reg_no))
 
     return render(request, 'students/outingHisto.html', {'user_details': user_details, 'outing_details':outing_details})

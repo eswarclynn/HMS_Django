@@ -7,22 +7,8 @@ from students.models import attendance, details
 
 # Create your views here.
 def index(request):
-    if request.COOKIES.get('username_std'):
-        response = render(request, 'institute/index.html')
-        response.delete_cookie('username_std')
+    return render(request, 'institute/index.html')
 
-    elif request.COOKIES.get('username_off'):
-        response = render(request, 'institute/index.html')
-        response.delete_cookie('username_off')
-
-    elif request.COOKIES.get('username_staff'):
-        response = render(request, 'institute/index.html')
-        response.delete_cookie('username_staff')
-
-    else:
-        response = render(request, 'institute/index.html')
-
-    return response
 @csrf_exempt
 def search(request):
     if request.method == 'POST':

@@ -18,7 +18,7 @@ class LoginView(SuccessMessageMixin, auth_views.LoginView):
             return reverse('students:student_home')
         elif user.is_official:
             return reverse('officials:official_home')
-        elif user.is_official:
+        elif user.is_worker:
             return reverse('workers:staff_home')
 
 class SignUpView(SuccessMessageMixin, CreateView):
@@ -33,7 +33,7 @@ class SignUpView(SuccessMessageMixin, CreateView):
             return reverse('students:student_home')
         elif user.is_official:
             return reverse('officials:official_home')
-        elif user.is_official:
+        elif user.is_worker:
             return reverse('workers:staff_home')
 
 class PasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
@@ -45,7 +45,7 @@ class PasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, auth_views.Pas
             return reverse('students:student_home')
         elif user.is_official:
             return reverse('officials:official_home')
-        elif user.is_official:
+        elif user.is_worker:
             return reverse('workers:staff_home')
 
     def get_context_data(self, **kwargs):

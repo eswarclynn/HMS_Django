@@ -8,8 +8,8 @@ from complaints.models import OfficialComplaints
 # Create your views here.
 def registerComplaint(request):
     if request.method == 'POST':
-        if request.COOKIES.get('username_std'):
-            user = Institutestd.objects.get(regd_no=request.COOKIES['username_std'])
+        if request.user.is_student:
+            user = Institutestd.objects.get(email_id=request.user.email)
             if request.POST.get('complainee'):
                 newComplaint = Complaints(
                 regd_no = user,
@@ -25,8 +25,8 @@ def registerComplaint(request):
                 summary = request.POST['summary'],
                 detailed = request.POST['detailed'],
                 )
-        elif request.COOKIES.get('username_off'):
-            user = Officials.objects.get(emp_id=request.COOKIES['username_off'])
+        elif request.user.is_official:
+            user = Officials.objects.get(email_id=request.user.email)
             if request.POST.get('complainee'):
                 newComplaint = OfficialComplaints(
                 regd_no = user,
@@ -43,7 +43,7 @@ def registerComplaint(request):
                 detailed = request.POST['detailed'],
                 )
 
-        elif request.COOKIES.get('username_staff'):
+        elif request.user.is_worker:
             messages.success(request, 'Complaint Registered Successfully!')
             return redirect('complaints:registerComplaint')
 

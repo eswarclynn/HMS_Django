@@ -50,11 +50,11 @@ body{
     height: 4px;
 }   
 .sidenav::-webkit-scrollbar-track {
-    background: #ddd;
+    background: #666;
 }
    
 .sidenav::-webkit-scrollbar-thumb {
-    background: #666; 
+    background: #99979b; 
 }
 
 .sidenav a:hover {

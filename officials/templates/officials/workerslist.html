@@ -50,7 +50,7 @@
         <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>    
 
 
@@ -59,17 +59,15 @@
         <div class="table1-container" style="padding: 20px; ">
 
             <h1 style="text-align: center;">List of Staff</h1>
-
-            <form method="POST" action="{% url 'officials:workerdelete' %}">
             <table class="table table-hover table-muted table-striped" id="att-table">
                 {% csrf_token %}
 
                 {% if messages %}
-                                   
+
                 {% for message in messages %}
-                     <script>alert('{{message}}');</script>
+                <script>alert('{{message}}');</script>
                 {% endfor %}
-                     
+
                 {% endif %}
 
 
@@ -84,38 +82,30 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                
-                    <tbody>
-                        
-                        {% for stud in emp %}
-                        <tr>
-                            <td>{{stud.staff_id}}</td>
-                            <td>{{stud.name}}</td>
-                            <td>{{stud.desig}}</td>
-                            <td>{{stud.gender}}</td>
-                            <td>{{stud.ph}}</td>
-                            <td>{{stud.block}}</td>
-                            <td>
-                                <input type="submit" name="e{{stud.staff_id}}" class="btn btn-primary" value ="Edit">
-                                <input type="submit" name="d{{stud.staff_id}}" class="btn btn-danger ml-3" value="Delete" onclick="alert('Are you sure you want to delete {{stud.staff_id}} ?')" >
-                            </td>
-                        </tr>
-                        {% empty %}
 
-                        {% endfor %}
-                            
-                          
-    
-                    </tbody>
+                <tbody>
 
-                    
-                    
-                </table>
-            </form>
+                    {% for stud in emp %}
+                    <tr>
+                        <td>{{stud.staff_id}}</td>
+                        <td>{{stud.name}}</td>
+                        <td>{{stud.desig}}</td>
+                        <td>{{stud.gender}}</td>
+                        <td>{{stud.ph}}</td>
+                        <td>{{stud.block}}</td>
+                        <td>
+                            <a href="{% url 'officials:edit_worker' stud.staff_id %}" class="btn btn-primary">Edit</a>
+                            <form action="{% url 'officials:delete_worker' stud.staff_id %}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Are you sure you want to delete {{stud.name}}?');">{% csrf_token %}
+                                <input type="submit" class="btn btn-danger ml-3" value="Delete" />
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
         </div>
-
-
-
     </div>
 
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>

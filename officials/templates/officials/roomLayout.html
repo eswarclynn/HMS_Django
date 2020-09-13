@@ -49,7 +49,7 @@
         <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
 
@@ -372,7 +372,7 @@
 
                 if(count < parseInt('{{room_type|slice:"0:1"}}')){
                     const template = document.createElement('template');
-                    template.innerHTML ="<tr ><td colspan='10' class='text-center'>Add Student to room :<input type='text' name='roll' class='ml-4'> <input type='hidden' name='room' value='{{block_name}}-"+floor+"-"+no+"'><input type='submit' name='Add' value='Add' class='btn btn-primary ml-5'></td></tr>";
+                    template.innerHTML ="<tr ><td colspan='10' class='text-center'>Add Student to room :<input type='text' name='roll' class='ml-4'> <input type='hidden' name='room' value='{{block_id}}-"+floor+"-"+no+"'><input type='submit' name='Add' value='Add' class='btn btn-primary ml-5'></td></tr>";
                     document.getElementById('table_list').appendChild(template.content.firstElementChild);
 
                 }

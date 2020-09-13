@@ -16,7 +16,6 @@ from django.db.models import QuerySet
 from officials.models import WaterCan
 from django.db.models import Sum
 import re
-from officials.forms import PostForm
 
 def official_check(user):
     return user.is_authenticated and user.is_official
@@ -154,7 +153,7 @@ def chiefsProfile(request):
 def takeAttendance(request):
     user = request.user
     user_details = Officials.objects.get(email_id = user.email)
-    block_details = Blocks.objects.filter(emp_id = user_details)
+    block_details = user_details.blocks
     students = details.objects.filter(block_id=block_details.block_id)
     
     stud_list = list()
@@ -241,8 +240,8 @@ def takeAttendance(request):
 def attendance_workers(request):
     user = request.user
     user_details = Officials.objects.get(email_id = user.email)
-    block_details = Blocks.objects.filter(emp_id = user_details)
-    students = Workers.objects.filter(block=block_details.block_id)
+    block_details = user_details.blocks
+    students = Workers.objects.filter(block=block_details)
     
     stud_list = list()
     for student in students:
@@ -368,10 +367,9 @@ def attendance_log(request):
 
         elif(request.POST["regno"]):
             regno = request.POST["regno"]
-            if not Institutestd.objects.get(regd_no=str(regno)).exists():
+            if not Institutestd.objects.filter(regd_no=str(regno)).exists():
                 messages.error(request, 'Invalid Student Roll No.')
                 return redirect('officials:attendance_log')
-            user_details = Institutestd.objects.get(regd_no=str(regno))
             current = attendance.objects.get(regd_no_id=regno).dates
             dates = current.split(',')
             abse = list(filter(lambda x: (x.startswith('X')), dates))
@@ -393,8 +391,8 @@ def attendance_log(request):
 def grantOuting(request):
     user = request.user
     user_details = Officials.objects.get(email_id = user.email)
-    block_details = Blocks.objects.filter(emp_id = user_details)
-    students = details.objects.filter(block_id=block_details.block_id)
+    block_details = user_details.blocks
+    students = details.objects.filter(block_id=block_details)
 
     stud_list = list()
     for student in students:
@@ -461,16 +459,6 @@ def search(request):
 
         else:
             block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
-            block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
-            block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
-            cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)
-            room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
-            block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
-            print(block_name_lower)
-            
-            if room_type == '4S':   cap_stud = cap_room*4
-            elif room_type == '2S': cap_stud = cap_room*2
-            elif room_type == '1S': cap_stud = cap_room
             
             studs = details.objects.filter(block_id=request.POST['block'])
             items_list = list()
@@ -497,14 +485,13 @@ def blockSearch(request):
     user_details = Officials.objects.get(email_id = user.email)
     send_blocks = Blocks.objects.all()
     if request.POST.get('submit'):
-        block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
-        block_gender = Blocks.objects.get(block_id=request.POST['block']).gender
-        block_care = Blocks.objects.get(block_id=request.POST['block']).emp_id_id
-        cap_room = (Blocks.objects.get(block_id=request.POST['block']).capacity)
-        room_type = Blocks.objects.get(block_id=request.POST['block']).room_type
-        block_name_lower = Blocks.objects.get(block_id=request.POST['block']).block_name.lower()
-        print(block_name_lower)
-        block_name='Bhima Hall Of Residence'
+        block = Blocks.objects.get(block_id=request.POST['block'])
+        block_id = block.block_id
+        block_name = block.block_name
+        block_gender = block.gender
+        block_care = block.emp_id_id
+        cap_room = block.capacity
+        room_type = block.room_type
         if room_type == '4S':   cap_stud = cap_room*4
         elif room_type == '2S': cap_stud = cap_room*2
         elif room_type == '1S': cap_stud = cap_room
@@ -527,6 +514,7 @@ def blockSearch(request):
         return render(request, 'officials/roomLayout.html', {
             'items_list':(items_list), 
             'send_blocks':send_blocks, 
+            'block_id':block_id,
             'block_name':block_name,
             'cap_room': cap_room,
             'room_type' : room_type,
@@ -553,10 +541,10 @@ def blockSearch(request):
                 messages.error(request, 'Student : '+str(roll)+' already alloted room!')
                 return redirect('officials:blockSearch')
             else:
-                block_req = Blocks.objects.get(block_name=placing_block)
+                block_req = Blocks.objects.get(block_id=placing_block)
                 stud_req = Institutestd.objects.get(regd_no=roll)
                 if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
-                    student.block_id = Blocks.objects.get(block_name=placing_block)
+                    student.block_id = block_req
                     student.room_no = int(placing_room)
                     student.floor = placing_floor
 
@@ -800,55 +788,55 @@ def workerdelete (request):
                 return render(request,'officials/register_staff.html',{'std':std,'employee':employee,'block':block})
 
 
-@user_passes_test(chief_warden_check)
-@csrf_exempt
-def watercan(request):
-    name = request.COOKIES['username_off']
-    off_details = Officials.objects.get(emp_id=str(name))
-    block_details = Blocks.objects.get(emp_id_id=str(name))
+# @user_passes_test(chief_warden_check)
+# @csrf_exempt
+# def watercan(request):
+#     name = request.COOKIES['username_off']
+#     off_details = Officials.objects.get(emp_id=str(name))
+#     block_details = Blocks.objects.get(emp_id_id=str(name))
 
-    if request.method == 'POST':
-        if request.POST.get('submit_btn'):
-            date = request.POST.get('date')
-            received = request.POST.get('received')
-            given = request.POST.get('given')
+#     if request.method == 'POST':
+#         if request.POST.get('submit_btn'):
+#             date = request.POST.get('date')
+#             received = request.POST.get('received')
+#             given = request.POST.get('given')
 
-            if WaterCan.objects.filter(block=block_details, date=date).exists():
-                current = WaterCan.objects.get(block=block_details, date=date)
-                current.received = received
-                current.given = given
-                current.save()
-            else:
-                newCan = WaterCan(block=block_details, date=date, received=received, given=given)
-                newCan.save()
-            messages.success(request, 'Water Cans Info updated')
-            return redirect('officials:watercan')
+#             if WaterCan.objects.filter(block=block_details, date=date).exists():
+#                 current = WaterCan.objects.get(block=block_details, date=date)
+#                 current.received = received
+#                 current.given = given
+#                 current.save()
+#             else:
+#                 newCan = WaterCan(block=block_details, date=date, received=received, given=given)
+#                 newCan.save()
+#             messages.success(request, 'Water Cans Info updated')
+#             return redirect('officials:watercan')
 
-        elif request.POST.get('count_btn'):
-            if request.POST.get('date_hist'):
-                date_hist = request.POST.get('date_hist')
-                if WaterCan.objects.filter(block=block_details, date=date_hist).exists():
-                    dateRec = WaterCan.objects.get(block=block_details, date=date_hist).received
-                    dateGiven = WaterCan.objects.get(block=block_details, date=date_hist).given
-                else:
-                    dateRec = -10
-                    dateGiven = -10
-                return render(request, 'officials/water-can.html', {'dateRec':dateRec, 'dateGiven':dateGiven, 'dateUsed':dateGiven})
+#         elif request.POST.get('count_btn'):
+#             if request.POST.get('date_hist'):
+#                 date_hist = request.POST.get('date_hist')
+#                 if WaterCan.objects.filter(block=block_details, date=date_hist).exists():
+#                     dateRec = WaterCan.objects.get(block=block_details, date=date_hist).received
+#                     dateGiven = WaterCan.objects.get(block=block_details, date=date_hist).given
+#                 else:
+#                     dateRec = -10
+#                     dateGiven = -10
+#                 return render(request, 'officials/water-can.html', {'dateRec':dateRec, 'dateGiven':dateGiven, 'dateUsed':dateGiven})
 
-            elif request.POST.get('month_hist'):
-                month = int(request.POST.get('month_hist').split('-')[1])
-                if WaterCan.objects.filter(block=block_details, date__month=month).exists():
-                    month_set = WaterCan.objects.filter(block=block_details, date__month=month).order_by('-date')
-                    month_rec = month_set.aggregate(Sum('received'))['received__sum']
-                    month_given = month_set.aggregate(Sum('given'))['given__sum']
-                    month_used = month_given
-                    return render(request, 'officials/water-can.html', {'month':request.POST.get('month_hist'), 'month_empty':False, 'month_set':month_set, 'month_rec':month_rec, 'month_given':month_given, 'month_used':month_used})
-                else:
-                    return render(request, 'officials/water-can.html', {'month_empty':True})
+#             elif request.POST.get('month_hist'):
+#                 month = int(request.POST.get('month_hist').split('-')[1])
+#                 if WaterCan.objects.filter(block=block_details, date__month=month).exists():
+#                     month_set = WaterCan.objects.filter(block=block_details, date__month=month).order_by('-date')
+#                     month_rec = month_set.aggregate(Sum('received'))['received__sum']
+#                     month_given = month_set.aggregate(Sum('given'))['given__sum']
+#                     month_used = month_given
+#                     return render(request, 'officials/water-can.html', {'month':request.POST.get('month_hist'), 'month_empty':False, 'month_set':month_set, 'month_rec':month_rec, 'month_given':month_given, 'month_used':month_used})
+#                 else:
+#                     return render(request, 'officials/water-can.html', {'month_empty':True})
 
 
 
-    return render(request, 'officials/water-can.html')
+#     return render(request, 'officials/water-can.html')
 
 
 from .forms import StudentForm

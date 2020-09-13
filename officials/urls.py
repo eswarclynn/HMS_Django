@@ -24,11 +24,13 @@ urlpatterns = [
     path('delete-student/<int:pk>', views.StudentDeleteView.as_view(), name='delete_student'),
     path('register-official/', views.OfficialRegisterView.as_view(), name='register_official'),
     path('edit-official/<int:pk>', views.OfficialUpdateView.as_view(), name='edit_official'),
+    path('delete-official/<int:pk>', views.OfficialDeleteView.as_view(), name='delete_official'),
     path('register-staff/', views.WorkerRegisterView.as_view(), name='register_worker'),
     path('edit-staff/<int:pk>', views.WorkerUpdateView.as_view(), name='edit_worker'),
+    path('delete-staff/<int:pk>', views.WorkerDeleteView.as_view(), name='delete_worker'),
 
 
-    path('water-cans/', views.watercan, name='watercan'),
+    # path('water-cans/', views.watercan, name='watercan'),
     path('student_list/', views.student_list, name='student_list'),
     path('emp_list/',views.emp_list,name="emp_list"),
     path('empdelete/',views.empdelete,name="empdelete"),

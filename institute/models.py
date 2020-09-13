@@ -124,3 +124,6 @@ class Blocks (models.Model):
     room_type=models.CharField(max_length=2,choices=OPTION)
     gender = models.CharField(max_length=7,choices=GENDER)
     capacity = models.IntegerField(null=False)
+
+    def __str__(self):
+        return self.block_name
