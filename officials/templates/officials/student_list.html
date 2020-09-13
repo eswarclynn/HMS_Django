@@ -112,7 +112,7 @@
                         <td>{{stud.ph}}</td>
                         <td>
                             <a href="{% url 'officials:edit_student' stud.regd_no %}" class="btn btn-success px-3">Edit</a>
-                            <form action="{% url 'officials:delete_student' stud.staff_id %}" method="POST" class="d-inline"
+                            <form action="{% url 'officials:delete_student' stud.regd_no %}" method="POST" class="d-inline"
                                 onsubmit="return confirm('Are you sure you want to delete {{stud.name}}?');">{% csrf_token %}
                                 <input type="submit" class="btn btn-danger ml-3" value="Delete" />
                             </form>

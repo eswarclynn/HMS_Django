@@ -31,9 +31,10 @@ def outing_app(request):
         toDate = request.POST['toDate']
         toTime = request.POST['toTime']
         purpose = request.POST['purpose']
-        parents_mobile = Institutestd.objects.get(regd_no=reg_no).ph_phone
+        student = Institutestd.objects.get(email_id = request.user.email)
+        parents_mobile = student.ph_phone
 
-        print(reg_no, fromDate, fromTime, toDate, toTime, purpose, parents_mobile)
+        print(fromDate, fromTime, toDate, toTime, purpose, parents_mobile)
 
         fromDateObj = datetime.datetime.strptime(fromDate, '%Y-%m-%d')
         toDateObj = datetime.datetime.strptime(toDate, '%Y-%m-%d')
@@ -41,7 +42,7 @@ def outing_app(request):
         toTimeObj = datetime.datetime.strptime(toTime, '%H:%M')
 
         application = outing(
-            regd_no= Institutestd.objects.get(email_id = request.user.email),
+            regd_no= student,
             fromDate=fromDateObj,
             fromTime=fromTimeObj,
             toDate=toDateObj,
@@ -71,7 +72,7 @@ def attendance_history(request):
 @user_passes_test(student_check)
 def outing_history(request):
     user_details = Institutestd.objects.get(email_id = request.user.email)
-    outing_details = outing.objects.filter(regd_no=str(reg_no))
+    outing_details = outing.objects.filter(regd_no=user_details.regd_no)
 
     return render(request, 'students/outingHisto.html', {'user_details': user_details, 'outing_details':outing_details})
 
