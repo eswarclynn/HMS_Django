@@ -72,9 +72,9 @@
 
                 <div class="row" style="margin-bottom: 10px;">
 
-                    <span class="col-md">Block : <b>{{block_details.block_name}}</b></span>
+                    <span class="col-md d-flex justify-content-center justify-content-md-start">Block : <b>{{block_details.block_name}}</b></span>
 
-                    <span class="col-md d-flex justify-content-end">
+                    <span class="col-md d-flex justify-content-center justify-content-md-end">
                         
                         {% if get_date %}
                             Date: <input type="date"  id="datefield" value="{{get_date}}" name="datefield" class="ml-3" onchange="date_click()" required/>
@@ -106,38 +106,35 @@
                         
                         {% for stud in stud_list %}
                         <tr>
-                            <td>{{stud.student.staff_id}}</td>
-                            <td>{{stud.student.name}}</td>
-                            <td>{{stud.student.designation}}</td>
+                            <td>{{stud.staff_id}}</td>
+                            <td>{{stud.name}}</td>
+                            <td>{{stud.designation}}</td>
                             <td>
 
                                 {% if stud.att %}
                                     
                                     {% if stud.att == 'Present' %}
-                                    <select class="form-control w-50" id="{{stud.student.staff_id}}" name="{{stud.student.staff_id}}"  required>
+                                    <select class="form-control w-50 d-inline-block is-valid" id="{{stud.staff_id}}" name="{{stud.staff_id}}"  required>
                                         <option value="Present" selected>Present</option>
                                         <option value="Absent">Absent</option>
                                     </select> 
                                         
                                     {% else %}
-                                    <select class="form-control w-50" id="{{stud.student.staff_id}}" name="{{stud.student.staff_id}}"  required>
+                                    <select class="form-control w-50 d-inline-block is-invalid" id="{{stud.staff_id}}" name="{{stud.staff_id}}"  required>
                                         <option value="Present">Present</option>
                                         <option value="Absent" selected>Absent</option>
                                     </select> 
                                         
                                     {% endif %}
-                                       
+                                    <span class="ml-3 text-primary">Editing Attendance</span>
 
                                 {% else %}
-                                <select class="form-control w-50" id="{{stud.student.staff_id}}" name="{{stud.student.staff_id}}"  required>
+                                <select class="form-control w-50" id="{{stud.staff_id}}" name="{{stud.staff_id}}"  required>
                                     <option value="Present" selected>Present</option>
                                     <option value="Absent">Absent</option>
                                 </select>  
                                 {% endif %}
                             </td>
-                            {% if stud.att %}
-                                <td><span>Editing Attendance</span></td>
-                            {% endif %}
                         </tr>
                         {% endfor %}
                             

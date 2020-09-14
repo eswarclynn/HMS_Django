@@ -241,25 +241,17 @@ def attendance_workers(request):
     user = request.user
     user_details = Officials.objects.get(email_id = user.email)
     block_details = user_details.blocks
-    students = Workers.objects.filter(block=block_details)
-    
-    stud_list = list()
-    for student in students:
-        stud_list.append(
-            {
-                'student':student,
-            }
-        )
+    workers = Workers.objects.filter(block=block_details)
 
     if request.method == 'POST':
         if request.POST.get('submit'):
             print('taking attendance')
             date=request.POST["datefield"]
             attendance_list=list()
-            for stud in stud_list:
-                attendance_list.append(request.POST[str(stud['student'].staff_id)]) # Storing attendance for verification
-                if (request.POST[str(stud['student'].staff_id)] == 'Present'):
-                    current = ATTWORKER.objects.get(staff_id=str(stud['student'].staff_id))
+            for stud in workers:
+                attendance_list.append(request.POST[str(stud.staff_id)]) # Storing attendance for verification
+                if (request.POST[str(stud.staff_id)] == 'Present'):
+                    current = stud.attendance
                     currAtt = current.dates
                     if currAtt == '':
                         currAtt += date
@@ -280,7 +272,7 @@ def attendance_workers(request):
                     current.dates = currAtt
                     current.save()
                 else:
-                    current = ATTWORKER.objects.get(staff_id=str(stud['student'].staff_id))
+                    current = stud.attendance
                     currAtt = current.dates
                     if currAtt == '':
                         currAtt += ('X'+date)
@@ -308,17 +300,17 @@ def attendance_workers(request):
 
         if request.POST.get('get_date'):
             get_date = request.POST.get('get_date')
-            for stud in stud_list:
-                pos = stud['student'].attendance.dates.find(get_date)
+            for stud in workers:
+                pos = stud.attendance.dates.find(get_date)
                 if pos != -1:
-                    if stud['student'].attendance.dates[pos-1] == 'X':
-                        stud['att'] = 'Absent'
+                    if stud.attendance.dates[pos-1] == 'X':
+                        stud.att = 'Absent'
                     else:
-                        stud['att'] = 'Present'
-            return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list, 'get_date':get_date})
+                        stud.att = 'Present'
+            return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':workers, 'get_date':get_date})
               
 
-    return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list})
+    return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':workers, 'attendance': attendance})
 
 
 @user_passes_test(official_check)

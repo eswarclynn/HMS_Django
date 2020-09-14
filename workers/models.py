@@ -28,6 +28,12 @@ class Workers(models.Model):
     def __str__(self):
         return str(self.staff_id)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not attendance.objects.filter(worker = self).exists():
+            att = attendance.objects.create(worker = self)
+
+
 class Medical(models.Model):
     STATUS = (
         ('Registered','Registered'),
@@ -46,10 +52,9 @@ class attendance(models.Model):
         ('Present','Present'),
         ('Absent','Absent')
     )
-    staff_id = models.OneToOneField(
+    worker = models.OneToOneField(
         Workers,
         on_delete=models.CASCADE,
-        primary_key=True,
     )
     dates = models.TextField(blank=True)
     status = models.CharField(max_length=10,default='',blank=True)
