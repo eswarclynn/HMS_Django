@@ -1,9 +1,8 @@
 from django.shortcuts import redirect, render
-from .models import Complaints
-from institute.models import Institutestd, Officials
+from .models import Complaint
+from institute.models import Student, Official
 from django.http.response import Http404
 from django.contrib import messages
-from complaints.models import OfficialComplaints
 
 # Create your views here.
 def registerComplaint(request):

@@ -1,5 +1,5 @@
 from django import forms
-from institute.models import Institutestd, Officials
+from institute.models import Student, Official
 
 
 class StudentForm(forms.ModelForm):
@@ -17,7 +17,7 @@ class StudentForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Institutestd
+        model = Student
         fields = '__all__'
 
         widgets = {

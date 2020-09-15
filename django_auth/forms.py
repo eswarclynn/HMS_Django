@@ -1,12 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User
-from institute.models import Institutestd, Officials
-from workers.models import Workers
-from students.models import attendance, details
+from institute.models import Student, Official
+from workers.models import Worker
 
 class SignUpForm(UserCreationForm):
-    
+    entity_id = forms.CharField(label='Registration No./Staff ID')
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2', 'is_student', 'is_official', 'is_worker')
@@ -41,7 +40,7 @@ class SignUpForm(UserCreationForm):
         if (is_worker or is_official) and (not email.endswith('@nitandhra.ac.in')):
             raise forms.ValidationError('Staff should use institute eMail ID')
 
-        if not ( Institutestd.objects.filter(email_id = email).exists() or Officials.objects.filter(email_id = email).exists() or Workers.objects.filter(email_id = email).exists() ):
+        if not ((is_student and Student.objects.filter(regd_no = entity_id).exists()) or (is_official and Official.objects.filter(emp_id = entity_id).exists()) or  (is_worker and Worker.objects.filter(staff_id = entity_id).exists())):
             if is_student:
                 user_type = 'Student'
             elif is_official or is_worker:

@@ -3,7 +3,6 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from institute.models import Institutestd
 
 class UserManager(BaseUserManager):
     def create_user(self, email, type_flag, password=None):

@@ -1,10 +1,10 @@
 from django.shortcuts import redirect, render
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from workers.models import Medical, Workers
-from institute.models import Blocks, Institutestd, Officials
-from complaints.models import Complaints, OfficialComplaints
-from students.models import details
+from workers.models import MedicalIssue, Worker
+from institute.models import Block, Student, Official
+from complaints.models import Complaint
+from students.models import RoomDetail
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
 

@@ -1,8 +1,9 @@
 from django.db import models
-from students.models import details, attendance
+from students.models import RoomDetail, Attendance
+from django.conf import settings
 
 # Create your models here.
-class Institutestd (models.Model):
+class Student(models.Model):
     YEAR = (
         (1, 1),
         (2, 2),
@@ -11,20 +12,20 @@ class Institutestd (models.Model):
     )
 
     BRANCH=(
-        ('CSE','Computer Science Engineering'),
-        ('ECE','Electronic and Communication Engineering'),
-        ('EEE','Electrical and Electronic Engineering'),
+        ('CSE','Computer Science and Engineering'),
+        ('ECE','Electronics and Communication Engineering'),
+        ('EEE','Electrical and Electronics Engineering'),
         ('CHE','Chemical Engineering'),
-        ('MME','Metalurgy Engineering'),
+        ('MME','Metallurgical and Materials Engineering'),
         ('MEC','Mechanical Engineering'),
         ('CIV','Civil Engineering'),
-        ('BIO','Bio Technology'),
+        ('BIO','Biotechnology'),
     )
     GENDER=(
         ('Male','Male'),
         ('Female','Female'),
     )
-    CASTE = (
+    COMMUNITY = (
         ('GEN', 'GEN'),
         ('OBC', 'OBC'),
         ('SC', 'SC'),
@@ -32,14 +33,15 @@ class Institutestd (models.Model):
         ('EWS', 'EWS')
     )
 
-    regd_no = models.IntegerField(primary_key=True,null=False)
-    roll_no = models.IntegerField(null=False)
-    name = models.CharField(max_length=100,null=False)
-    email_id = models.CharField(max_length=50,null=False, unique=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    regd_no = models.CharField(unique=True, null=False, max_length=20)
+    roll_no = models.CharField(unique=True, null=False, max_length=20)
+    name = models.CharField(max_length=100, null=False)
+    email = models.EmailField(null=False)
     branch = models.CharField(max_length=3,choices=BRANCH,null=False)
     gender = models.CharField(max_length=7,choices=GENDER,null=False)
     pwd = models.BooleanField(null=False, default=False)
-    community = models.CharField(max_length=25, choices=CASTE, null=False, default='GEN')
+    community = models.CharField(max_length=25, choices=COMMUNITY, null=False)
     year = models.IntegerField(null=False, choices=YEAR)
     dob = models.DateField(null=False)
     blood_group = models.CharField(max_length=25,null=False)
@@ -65,13 +67,13 @@ class Institutestd (models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-        if not details.objects.filter(regd_no = self).exists():
-            det = details.objects.create(regd_no=self)
-        if not attendance.objects.filter(regd_no = self).exists():
-            att = attendance.objects.create(regd_no=self)
+        if not RoomDetail.objects.filter(student = self).exists():
+            det = RoomDetail.objects.create(student=self)
+        if not Attendance.objects.filter(student = self).exists():
+            att = Attendance.objects.create(student=self)
 
 
-class Officials (models.Model):
+class Official(models.Model):
     EMP=(
         ('Caretaker','Caretaker'),
         ('Warden','Warden'),
@@ -79,30 +81,33 @@ class Officials (models.Model):
         ('Chief-Warden','Chief-Warden'),
 
     )
-    BRANCHES=(
-        ('CSE','Computer Science Engineering'),
-        ('ECE','Electronic and Communication Engineering'),
-        ('EEE','Electrical and Electronic Engineering'),
+    BRANCH=(
+        ('CSE','Computer Science and Engineering'),
+        ('ECE','Electronics and Communication Engineering'),
+        ('EEE','Electrical and Electronics Engineering'),
         ('CHE','Chemical Engineering'),
-        ('MME','Metalurgy Engineering'),
+        ('MME','Metallurgical and Materials Engineering'),
         ('MEC','Mechanical Engineering'),
         ('CIV','Civil Engineering'),
-        ('BIO','Bio Technology'),
-
+        ('BIO','Biotechnology'),
+        ('SOS', 'School of Sciences'),
+        ('SHM', 'School of Humanities and Management')
     )
 
-    emp_id = models.IntegerField(primary_key=True,null=False)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    emp_id = models.CharField(unique=True,null=False, max_length=20)
     name = models.CharField(max_length=100)
     designation = models.CharField(max_length=20,choices=EMP)
-    branch=models.CharField(max_length=20,choices=BRANCHES,default="CSE")
+    branch=models.CharField(max_length=20,choices=BRANCH)
     phone = models.CharField(max_length=10, null=False)
-    email_id = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(null=False)
+
 
     def __str__(self):
         return str(self.emp_id)
 
 
-class Blocks (models.Model):
+class Block(models.Model):
     OPTION=(
           ('1S','One student per Room'),
           ('2S','Two students per Room'),
@@ -114,16 +119,16 @@ class Blocks (models.Model):
         ('Female','Female'),
      )
 
-    emp_id = models.OneToOneField(
-        Officials,
+    caretaker = models.OneToOneField(
+        Official,
         on_delete=models.CASCADE,
         null=True, blank=True
     )
-    block_id = models.IntegerField(primary_key=True)
-    block_name=models.CharField(max_length=50,null=False)
-    room_type=models.CharField(max_length=2,choices=OPTION)
+    block_id = models.CharField(unique=True, max_length=20)
+    name = models.CharField(max_length=50,null=False)
+    room_type = models.CharField(max_length=2,choices=OPTION)
     gender = models.CharField(max_length=7,choices=GENDER)
     capacity = models.IntegerField(null=False)
 
     def __str__(self):
-        return self.block_name
+        return self.name

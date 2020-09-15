@@ -1,13 +1,13 @@
 from django.contrib import admin
-from workers.models import Workers,Medical,attendance
+from workers.models import Worker, MedicalIssue, Attendance
 
 # Register your models here.
-class workersAdmin(admin.ModelAdmin):
-    list_display = ('staff_id', 'name', 'designation', 'block')
+class WorkerAdmin(admin.ModelAdmin):
+    list_display = ('staff_id', 'name', 'user', 'designation', 'block')
 
-class medicalAdmin(admin.ModelAdmin):
-    list_display = ('regd_no', 'status', 'summary')
+class MedicalIssueAdmin(admin.ModelAdmin):
+    list_display = ('entity_id', 'entity_type', 'status', 'summary')
 
-admin.site.register(Workers, workersAdmin)
-admin.site.register(Medical, medicalAdmin)
-admin.site.register(attendance)
+admin.site.register(Worker, WorkerAdmin)
+admin.site.register(MedicalIssue, MedicalIssueAdmin)
+admin.site.register(Attendance)

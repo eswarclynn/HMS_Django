@@ -64,7 +64,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Krishnaveni Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'krishnaveni hall of residence'%}
                             <p>{{em.name}} : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -103,7 +103,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Tungabhadra Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'tungabhadra hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -142,7 +142,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Bhima Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'bhima hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -181,7 +181,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Munneru Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'munneru hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -220,7 +220,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'GhataPrabha Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'ghataprabha hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -271,7 +271,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Godavari Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'godavari hall of residence' %}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -310,7 +310,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Sabari Hall of Residence'%}
+                            {% if em.block.block_name|lower == 'sabari hall of residence' %}
                             <p>{{em.name}} : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -349,7 +349,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Pranahita Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'pranahita hall of residence' %}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -388,7 +388,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Indravathi Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'indravathi hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -427,7 +427,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Banganga Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'banganga hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -466,7 +466,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Purna Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'purna hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}
@@ -505,7 +505,7 @@
                 <h5>Caretaker Contact: </h5>
                     {% if caretaker %}
                         {%for em in caretaker%}
-                            {%if em.block == 'Manjeera Hall Of Residence'%}
+                            {%if em.block.block_name|lower == 'manjeera hall of residence'%}
                             <p>{{em.name}}(Caretaker) : {{em.ph}}</p>
                             {%endif%}
                         {%endfor%}

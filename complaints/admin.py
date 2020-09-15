@@ -1,12 +1,8 @@
 from django.contrib import admin
-from .models import *
+from .models import Complaint
 
 # Register your models here.
-class complaintsAdmin(admin.ModelAdmin):
-    list_display = ('regd_no', 'type', 'summary', 'status', 'date', 'remark')
+class ComplaintAdmin(admin.ModelAdmin):
+    list_display = ('entity_id', 'entity_type', 'type', 'summary', 'status', 'created_at', 'updated_at', 'remark')
 
-class officialComplaintsAdmin(admin.ModelAdmin):
-    list_display = ('regd_no', 'type', 'summary', 'status', 'date', 'remark')
-
-admin.site.register(OfficialComplaints, complaintsAdmin)
-admin.site.register(Complaints, officialComplaintsAdmin)
+admin.site.register(Complaint, ComplaintAdmin)

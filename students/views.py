@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
-from institute.models import Blocks, Institutestd, Officials
-from students.models import attendance, outing
+from institute.models import Block, Student, Official
+from students.models import Attendance, Outing
 from django.http import HttpResponse
 import datetime
 from django.contrib import messages

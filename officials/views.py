@@ -1,19 +1,14 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_exempt
-from institute.models import Blocks, Institutestd, Officials
-from students.models import attendance as ATT
-from students.models import details
-from students.models import attendance
-from students.models import outing as OUTINGDB
+from institute.models import Block, Student, Official
+from students.models import Attendance as ATT, RoomDetail, Outing as OUTINGDB
 from django.contrib import messages
 from datetime import date as datePy
 from django.http.response import Http404
-from complaints.models import Complaints, OfficialComplaints
-from workers.models import Medical, Workers
-from workers.models import attendance as ATTWORKER
+from complaints.models import Complaint
+from workers.models import MedicalIssue, Worker, Attendance as ATTWORKER
 from django.db.models import QuerySet
-from officials.models import WaterCan
 from django.db.models import Sum
 import re
 
@@ -855,7 +850,7 @@ class ChiefWardenTestMixin(OfficialTextMixin):
 
 class StudentRegisterView(CreateView):
     template_name = 'officials/student-register-form.html'
-    model = Institutestd
+    model = Student
     form_class = StudentForm
     success_url = reverse_lazy('officials:student_list')
 
@@ -866,7 +861,7 @@ class StudentRegisterView(CreateView):
 
 class StudentUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/student-register-form.html'
-    model = Institutestd
+    model = Student
     form_class = StudentForm
     success_url = reverse_lazy('officials:student_list')
 
@@ -876,12 +871,12 @@ class StudentUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
         return context
 
 class StudentDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
-    model = Institutestd
+    model = Student
     success_url = reverse_lazy('officials:student_list')
 
 class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
-    model = Officials
+    model = Official
     fields = '__all__'
     success_url = reverse_lazy('officials:emp_list')
 
@@ -892,7 +887,7 @@ class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
 
 class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/official-register-form.html'
-    model = Officials
+    model = Official
     fields = '__all__'
     success_url = reverse_lazy('officials:emp_list')
 
@@ -902,12 +897,12 @@ class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
         return context
 
 class OfficialDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
-    model = Officials
+    model = Official
     success_url = reverse_lazy('officials:emp_list')
 
 class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
-    model = Workers
+    model = Worker
     fields = '__all__'
     success_url = reverse_lazy('officials:workers_list')
 
@@ -918,7 +913,7 @@ class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
 
 class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/official-register-form.html'
-    model = Workers
+    model = Worker
     fields = '__all__'
     success_url = reverse_lazy('officials:workers_list')
 
@@ -928,6 +923,6 @@ class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
         return context
 
 class WorkerDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
-    model = Workers
+    model = Worker
     success_url = reverse_lazy('officials:workers_list')
 

@@ -1,17 +1,16 @@
 from django.contrib import admin
-from students.models import details,attendance,outing
+from students.models import RoomDetail,Attendance,Outing
 
 # Register your models here.
-class detailsAdmin(admin.ModelAdmin):
-    list_display = ('regd_no', 'block_id', 'room_no', 'floor')
+class RoomDetailAdmin(admin.ModelAdmin):
+    list_display = ('student', 'block', 'room_no', 'floor')
 
-class attendanceAdmin(admin.ModelAdmin):
-    list_display = ('regd_no', 'status')
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ('student', 'status')
 
-class outingAdmin(admin.ModelAdmin):
-    list_display = ('regd_no', 'fromDate', 'fromTime', 'toDate', 'toTime', 'purpose', 'parent_mobile', 'permission')
+class OutingAdmin(admin.ModelAdmin):
+    list_display = ('student', 'fromDate', 'fromTime', 'toDate', 'toTime', 'purpose', 'permission')
 
-
-admin.site.register(details, detailsAdmin)
-admin.site.register(attendance, attendanceAdmin)
-admin.site.register(outing, outingAdmin)
+admin.site.register(RoomDetail, RoomDetailAdmin)
+admin.site.register(Attendance, AttendanceAdmin)
+admin.site.register(Outing, OutingAdmin)

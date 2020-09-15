@@ -11,22 +11,24 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'o*78gqvy)(*8(w(s(dm8^o(gfzzkntu9ow+fvtd&*ilxnx+)(b'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG") == "True"
 # DEBUG = os.environ.get("DEBUG", False)
 
-ALLOWED_HOSTS = ['localhost', '.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com']
 
 
 # Application definition
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,15 +87,18 @@ WSGI_APPLICATION = 'hosteldb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'hosteldb',
         'USER': 'hosteladmin',
-        'PASSWORD': '12345',
+        'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '',
     }
 }
 
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -101,9 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
     # {
     #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
     # {
     #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     # },
@@ -151,3 +157,18 @@ EMAIL_USE_SSL=False
 
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 MEDIA_URL= "/media/"
+
+
+if env("ENVIRONMENT") == "development":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'hosteldb',
+            'USER': 'hosteladmin',
+            'PASSWORD': '12345',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+    }
+
+    AUTH_PASSWORD_VALIDATORS = []

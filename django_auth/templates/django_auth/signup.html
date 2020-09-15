@@ -44,6 +44,7 @@
                          <div class="card-body">
                               <form method="post">{% csrf_token %}
                                    {{ form|as_crispy_errors }}
+                                   {{form.entity_id|as_crispy_field}}
                                    {{form.email|as_crispy_field}}
                                    {{form.password1|as_crispy_field}}
                                    {{form.password2|as_crispy_field}}
