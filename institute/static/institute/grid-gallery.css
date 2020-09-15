@@ -1,16 +1,9 @@
 body{
-  background: url('bg3.jpg') no-repeat center center fixed;
-  background-size: cover;
-}
-
-.gallery-block.grid-gallery{
-
-  padding-bottom: 60px;
-  padding-top: 60px;
+  background: linear-gradient(to top, #dfe9f3 0%, white 100%) no-repeat center center fixed;
+  
 }
 
 .gallery-block.grid-gallery .heading{
-    margin-bottom: 50px;
     text-align: center;
 }
 
@@ -39,15 +32,4 @@ body{
     transform: scale(1.05);
     box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.15) !important;
   }
-}
-
-a {
-  color: aliceblue;
-  font-size: 1.3em;
-  transition: 0.5s;
-}
-
-a:hover {
-  color: rgb(252, 169, 74);
-  text-decoration: none;
 }

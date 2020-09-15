@@ -10,23 +10,28 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href="{% static 'officials/style_main.css' %}" rel="stylesheet"> <!--Layout.css-->
-  <script src = "{% static 'officials/search.js' %}"></script>
+  <link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'officials/sidenav.js' %}"></script>
 
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'officials:chiefsProfile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>
+        
+        <div class="col-0 ">
+            <a href="{% url 'officials:chiefsProfile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         </div>
     </nav>
 
@@ -37,14 +42,18 @@
         <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
         <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-        <a href="{% url 'officials:register' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
-        <a href="{% url 'officials:registeremp' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'officials:register_student' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:student_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp;List of Students</a>
+        <a href="{% url 'officials:register_official' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'officials:emp_list' %}"><span><i class="fa fa-file-text-o"></i></span> &nbsp;&nbsp; List of Employees</a>
+        <a href="{% url 'officials:register_worker' %}" target="_blank"><span><i class="fa fa-address-book"></i></span> &nbsp;&nbsp; Add Worker</a>
+        <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
-    <br> <br> <br> <br>
+
     
     <div class="container main-container">
         <h2 class="text-center">Search Student</h2>
@@ -52,8 +61,8 @@
         <form method="POST" action="{% url 'officials:search' %}">
 
             <div class="row text-center">
-                <div class="col">Roll No.: <input type="checkbox" class="checkBox ml-3" id="regCheck" onclick="setEnabled()"></div>
-                <div class="col">Block: <input type="checkbox" class="checkBox ml-3" id="blockCheck" onclick="setEnabled()"></div>
+                <div class="col">Roll No.: <input type="radio" name="search_by" value="rollno" class="ml-3" id="regCheck" onclick="setEnabled()"></div>
+                <div class="col">Block: <input type="radio" name="search_by" value="block" class="ml-3" id="blockCheck" onclick="setEnabled()"></div>
             </div>
             
             <div class="row mt-4">
@@ -84,7 +93,7 @@
 <br><br>
         
         <div class="table-container container">
-            <table class="table table-hover table-dark table-striped">
+            <table class="table table-hover table-muted table-striped">
                 <thead>
                     <th>Student ID</th>
                     <th>Name</th>
@@ -96,7 +105,6 @@
                     <th>In Campus?</th>
                 </thead>
                 <tbody>
-                    
                     {% for item in items_list %}
                     <tr>
                         <td>{{item.stud.regd_no}}</td>
@@ -107,12 +115,8 @@
                         <td>{{item.block_name}}</td>
                         <td>{{item.block_details.floor|slice:"0:1"}}-{{item.block_details.room_no}}</td>
                         <td>{{item.isPresent}}</td>
-                        
-
                     </tr>
-                        
                     {% endfor %}
-                        
                 </tbody>
             </table>
         </div>
@@ -127,6 +131,27 @@
                 
             });
         } );
+
+    function setEnabled() {
+    
+        let regno = document.getElementById("regno") ;
+        let block = document.getElementById("block");
+
+        if(document.getElementById('regCheck').checked == true){
+            regno.disabled = false;
+            block.value = "";
+        }else{
+            regno.disabled = true;
+        }
+
+        if(document.getElementById('blockCheck').checked == true){
+            block.disabled = false;
+            regno.value = "";
+        }else{
+            block.disabled= true;
+        }
+
+    }
     </script>
 
 </body>

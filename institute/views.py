@@ -2,35 +2,21 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.messages.api import get_messages
-from institute.models import Blocks, Institutestd
-from students.models import attendance, details
+from institute.models import Block, Student, Official
+from students.models import Attendance, RoomDetail
 
 # Create your views here.
 def index(request):
-    if request.COOKIES.get('username_std'):
-        response = render(request, 'institute/index.html')
-        response.delete_cookie('username_std')
+    return render(request, 'institute/index.html')
 
-    elif request.COOKIES.get('username_off'):
-        response = render(request, 'institute/index.html')
-        response.delete_cookie('username_off')
-
-    elif request.COOKIES.get('username_staff'):
-        response = render(request, 'institute/index.html')
-        response.delete_cookie('username_staff')
-
-    else:
-        response = render(request, 'institute/index.html')
-
-    return response
 @csrf_exempt
 def search(request):
     if request.method == 'POST':
 
         if request.POST.get('regno'):
-            stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
+            stud = Student.objects.get(regd_no=str(request.POST.get('regno')))
             block_details = details.objects.get(regd_no=stud)
-            block = Blocks.objects.get(block_id=block_details.block_id_id)
+            block = Block.objects.get(block_id=block_details.block_id_id)
             items={
                 'stud':stud,
                 'block_details':block_details,
@@ -43,3 +29,28 @@ def search(request):
 
 def gallery(request):
     return render(request, 'institute/grid-gallery.html')
+
+def hostels(request):
+    emp=Officials.objects.all()
+    caretaker=list()
+
+    for em in emp:
+
+        try:
+            if Blocks.objects.filter(emp_id=em).exists():
+                block_name=Blocks.objects.get(emp_id=em).block_name
+                caretaker.append({
+                    'block':block_name,
+                    'ph':em.phone,
+                    'name':em.name,
+                })
+        except:
+            pass
+          
+    return render (request,'institute/hostels.html',{'caretaker':caretaker,})
+
+def contact(request):
+    return render (request,'institute/contact.html')
+
+def information(request):
+    return render(request,'institute/information.html',{})

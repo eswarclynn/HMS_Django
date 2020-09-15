@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Outing Requests - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -10,7 +10,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href="{% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--Layout.css-->
@@ -19,14 +20,18 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'officials:profile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>
+        
+        <div class="col-0 ">
+            <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         </div>
     </nav>
 
@@ -38,13 +43,13 @@
         <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
         <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
         <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
-        <a href="{% url 'officials:watercan' %}"><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>
+        <!--<a href=""><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>-->
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
-    <br> <br> <br> <br>
+
     <div class="container main-container">
         <p style="text-align: center; font-size: large;"><b>{{off_details.name}}</b>, take at look at pending outing requests.</p><br>
 
@@ -64,7 +69,7 @@
                 {% endfor %}
                      
                 {% endif %}
-                <table class="table table-hover table-dark table-striped" >
+                <table class="table table-hover table-muted table-striped" >
                     <thead>
                         <tr>
                             <th>Roll No.</th>
@@ -75,6 +80,7 @@
                             <th>To Date</th>
                             <th>Purpose of Visit</th>
                             <th>Parent's Mobile</th>
+                            <th>View History</th>
                             <th>Allow?</th>
                         </tr>
                     </thead>
@@ -89,34 +95,18 @@
                                 <td>{{stud.outing.toDate}}</td>
                                 <td>{{stud.outing.purpose}}</td>
                                 <td>{{stud.outing.parent_mobile}}</td>
+                                <td><button type="submit" value="{{stud.info.regd_no}}" class="btn btn-primary" name="HIS">View History</button></td>
                                 <td>
-                                    <select class="form-control" id="{{stud.outing.id}}" name="{{stud.outing.id}}">
-                                        <option value="">Select Permission</option>
-                                        <option value="Granted">Granted</option>
-                                        <option value="Rejected">Rejected</option>
-                                    </select>
+                                    <button type="submit" value="{{stud.outing.id}}" class="btn btn-success" name="GR">Grant</button>
+                                    <button type="submit" value="{{stud.outing.id}}" class="btn btn-danger ml-xl-3" name="RE">Reject</button>
                                 </td>
                             
                             </tr>
 
                         {% empty %}
 
-                            <tr>
-                                <td colspan="9" class="text-center">
-                                    No Pending Outing Requests!
-                                </td>
-                            </tr>
-                            <script>
-                                window.onload = function(){
-                                    document.getElementById("sub-btn").disabled = true;
-                                }
-                            </script>
-
                         {% endfor %}
                 </table>
-                <div class="d-flex justify-content-center">
-                    <input type="submit" class="btn btn-success p-3" id="sub-btn" >
-                </div>
             </form>
 
         </div>
@@ -126,7 +116,7 @@
     <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.table-dark').DataTable({
+            $('.table-muted').DataTable({
                 "dom": '<"row"<"col-3"l><"col"f><"col"p>>'
             });
 

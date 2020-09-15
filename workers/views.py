@@ -1,17 +1,22 @@
 from django.shortcuts import redirect, render
 from django.http import Http404, HttpResponse
-from workers.models import Medical, Workers
-from institute.models import Blocks, Institutestd, Officials
-from complaints.models import Complaints, OfficialComplaints
-from students.models import details
+from django.views.decorators.csrf import csrf_exempt
+from workers.models import MedicalIssue, Worker
+from institute.models import Block, Student, Official
+from complaints.models import Complaint
+from students.models import RoomDetail
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test, login_required
+
+def worker_check(user):
+    return user.is_authenticated and user.is_worker
 
 # Create your views here.
+@csrf_exempt
+@user_passes_test(worker_check)
 def staff_home(request):
-    staff_id = request.COOKIES['username_staff']
-    user_details = Workers.objects.get(staff_id=str(staff_id))
+    user_details = Workers.objects.get(email_id = request.user.email)
     
-
     complaints = list()
     off_complaints = list()
     if user_details.designation == 'General Servant':
@@ -46,7 +51,7 @@ def staff_home(request):
                     'room':room_det.room_no,
                     'floor':room_det.floor[0],
                     'block': room_det.block_id.block_name,
-                    'name': Institutestd.objects.get(regd_no=item.regd_no).name
+                    'info': Institutestd.objects.get(regd_no=item.regd_no)
                 })
                 
             except Exception as e: 
@@ -59,7 +64,7 @@ def staff_home(request):
                 medical.append({
                     'comp':item,
                     'designation': designation,
-                    'name': off_det.name
+                    'info': off_det
                 })
             except: print('Not Official')
             try:
@@ -68,43 +73,51 @@ def staff_home(request):
                 medical.append({
                     'comp':item,
                     'designation': designation,
-                    'name': work_det.name
+                    'info': work_det
                 })
             except: print('Not Staff')
             print(medical)
+
+        if request.method == 'POST':
+            print(request.POST)
+            for item in medical:
+                newComplaint = Medical.objects.get(id=item['comp'].id)
+                print(str(item['comp'].id))
+                if newComplaint.status != request.POST[str(item['comp'].id)] and newComplaint.remarks != request.POST['RE'+str(item['comp'].id)]:
+                    newComplaint.status = request.POST[str(item['comp'].id)]
+                    newComplaint.remarks = request.POST['RE'+str(item['comp'].id)]
+                    newComplaint.save()
+            else:
+                messages.success(request, 'Successfully updated Medical Issues!')
+                return redirect('workers:staff_home') 
     if user_details.block: block_details = Blocks.objects.filter(block_id=user_details.block.block_id)
     else: block_details=""
     return render(request, 'workers/workers-profile.html', {'user_details': user_details, 'block_details':block_details, 'complaints':complaints,'off_complaints':off_complaints, 'medical':medical})
 
-
+@login_required
 def medical_issue(request):
     if request.method == 'POST':
-        if request.COOKIES.get('username_std'):
+        if request.user.is_student:
                 newComplaint = Medical(
-                regd_no = request.COOKIES['username_std'],
+                regd_no = Institutestd.objects.get(email_id = request.user.email).regd_no,
                 summary = request.POST['summary'],
                 detailed = request.POST['detailed'],
                 )
-        elif request.COOKIES.get('username_off'):
+        elif request.user.is_official:
                 newComplaint = Medical(
-                regd_no = request.COOKIES['username_off'],
+                regd_no = Officials.objects.get(email_id = request.user.email).emp_id,
                 summary = request.POST['summary'],
                 detailed = request.POST['detailed'],
                 )
-        elif request.COOKIES.get('username_staff'):
+        elif request.user.is_worker:
                 newComplaint = Medical(
-                regd_no = request.COOKIES['username_staff'],
+                regd_no = Workers.objects.get(email_id = request.user.email).staff_id,
                 summary = request.POST['summary'],
                 detailed = request.POST['detailed'],
                 )
-
-        else:
-            raise Http404('Please Log In and then register medical issue!')
                 
         newComplaint.save()
         messages.success(request, 'Medical Issue Registered Successfully!')
         return redirect('workers:medical_issue')
-
-
 
     return render(request, 'workers/medical.html')

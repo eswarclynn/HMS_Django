@@ -10,7 +10,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href="{% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--attendance.css-->
@@ -20,44 +21,77 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'officials:profile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
-    </nav>
+        
+        <div class="col-0 ">
+            <a href="{% url 'officials:chiefsProfile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        </div>
+</nav>
 
-    <br> <br> <br> <br>
+    <div id="mySidenav" class="sidenav">
+        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
+        <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
+        <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
+        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
+        <a href="{% url 'officials:register_student' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:student_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp;List of Students</a>
+        <a href="{% url 'officials:register_official' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'officials:emp_list' %}"><span><i class="fa fa-file-text-o"></i></span> &nbsp;&nbsp; List of Employees</a>
+        <a href="{% url 'officials:register_worker' %}" target="_blank"><span><i class="fa fa-address-book"></i></span> &nbsp;&nbsp; Add Worker</a>
+        <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
+        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
+        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+    </div>
+
+
     <div class="container main-container">
-
-        <div class="table1-container" >
-
+    
+        <div class="table1-container">
+    
             <h1 style="text-align: center;">List of Students</h1>
-
-            <form method="POST" action="{% url 'officials:studentdelete' %}">
-            <table class="table table-hover table-dark table-striped" id="att-table">
+            <div id="filters" class="row mb-4">
+                <span class="col-md"></span>
+                <span class="col-md"></span>
+                Year:<span class="col-md"></span>
+                Branch:<span class="col-md"></span>
+                Gender:<span class="col-md"></span>
+                Block:<span class="col-md"></span>
+                <span class="col-md"></span>
+                <span class="col-md"></span>
+                <span class="col-md"></span>
+    
+            </div>
+    
+            <table class="table table-hover table-muted table-striped" id="att-table">
                 {% csrf_token %}
-
+    
                 {% if messages %}
-                                   
+    
                 {% for message in messages %}
-                     <script>
-                          alert('{{message}}');
-                     </script>
+                <script>
+                    alert('{{message}}');
+                </script>
                 {% endfor %}
-                     
+    
                 {% endif %}
-
-
+    
+    
                 <thead>
                     <tr>
-                        <th>Roll No</th>
+                        <th>Regd No</th>
                         <th>Name</th>
                         <th>Year</th>
+                        <th>Branch</th>
                         <th>Gender</th>
                         <th>Block</th>
                         <th>Room No</th>
@@ -65,32 +99,30 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                    <tbody>  
-                        {% for stud in list_of_students %}
-                        <tr>
-                            <td>{{stud.regd_no}}</td>
-                            <td>{{stud.name}}</td>
-                            <td>{{stud.year}}</td>
-                            <td>{{stud.gender}}</td>
-                            <td>{{stud.block}}</td>
-                            <td>{{stud.floor|slice:"0:1"}}-{{stud.room_no}}</td>
-                            <td>{{stud.ph}}</td>
-                            <td>
-                                <input type="submit" name="e{{stud.regd_no}}" class="btn btn-success px-3" value ="Edit" >
-                                <input type="submit" name="d{{stud.regd_no}}" class="btn btn-danger ml-3" value="Delete" onclick="alert('Are you sure you want to delete {{stud.regd_no}} ?')">
-                            </td>
-                        </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="10" class="text-center">No students are present</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-
-                    
-                    
-                </table>
-            </form>
+                <tbody>
+                    {% for stud in list_of_students %}
+                    <tr>
+                        <td>{{stud.regd_no}}</td>
+                        <td>{{stud.name}}</td>
+                        <td>{{stud.year}}</td>
+                        <td>{{stud.branch}}</td>
+                        <td>{{stud.gender}}</td>
+                        <td>{{stud.block}}</td>
+                        <td>{{stud.floor|slice:"0:1"}}-{{stud.room_no}}</td>
+                        <td>{{stud.ph}}</td>
+                        <td>
+                            <a href="{% url 'officials:edit_student' stud.regd_no %}" class="btn btn-success px-3">Edit</a>
+                            <form action="{% url 'officials:delete_student' stud.regd_no %}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Are you sure you want to delete {{stud.name}}?');">{% csrf_token %}
+                                <input type="submit" class="btn btn-danger ml-3" value="Delete" />
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+    
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -101,7 +133,29 @@
             $('table').DataTable({
                 "lengthMenu": [[10, 25, 50, 100, 250, 500, 1000, -1], [10, 25, 50, 100, 250, 500, 1000, "All"]],
                 "info":false,
-                "dom": '<"row"<"col-3"l><"col"f><"col"p>>t'
+                "dom": '<"row"<"col-3"l><"col"f><"col"p>>t',
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        if (column.index() == 2 || column.index() == 3 || column.index() == 4 || column.index() == 5) {   
+                            var select = $('<select class="form-control"><option value=""></option></select>')
+                                .appendTo($("#filters").find("span").eq(column.index()))
+                                .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val());                                     
+
+                                column.search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+                        
+
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>')
+                            });
+                        }
+                    });
+                }
             });
         } );
     </script>

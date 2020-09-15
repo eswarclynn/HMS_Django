@@ -9,7 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href="{% static 'officials/roomLayout.css' %}" rel="stylesheet"> <!--attendance.css-->
@@ -18,16 +19,20 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'officials:chiefsProfile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
         </div>
-    </nav>
+        
+        <div class="col-0 ">
+            <a href="{% url 'officials:chiefsProfile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        </div>
+</nav>
 
 
     <div id="mySidenav" class="sidenav">
@@ -36,14 +41,18 @@
         <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
         <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
         <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-        <a href="{% url 'officials:register' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
-        <a href="{% url 'officials:registeremp' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'officials:register_student' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
+        <a href="{% url 'officials:student_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp;List of Students</a>
+        <a href="{% url 'officials:register_official' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
+        <a href="{% url 'officials:emp_list' %}"><span><i class="fa fa-file-text-o"></i></span> &nbsp;&nbsp; List of Employees</a>
+        <a href="{% url 'officials:register_worker' %}" target="_blank"><span><i class="fa fa-address-book"></i></span> &nbsp;&nbsp; Add Worker</a>
+        <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
-    <br> <br> <br> <br>
+
     <div class="container-fluid main-container">
 
         <h2 class="text-center">Block Layout</h2>
@@ -118,27 +127,72 @@
              
         {% endif %}
         
-        {% if room_type == '4S' %}
+        {% if block_name|lower == 'tungabhadra hall of residence'  %}
             <div>
-                {% include 'officials/4SB.html' %}
+                {% include 'officials/Tunga.html' %}
             </div>
         {% endif %}
-        {% if room_type == '2S' %}
+        {% if block_name|lower == 'krishnaveni hall of residence'  %}
             <div>
-                {% include 'officials/2SB.html' %}
-            </div>
-        {% endif %}        
-        {% if room_type == '1S' %}
-            <div>
-                {% include 'officials/2SB.html' %}
+                {% include 'officials/Krishnaveni.html' %}
             </div>
         {% endif %}
-
+        {% if block_name|lower == 'munneru hall of residence'  %}
+            <div>
+                {% include 'officials/Munneru.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'bhima hall of residence'  %}
+            <div>
+                {% include 'officials/Bhima.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'ghataprabha hall of residence'  %}
+            <div>
+                {% include 'officials/Ghata.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'indravathi hall of residence'  %}
+            <div>
+                {% include 'officials/Indravathi.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'manjeera hall of residence'  %}
+            <div>
+                {% include 'officials/Manjeera.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'purna hall of residence'  %}
+            <div>
+                {% include 'officials/Purna.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'banganga hall of residence'  %}
+            <div>
+                {% include 'officials/Banganga.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'godavari hall of residence'  %}
+            <div>
+                {% include 'officials/Godavari.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'pranahita hall of residence'  %}
+            <div>
+                {% include 'officials/Pranahita.html' %}
+            </div>
+        {% endif %}
+        {% if block_name|lower == 'sabari hall of residence'  %}
+            <div>
+                {% include 'officials/Sabari.html' %}
+            </div>
+        {% endif %}
+    
         
         
         <div class="container-fluid mt-4 d-none" id="table-con">
             <form method="POST" action="{% url 'officials:blockSearch' %}">
-            <table class="table table-hover table-dark table-striped">
+            <table class="table table-hover table-muted table-striped">
                 <thead>
                     <th>Student ID</th>
                     <th>Name</th>
@@ -318,7 +372,7 @@
 
                 if(count < parseInt('{{room_type|slice:"0:1"}}')){
                     const template = document.createElement('template');
-                    template.innerHTML ="<tr ><td colspan='10' class='text-center'>Add Student to room :<input type='text' name='roll' class='ml-4'> <input type='hidden' name='room' value='{{block_name}}-"+floor+"-"+no+"'><input type='submit' name='Add' value='Add' class='btn btn-primary ml-5'></td></tr>";
+                    template.innerHTML ="<tr ><td colspan='10' class='text-center'>Add Student to room :<input type='text' name='roll' class='ml-4'> <input type='hidden' name='room' value='{{block_id}}-"+floor+"-"+no+"'><input type='submit' name='Add' value='Add' class='btn btn-primary ml-5'></td></tr>";
                     document.getElementById('table_list').appendChild(template.content.firstElementChild);
 
                 }

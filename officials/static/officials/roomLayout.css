@@ -1,16 +1,16 @@
 body{
     font-family: 'Roboto', sans-serif;
     background-color:#F9FAFB;
-
-}
-
-.container-fluid{
-    overflow-x: auto;
 }
 
 .container{
     overflow-x: auto;
 }
+.container-fluid{
+    overflow-x: auto;
+}
+
+
 #topnav {
     background-color: #7f5a83;
     background-image: linear-gradient(315deg, #7f5a83 0%, #0d324d 74%);
@@ -24,7 +24,7 @@ body{
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 5;
     top: 0;
     left: 0;
     background-color: #100f18;
@@ -33,11 +33,11 @@ body{
     padding-top: 60px;
     box-shadow: 8px 8px 6px -6px rgb(37, 34, 68);
     background: rgb(22,32,49);
-    background: linear-gradient(90deg, rgba(22,32,49,1) 0%, rgba(22,32,49,1) 81%, #1f2e47 100%);
+    background: linear-gradient(90deg, rgba(22,32,49,1) 0%, rgba(22,32,49,1) 81%, rgba(31,46,71,1) 100%);
 }
 
 .sidenav a {
-    padding: 8px 8px 30px 32px;
+    padding: 5px 8px 13px 32px;
     text-decoration: none;
     font-size: 1.3em;
     color: #a1a1a1;
@@ -45,11 +45,24 @@ body{
     transition: 0.3s;
 }
 
+.sidenav::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}   
+.sidenav::-webkit-scrollbar-track {
+    background: #ddd;
+}
+   
+.sidenav::-webkit-scrollbar-thumb {
+    background: #666; 
+}
+
 .sidenav a:hover {
     color: #b766ec;
 }
 
 .main-container {
+    margin-top: 5.5rem;
     background-color: rgba(221, 221, 221, 0.5);
     margin-bottom: 20px;
     border: 1.5px solid #a1a1a1; 
@@ -72,7 +85,7 @@ body{
     background: rgb(80,251,186);
     background: radial-gradient(circle, rgb(12, 209, 134) 0%, rgb(14, 129, 6) 100%);
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
     transition:  0.5s;
     color: aliceblue;
@@ -96,7 +109,7 @@ body{
 .stairs {
 
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
     transition:  0.5s;
     color: aliceblue;
@@ -109,7 +122,7 @@ body{
     background: rgb(80,251,186);
     background: radial-gradient(circle, rgb(12, 209, 134) 0%, rgb(14, 129, 6) 100%);
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.2);
     transition:  0.5s;
     color: aliceblue;
@@ -120,12 +133,12 @@ body{
 
 .balcony {
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     background-color: rgb(221, 150, 124);
 }
 
 .staff {
     height: 3.5rem;
-    width: 3.5rem;
+    width: 3.3rem;
     background-color: cadetblue;
 }

@@ -2,5 +2,6 @@
 db.sqlite3
 myvenv/*
 __pycache__/*
-Hostel-Management-System_README.md
-Hostel_Management_System.rar
+
+.env
+requirements_dev.txt

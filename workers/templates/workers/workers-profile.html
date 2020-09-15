@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Staff Home - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -9,7 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href=" {% static 'workers/workers-profile.css' %} " rel="stylesheet"> <!--Layout.css-->
@@ -18,17 +19,20 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'workers:staff_home' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>
+        
+        <div class="col-0 ">
+            <a href="{% url 'workers:staff_home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         </div>
     </nav>
-
 
     <div id="mySidenav" class="sidenav">
         <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
@@ -36,10 +40,10 @@
         <!--<a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>-->
         <!--<a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>-->
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
-    <br> <br> <br> <br>
+
     <div class="container main-container">
         <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>!</p>
 
@@ -86,12 +90,10 @@
                             <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
                         </tr>
                         <tr>
-                            <td class="field">Address</td>
-                            <td class="field-item" id="address-field">{{user_details.address}}</td>
+                            <td colspan="2" class="text-center">
+                                <a href="{% url 'django_auth:change_password' %}"><button class="btn btn-primary">Change Password</button></a>
+                            </td>
                         </tr>
-
-
-
                     </tbody>
                 </table>
             </form>
@@ -99,19 +101,23 @@
 
         </div>
 
-        
+        <script>var modal_items=[];</script>
         {% if complaints|length > 0 %}
             
         <div class="table-container">
             <div class="container" id="complaints-wrapper">
                 <h2 style="text-align: center;">Students Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped">
+                <table class="table table-hover table-muted table-striped">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>
-                            <th>Registered By</th>
+                            <th>Roll No.</th>
+                            <th>Name</th>
+                            <th>Room</th>
+                            <th>Block</th>
                             <th>Type</th>
                             <th>Summary</th>
+                            <th>Details</th>
                             
                         </tr>
                     </thead>
@@ -120,11 +126,27 @@
                         {% for item in complaints %}
                         <tr>
                             <td class="text-center">{{forloop.counter}} </td>
-                            <td class="text-center">{{item.regd_no}}</td>
+                            <td class="text-center text-primary" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" data-regd="{{item.regd_no}}" >{{item.regd_no}}</td>
+                            <td class="text-center">{{item.regd_no.name}}</td>
+                            <td class="text-center">{{item.regd_no.details.floor|slice:"0:1"}}-{{item.regd_no.details.room_no}}</td>
+                            <td class="text-center">{{item.regd_no.details.block_id.block_name}}</td>
                             <td class="text-center">{{item.type}}</td>
                             <td class="text-center">{{item.summary}}</td>                   
+                            <td class="text-center">{{item.detailed}}</td>                   
                         </tr>
-                        
+                        <script>
+                            modal_items.push({
+                                roll_no: '{{item.regd_no}}',
+                                name: '{{item.regd_no.name}}',
+                                year: '{{item.regd_no.year}}',
+                                branch: '{{item.regd_no.branch}}',
+                                gender: '{{item.regd_no.gender}}',
+                                phone: '{{item.regd_no.phone}}',
+                                room: '{{item.regd_no.details.floor|slice:"0:1"}}-{{item.regd_no.details.room_no}}',
+                                block: '{{item.regd_no.details.block_id.block_name}}',
+                                name: '{{item.regd_no.name}}',
+                            })
+                        </script>
                         {% empty %}
                         <tr>
                             <td colspan="5" class="text-center"> No complaints registered! </td>
@@ -137,15 +159,17 @@
         </div>
         {% endif %}
 
-        {% if complaints|length > 0 %}
+        {% if off_complaints|length > 0 %}
         <div class="table-container">
             <div class="container" id="off_complaints-wrapper">
                 <h2 style="text-align: center;">Officials Complaints Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped">
+                <table class="table table-hover table-muted table-striped">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>
                             <th>Registered By</th>
+                            <th>Name</th>
+                            <th>Block</th>
                             <th>Type</th>
                             <th>Summary</th>
                             
@@ -156,10 +180,25 @@
                         {% for item in off_complaints %}
                         <tr>
                             <td class="text-center">{{forloop.counter}} </td>
-                            <td class="text-center">{{item.regd_no}}</td>
+                            <td class="text-center text-primary" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" data-regd="{{item.regd_no}}" >{{item.regd_no}}</td>
+                            <td class="text-center">{{item.regd_no.name}}</td>
+                            <td class="text-center">{{item.regd_no.blocks.block_name}}</td>
                             <td class="text-center">{{item.type}}</td>
                             <td class="text-center">{{item.summary}}</td>                   
                         </tr>
+                        <script>
+                            modal_items.push({
+                                roll_no: '{{item.regd_no}}',
+                                name: '{{item.regd_no.name}}',
+                                year: '{{item.regd_no.year}}',
+                                branch: '{{item.regd_no.branch}}',
+                                gender: '{{item.regd_no.gender}}',
+                                phone: '{{item.regd_no.phone}}',
+                                room: '{{item.regd_no.details.floor|slice:"0:1"}}-{{item.regd_no.details.room_no}}',
+                                block: '{{item.regd_no.details.block_id.block_name}}',
+                                name: '{{item.regd_no.name}}',
+                            })
+                        </script>
                         
                         {% empty %}
                         <tr>
@@ -178,7 +217,18 @@
         <div class="table-container">
             <div class="container" id="complaints-wrapper">
                 <h2 style="text-align: center;">Medical Issues Registered</h2> <br>
-                <table class="table table-hover table-dark table-striped">
+                <form action="{% url 'workers:staff_home' %}" method="post">
+                {% csrf_token %}
+                {% if messages %}
+                                   
+                {% for message in messages %}
+                     <script>
+                          alert('{{message}}');
+                     </script>
+                {% endfor %}
+                     
+                {% endif %} 
+                <table class="table table-hover table-muted table-striped">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>
@@ -189,6 +239,8 @@
                             <th>Block</th>
                             <th>Summary</th>
                             <th>Details</th>
+                            <th>Action</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -196,26 +248,84 @@
                         {% for item in medical %}
                         <tr>
                             <td class="text-center">{{forloop.counter}} </td>
-                            <td class="text-center">{{item.comp.regd_no}}</td>
+                            <td class="text-center text-primary" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal" data-regd="{{item.comp.regd_no}}" >{{item.comp.regd_no}}</td>
                             <td class="text-center">{{item.designation}}</td>
                             <td class="text-center">{{item.name}}</td>
                             <td class="text-center">{{item.floor|slice:"0:1"}}-{{item.room}}</td>
                             <td class="text-center">{{item.block}}</td>
                             <td class="text-center">{{item.comp.summary}}</td>
-                            <td class="text-center">{{item.comp.detailed}}</td>                   
+                            <td class="text-center">{{item.comp.detailed}}</td>
+                            <td>                          
+                                <select class="" id='{{item.comp.id}}' name='{{item.comp.id}}'>
+                                    <option value="Registered">Registered</option>
+                                    <option value="Resolved">Resolved</option>
+                                </select>
+                            </td>
+                            <td><input type="text" name="RE{{item.comp.id}}" id="RE{{item.comp.id}}" placeholder="Enter Remark..."></td>                
                         </tr>
+                        <script>
+                            
+                            modal_items.push({
+                                roll_no: '{{item.info.regd_no}}',
+                                name: '{{item.info.name}}',
+                                year: '{{item.info.year}}',
+                                branch: '{{item.info.branch}}',
+                                gender: '{{item.info.gender}}',
+                                phone: '{{item.info.phone}}',
+                                room: '{{item.info.details.floor|slice:"0:1"}}-{{item.info.details.room_no}}',
+                                block: '{{item.info.details.block_id.block_name}}',
+                                name: '{{item.info.name}}',
+                            })
+                        </script>
                         
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center"> No complaints registered! </td>
+                            <td colspan="9" class="text-center"> No complaints registered! </td>
                         </tr>
                         {% endfor %}
                         
                     </tbody>
                 </table>
+                <div class="row justify-content-center">
+                    <input type="submit" class="btn btn-success mt-2 p-3">
+                </div>
+                </form>
             </div>
         </div>
         {% endif %}
+  
+  <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Student Information</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        <script>
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) 
+                var regd = button.data('regd')
+                var item = modal_items.find((item)=> (item.roll_no == regd))
+                var modal = $(this)
+                modal.find('.modal-title').text('Student Information: ' + regd)
+                var text = modal.find('.modal-body');
+                text[0].innerHTML = '';
+                for (var field in item) {
+                    text[0].innerHTML += '<p class="row"><span class="col text-capitalize font-weight-bold">'+field+'</span><span class="col">'+item[field]+'</span></p>';
+                }
+            })
+        </script>
         
     </body>
 </html>

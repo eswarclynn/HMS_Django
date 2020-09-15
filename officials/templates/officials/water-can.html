@@ -9,24 +9,29 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href="{% static 'officials/attendance.css' %} " rel="stylesheet"> <!--attendance.css-->
+  <link href="{% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--attendance.css-->
 
-  <script src = "{% static 'officials/attendance.js' %}"></script>
+  <script src = "{% static 'officials/sidenav.js' %}"></script>
 
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'officials:profile' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>
+        
+        <div class="col-0 ">
+            <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         </div>
     </nav>
 
@@ -38,14 +43,14 @@
         <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
         <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
         <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
-        <a href="{% url 'officials:watercan' %}"><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>
+        <!--<a href=""><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>-->
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
     </div>
 
-    <br> <br> <br> <br>
-    <div class="container" style="border: 1.5px solid #a1a1a1; border-radius: 15px; padding: 10px;">
+
+    <div class="main-container container" style="border: 1.5px solid #a1a1a1; border-radius: 15px; padding: 10px;">
 
         <div class="table1-container" style="padding: 20px; ">
 
@@ -70,15 +75,15 @@
                             <input type="date" name="date" id="date" class="d-inline" required>
                         </div>
                         <div class="col-md-3 form-group">
-                            <label for="received" class="ml-2 mr-2  ">Count Received:</label>
+                            <label for="received" class="ml-2 mr-2  ">Full Cans Received:</label>
                             <input type="number" name="received" id="received" min="0" required style="width: 50px;"> 
                         </div>
                         <div class="col-md-3 form-group">
-                            <label for="given" class="ml-2  mr-2">Count Given:</label>
+                            <label for="given" class="ml-2  mr-2">Empty Cans Given:</label>
                             <input type="number" name="given" id="given"   min="0" required style="width: 50px;"> 
                         </div>
                         <div class="col-md-3 text-center">
-                            <input type="submit" class="subbtn btn-success" name="submit_btn">
+                            <input type="submit" class="btn btn-success" name="submit_btn">
                         </div>                        
                     </div>
                 </form>
@@ -94,7 +99,7 @@
                             <input type="month" name="month_hist" id="month_hist" class="d-inline" onclick="setEnabled(this)">
                         </div>
                         <div class="col ">
-                            <input type="submit" class="subbtn btn-primary" value="Get Count" name="count_btn">
+                            <input type="submit" class="btn btn-primary" value="Get Count" name="count_btn">
                         </div> 
                     </div>          
                 </form>
@@ -105,8 +110,8 @@
                     <div class="row text-center mt-3">
                         {% if dateRec != -10 %}
                             <div class=" col alert alert-primary" role="alert">
-                                Cans received on given date: <strong class="text-danger">{{dateRec}}</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-                                Cans returned on given date: <strong class="text-danger">{{dateGiven}}</strong> &nbsp;&nbsp;&nbsp;&nbsp;
+                                Full Cans received on given date: <strong class="text-danger">{{dateRec}}</strong> &nbsp;&nbsp;&nbsp;&nbsp;
+                                Empty Cans returned on given date: <strong class="text-danger">{{dateGiven}}</strong> &nbsp;&nbsp;&nbsp;&nbsp;
                                 Cans Used on given date: <strong class="text-danger">{{dateUsed}}</strong> 
                             </div>
                         {% else %}
@@ -126,15 +131,15 @@
                             <h3>Monthly Water Can Usage for the month of {{month}}</h3>
                             <div class="row font-weight-bolder mt-3">
                                 <div class="col">
-                                    Water Cans Received : {{month_rec}}
+                                    Full Water Cans Received : {{month_rec}}
                                 </div>
                                 <div class="col">
-                                    Water Cans Given : {{month_given}}
+                                    Empty Cans Given : {{month_given}}
                                 </div>                            <div class="col">
                                     Water Cans Used : {{month_used}}
                                 </div>
                             </div>
-                            <table class="table table-dark table-striped table-hover mt-3">
+                            <table class="table table-muted table-striped table-hover mt-3">
                                 <thead>
                                     <th>Sl No.</th>
                                     <th>Date</th>
@@ -147,11 +152,11 @@
                                     {% for item in month_set %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{item.date}}</td>
+                                            <td>{{item.date|date:'d-m-Y'}}</td>
                                             <td>{{item.received}}</td>
                                             <td>{{item.given}}</td>
                                             <td id="u{{forloop.counter}}">
-                                                <script>document.getElementById("u{{forloop.counter}}").innerHTML = parseInt('{{item.received}}') - parseInt('{{item.given}}') </script>
+                                                {{item.given}}
                                             </td>
                                         </tr>
                                     {% endfor %}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hostel Management System</title>
+  <title>Attendance History - Hostel Management System</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -10,7 +10,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!--Lobster-->
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
   <link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet"> <!--Layout.css-->
@@ -19,14 +20,18 @@
 </head>
 
 <body>
-    <nav class="navbar fixed-top" id="topnav">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        <div class="justify-content-center">
-            <span style="color:darkorange; font-family: 'Lobster', cursive;" id="title">Hostel Management System</span>
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-0 ">
+            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
         </div>
 
-        <div>
-            <a href="{% url 'students:student_home' %}"><span><i class="fa fa-user-circle-o" style="font-size:4vh;color:aliceblue"></i></span></a>
+        <div class="col-10 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>
+        
+        <div class="col-0 ">
+            <a href="{% url 'students:student_home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         </div>
     </nav>
 
@@ -39,11 +44,11 @@
         <a href="{% url 'students:outing_history' %}"><span><i class="fa fa-history" ></i></span> &nbsp;&nbsp; Outing History</a>
         <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
         <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'institute:index' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
 
     </div>
 
-    <br> <br> <br> <br>
+
     <div class="container main-container">
         <p style="text-align: center; font-size: large;"><b>{{user_details.name}}</b>, take at look at your attendance history.</p>
 
@@ -80,7 +85,7 @@
         <div class="row mt-4">
             <div class="col">
                 <h2 style="text-align: center;">Days present</h2>
-                <table class="table table-hover table-dark table-striped" id="prestable">
+                <table class="table table-hover table-muted table-striped" id="prestable">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>
@@ -101,7 +106,7 @@
             </div>
             <div class="col">
                 <h2 style="text-align: center;">Days absent</h2>
-                <table class="table table-hover table-dark table-striped" id="abstable">
+                <table class="table table-hover table-muted table-striped" id="abstable">
                     <thead>
                         <tr>
                             <th>Sl. No.</th>

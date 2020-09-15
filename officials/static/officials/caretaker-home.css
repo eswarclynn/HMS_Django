@@ -24,7 +24,7 @@ body{
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 5;
     top: 0;
     left: 0;
     background-color: #100f18;
@@ -45,17 +45,30 @@ body{
     transition: 0.3s;
 }
 
+.sidenav::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}   
+.sidenav::-webkit-scrollbar-track {
+    background: #666;
+}
+   
+.sidenav::-webkit-scrollbar-thumb {
+    background: #99979b; 
+}
+
 .sidenav a:hover {
     color: #b766ec;
 }
 
 .main-container {
+    margin-top: 5.5rem;
     background-color: rgba(221, 221, 221, 0.5);
     border: 1.5px solid #a1a1a1;
     border-radius: 15px;
     padding: 30px;
     margin-bottom: 30px;
-    max-width: 1300px;
+    max-width: 1190px;
 }
 
 @media (max-width: 768px){
@@ -113,7 +126,7 @@ body{
     font-size: 3em;
 }
 
-.table-dark{
+.table-muted{
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
