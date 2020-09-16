@@ -6,6 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from .models import User
 from .forms import SignUpForm
+from institute.models import Student, Official
+from workers.models import Worker
 
 # Create your views here.
 
@@ -35,6 +37,21 @@ class SignUpView(SuccessMessageMixin, CreateView):
             return reverse('officials:official_home')
         elif user.is_worker:
             return reverse('workers:staff_home')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        is_student = form.cleaned_data.get('is_student')
+        is_official = form.cleaned_data.get('is_official')
+        is_worker = form.cleaned_data.get('is_worker')
+        entity_id = form.cleaned_data.get('entity_id')
+        if is_student:
+            Student.objects.filter(regd_no = entity_id).update(user = form.instance)
+        elif is_official:
+            Official.objects.filter(emp_id = entity_id).update(user = form.instance)
+        elif is_worker:
+            Worker.objects.filter(staff_id = entity_id).update(user = form.instance)
+
+        return response
 
 class PasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
     template_name = 'django_auth/password_change.html'
