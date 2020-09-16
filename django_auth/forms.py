@@ -27,6 +27,7 @@ class SignUpForm(UserCreationForm):
         is_official = cleaned_data.get('is_official')
         is_worker = cleaned_data.get('is_worker')
         email = cleaned_data.get('email')
+        entity_id = cleaned_data.get('entity_id')
 
         if not(is_student or is_official or is_worker):
             raise forms.ValidationError('User should belong to a single type.')
