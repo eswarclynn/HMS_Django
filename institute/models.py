@@ -102,6 +102,9 @@ class Official(models.Model):
     phone = models.CharField(max_length=10, null=False)
     email = models.EmailField(null=False)
 
+    def is_chief(self):
+        return (self.designation == 'Deputy Chief-Warden' or self.designation == 'Chief-Warden')
+
 
     def __str__(self):
         return str(self.emp_id)

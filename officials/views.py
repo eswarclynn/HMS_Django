@@ -2,12 +2,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_exempt
 from institute.models import Block, Student, Official
-from students.models import Attendance as ATT, RoomDetail, Outing as OUTINGDB
+from students.models import Attendance, RoomDetail, Outing as OUTINGDB
 from django.contrib import messages
 from datetime import date as datePy
 from django.http.response import Http404
 from complaints.models import Complaint
-from workers.models import MedicalIssue, Worker, Attendance as ATTWORKER
+from workers.models import MedicalIssue, Worker, Attendance as AttendanceWorker
 from django.db.models import QuerySet
 from django.db.models import Sum
 import re
@@ -18,7 +18,7 @@ def official_check(user):
 
 def chief_warden_check(user):
     if official_check(user):
-        official = Officials.objects.get(email_id = user.email)
+        official = user.official
         chief_check = official.designation == 'Deputy Chief-Warden' or official.designation == 'Chief-Warden'
     return official_check(user) and chief_check
 
@@ -28,54 +28,9 @@ def chief_warden_check(user):
 @csrf_exempt 
 def official_home(request):
     user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
-    if(user_details.designation == 'Caretaker' or user_details.designation == 'Warden'):
-        try:
-            block_details = Blocks.objects.get(emp_id = user_details)
-        except Blocks.DoesNotExist:
-            raise Http404("You are currently not appointed any block! Please contact Admin")
-
-        students = details.objects.filter(block_id=block_details.block_id)
-        stud_roll = []
-        for stud in students:
-            stud_roll.append(stud.regd_no)
-    
-        present_list = list()
-        absent_list = list()
-        for student in students:
-            if ATT.objects.get(regd_no_id=student.regd_no_id).status == 'Present':
-                present_list.append(
-                    {
-                        'block':student,
-                        'info':Institutestd.objects.get(regd_no=str(student.regd_no))
-                    }
-                )
-            elif ATT.objects.get(regd_no_id=student.regd_no_id).status == 'Absent':
-                absent_list.append(
-                    {
-                        'block':student,
-                        'info':Institutestd.objects.get(regd_no=str(student.regd_no))
-                    }
-                )
-
-        complaints = list(Complaints.objects.filter(status='Registered', regd_no__in=stud_roll)) + list(Complaints.objects.filter(status='Processing', regd_no__in=stud_roll))
-
-        if request.method == 'POST':
-            for i in request.POST:
-                if i == 'update':
-                    comp_id = request.POST[i]
-                    newComplaint = Complaints.objects.get(id=comp_id)
-                    if newComplaint.status != request.POST[comp_id] or newComplaint.remark != request.POST['RE'+comp_id]:
-                        newComplaint.status = request.POST[comp_id]
-                        newComplaint.remark = request.POST['RE'+comp_id]
-                        newComplaint.save()
-                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
-                        return redirect('officials:official_home') 
-
-        return render(request, 'officials/caretaker-home.html', {'user_details': user_details, 'block_details':block_details,'present_list':present_list,'absent_list':absent_list, 'complaints':complaints})
-
-    else:
-        pres = attendance.objects.filter(status='Present')
+    official = user.official
+    if official.is_chief:
+        pres = Attendance.objects.filter(status='Present')
         present=list()
         for item in pres:
             try:
@@ -123,6 +78,53 @@ def official_home(request):
                         return redirect('officials:official_home') 
 
         return render(request, 'officials/chiefs-home.html', {'user_details': user_details, 'present':present, 'absent':absent, 'complaints':complaints,'complaints_list':complaints_list , 'offComplaints':offComplaints})
+
+    else:
+        try:
+            block_details = official.block
+        except Blocks.DoesNotExist:
+            messages.error(request, 'You are currently not appointed any block! Please contact Admin')
+            raise Http404()
+
+        students = details.objects.filter(block_id=block_details.block_id)
+        stud_roll = []
+        for stud in students:
+            stud_roll.append(stud.regd_no)
+    
+        present_list = list()
+        absent_list = list()
+        for student in students:
+            if ATT.objects.get(regd_no_id=student.regd_no_id).status == 'Present':
+                present_list.append(
+                    {
+                        'block':student,
+                        'info':Institutestd.objects.get(regd_no=str(student.regd_no))
+                    }
+                )
+            elif ATT.objects.get(regd_no_id=student.regd_no_id).status == 'Absent':
+                absent_list.append(
+                    {
+                        'block':student,
+                        'info':Institutestd.objects.get(regd_no=str(student.regd_no))
+                    }
+                )
+
+        complaints = list(Complaints.objects.filter(status='Registered', regd_no__in=stud_roll)) + list(Complaints.objects.filter(status='Processing', regd_no__in=stud_roll))
+
+        if request.method == 'POST':
+            for i in request.POST:
+                if i == 'update':
+                    comp_id = request.POST[i]
+                    newComplaint = Complaints.objects.get(id=comp_id)
+                    if newComplaint.status != request.POST[comp_id] or newComplaint.remark != request.POST['RE'+comp_id]:
+                        newComplaint.status = request.POST[comp_id]
+                        newComplaint.remark = request.POST['RE'+comp_id]
+                        newComplaint.save()
+                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
+                        return redirect('officials:official_home') 
+
+        return render(request, 'officials/caretaker-home.html', {'user_details': user_details, 'block_details':block_details,'present_list':present_list,'absent_list':absent_list, 'complaints':complaints})
+
 
 
 @user_passes_test(official_check)

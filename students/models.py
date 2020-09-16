@@ -9,7 +9,7 @@ class RoomDetail(models.Model):
     )
 
     student = models.OneToOneField('institute.Student', on_delete=models.CASCADE, null=False)
-    block = models.OneToOneField('institute.Block', on_delete=models.CASCADE, null=True, blank=True)
+    block = models.ForeignKey('institute.Block', on_delete=models.CASCADE, null=True, blank=True)
     room_no = models.IntegerField(null=True, blank=True)
     floor = models.CharField(max_length=10, choices=FLOOR_OPTIONS, null=True, blank=True)
 
