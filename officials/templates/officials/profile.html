@@ -1,143 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Profile - Hostel Management System</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+{% extends 'officials/base_officials.html' %}
 
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
-  {% load static %}
-  <link href=" {% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--Layout.css-->
-  <script src = "{% static 'officials/sidenav.js' %}"></script>
+{% block title %}Official Profile - Hostel Management System{% endblock title %}
 
-</head>
-
-<body>
-    <nav class="navbar fixed-top row px-4" id="topnav">
-        <div class="col-0 ">
-            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        </div>
-
-        <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
-            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-        </div>
-        
-        <div class="col-0 ">
-            <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
-        </div>
-    </nav>
-
-
-    <div id="mySidenav" class="sidenav">
-        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
-        <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
-        <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
-        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-        <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
-        <!--<a href=""><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>-->
-        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
-        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+{% block content %}
+<p style="text-align: center; font-size: large;">Hello <b>{{official.name}}</b>!</p>
+<div class="container">
+  <div class="row py-3 border-bottom border-top" style="background-color: darkgray;">
+    <div class="col-12 font-weight-bold text-center">Your Details</div>
+  </div>
+  <div class="row py-3 border-bottom">
+    <div class="col-6 font-weight-bold">Name</div>
+    <div class="col-6">{{official.name}}</div>
+  </div>
+  <div class="row py-3 border-bottom">
+    <div class="col-6 font-weight-bold">Staff No.</div>
+    <div class="col-6">{{official.emp_id}}</div>
+  </div>
+  <div class="row py-3 border-bottom">
+    <div class="col-6 font-weight-bold">Designation</div>
+    <div class="col-6">{{official.designation}}</div>
+  </div>
+  <div class="row py-3 border-bottom">
+    <div class="col-6 font-weight-bold">Block</div>
+    <div class="col-6">
+      {% for block in block_details %}
+      {{block.name}}
+      {% endfor %}
     </div>
-
-
-    <div class="container main-container">
-        <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>!</p>
-
-        <div class="table-container profile">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th colspan="2" class="text-center" style="background-color: darkgray;">Your Details</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="tbody">
-                        <tr>
-                            <td class="field font-weight-bold">Name</th>
-                                <td class="field-item">{{user_details.name}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field font-weight-bold">Staff No.</td>
-                            <td class="field-item">{{user_details.emp_id}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field font-weight-bold">Designation</td>
-                            <td class="field-item">{{user_details.designation}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field font-weight-bold">Block</td>
-                            <td class="field-item">
-                                {% for block in block_details %}
-                                    {{block.block_name}},
-                                {% endfor %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="field font-weight-bold">Contact Number</td>
-                            <td class="field-item" id="phone-field">{{user_details.phone}}</td>
-                        </tr>
-                        <tr>
-                            <td class="field font-weight-bold">e-Mail ID</td>
-                            <td class="field-item" id="mail-field">{{user_details.email_id}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="text-center">
-                                <a href="{% url 'django_auth:change_password' %}"><button class="btn btn-primary">Change Password</button></a>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-        </div>
-
-        <div class="table-container">
-            <div class="container" id="complaints-wrapper">
-                <h2 style="text-align: center;">Complaints Registered</h2> <br>
-                <table class="table table-hover table-muted table-striped" id="abstable">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Sl. No.</th>
-                            <th class="text-center">Type</th>
-                            <th class="text-center">Complainee</th>
-                            <th class="text-center">Summary</th>
-                            <th class="text-center">Date Registered</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        {% for item in complaints %}
-                            <tr>
-                                <td class="text-center">{{forloop.counter}} </td>
-                                <td class="text-center">{{item.type}}</td>
-                                <td class="text-center">{{item.complainee}}</td>
-                                <td class="text-center">{{item.summary}}</td>
-                                <td class="text-center">{{item.date|date:'d-m-Y'}}</td>
-                                <td class="text-center">{{item.status}}</td>
-                                <td class="text-center">{{item.remark}}</td>
-                            </tr>
-                            
-                        {% empty %}
-                            <tr>
-                                <td colspan="10" class="text-center"> No complaints registered! </td>
-                            </tr>
-                        {% endfor %}
-        
-                    </tbody>
-                </table>
-            </div>
+  </div>
+  <div class="row py-3 border-bottom">
+    <div class="col-6 font-weight-bold">Contact Number</div>
+    <div class="col-6" id="phone-field">{{official.phone}}</div>
+  </div>
+  <div class="row py-3 border-bottom">
+    <div class="col-6 font-weight-bold">Account eMail</div>
+    <div class="col-6" id="mail-field">{{official.user.email}}</div>
+  </div>
+  <div class="row py-3 border-bottom">
+    <div class="col-6 font-weight-bold">Personal eMail</div>
+    <div class="col-6" id="mail-field">{{official.email}}</div>
+  </div>
+  <div class="row py-3">
+    <div class="col-12 text-center">
+      <a href="{% url 'django_auth:change_password' %}"><button class="btn btn-primary">Change Password</button></a>
     </div>
+  </div>
+</div>
 
-</body>
-</html>
+<hr />
+<h2 style="text-align: center;">Complaints Registered</h2> <br>
+<div class="overflow-auto px-4" id="complaints-wrapper">
+  <table class="table table-hover table-muted table-striped" id="abstable">
+    <thead>
+      <tr>
+        <th class="text-center">Sl. No.</th>
+        <th class="text-center">Type</th>
+        <th class="text-center">Complainee</th>
+        <th class="text-center">Summary</th>
+        <th class="text-center">Date Registered</th>
+        <th class="text-center">Status</th>
+        <th class="text-center">Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for item in complaints %}
+      <tr>
+        <td class="text-center">{{forloop.counter}} </td>
+        <td class="text-center">{{item.type}}</td>
+        <td class="text-center">{{item.complainee}}</td>
+        <td class="text-center">{{item.summary}}</td>
+        <td class="text-center">{{item.date|date:'d-m-Y'}}</td>
+        <td class="text-center">{{item.status}}</td>
+        <td class="text-center">{{item.remark}}</td>
+      </tr>
+
+      {% empty %}
+      <tr>
+        <td colspan="10" class="text-center"> No complaints registered! </td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Complaints - Hostel Management System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
+  {% load static %}
+  <link href=" {% static 'officials/application.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <script src = "{% static 'complaints/complaint.js' %}"></script>
+
+</head>
+
+<body class="bg-light">
+    <nav class="navbar fixed-top row px-4" id="topnav">
+        <div class="col-12 d-flex justify-content-center">
+            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        </div>   
+   </nav>
+    <div class="container">
+        <h2 class="text-center">Complaint</h2>
+        <div class="row my-3">
+            <div class="col-md-6 border border-secondary">
+                <h4 class="text-center">Complaint Details</h4>
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{ complaint.type }}</td>
+                        </tr>
+                        <tr>
+                            <th>Complainee</th>
+                            <td>{{ complaint.complainee.regd_no }} - {{ complaint.complainee.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Summary</th>
+                            <td>{{ complaint.summary }}</td>
+                        </tr>
+                        <tr>
+                            <th>Details</th>
+                            <td>{{ complaint.detailed }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <form method="POST" action=" {% url 'complaints:registerComplaint' %}">
+            {% csrf_token %}
+                         
+            {% if messages %}
+                      
+            {% for message in messages %}
+                 <script>
+                      alert('{{message}}');
+                 </script>
+            {% endfor %}
+                 
+            {% endif %}
+
+            <div class="row mt-5 mb-4">
+                <div class="col-sm-6 text-right pr-5">
+                    <label for="comp-type"><strong> Type of Complaint :</strong></span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <select class="form-control w-50" id="comp-type" name="type" onchange="setEnabled()" required>
+                        <option value="">Select Type</option>
+                        <option value="General">General</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Civil">Civil</option>
+                        <option value="Cleaning">Cleaning</option>
+                        <option value="Indisciplinary">Indisciplinary</option>
+                        <option value="Discrimination/ Harassment">Discrimination/ Harassment</option>
+                        <option value="Damage to property">Damage to property</option>
+                        <option value="Latecomer">Latecomer</option>
+
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row ">
+                <div class="col-sm-6 text-right pr-5">
+                    <label for="comp-regno"><strong>Registration no. of Complainee :</strong></span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <input type="text" id="comp-regno" class="form-control w-75" name="complainee" placeholder="Enter Registration No." disabled required/>
+                    <small id="complainee-help" class="form-text text-muted">Registration no. of the person on whom the complaint should be filed against.</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 text-right pr-5">
+                    <label for="comp-summary"><strong> Complaint Summary :</strong></span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <input type="text" id="comp-summary" class="form-control w-75" name="summary" placeholder="Enter Complaint Summary" disabled required/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 text-right pr-5">
+                    <label for="comp-detail"><strong> Detailed Complaint :</strong></span>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <textarea type="text" id="comp-detail" class="form-control w-75" name="detailed" rows="5"placeholder="Enter a detailed explanation of your complaint." disabled required></textarea>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col text-center">
+                    <input type="submit" class="btn btn-primary" style="transition: 0.5s;"/>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</body>
+</html>

@@ -3,6 +3,8 @@ from .models import Complaint
 from institute.models import Student, Official
 from django.http.response import Http404
 from django.contrib import messages
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 def registerComplaint(request):
@@ -55,4 +57,9 @@ def registerComplaint(request):
         messages.success(request, 'Complaint Registered Successfully!')
         return redirect('complaints:registerComplaint')
 
-    return render(request, 'complaints/complaint.html')
+    return render(request, 'complaints/new.html')
+
+class ComplaintDetailView(LoginRequiredMixin, DetailView):
+    model = Complaint
+    template_name = 'complaints/show.html'
+    context_object_name = 'complaint'

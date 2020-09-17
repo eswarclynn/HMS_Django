@@ -1,0 +1,81 @@
+body{
+  font-family: 'Roboto', sans-serif;
+  background-color:#f8f9fa;
+}
+
+#topnav {
+  background-color: #7f5a83;
+  background-image: linear-gradient(315deg, #7f5a83 0%, #0d324d 74%);
+  box-shadow: 0 8px 6px -6px rgb(37, 34, 68);
+}
+#title{
+  font-size:x-large;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  background-color: #100f18;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  box-shadow: 8px 8px 6px -6px rgb(37, 34, 68);
+  background: rgb(22,32,49);
+  background: linear-gradient(90deg, rgba(22,32,49,1) 0%, rgba(22,32,49,1) 81%, rgba(31,46,71,1) 100%);
+}
+
+.sidenav a {
+  padding: 5px 8px 13px 32px;
+  text-decoration: none;
+  font-size: 1.3em;
+  color: #a1a1a1;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover, .sidenav a.active {
+  color: #b766ec;
+}
+
+.sidenav::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}   
+.sidenav::-webkit-scrollbar-track {
+  background: #666;
+}
+ 
+.sidenav::-webkit-scrollbar-thumb {
+  background: #99979b; 
+}
+
+.main-container {
+  margin-top: 5.5rem;
+  background: rgb(255, 255, 255);
+  border: 1px solid #dee2e6!important;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  padding: 30px;
+  margin-bottom: 30px;
+  max-width: 1190px;
+}
+
+.table-muted{
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.table-container::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}   
+.table-container::-webkit-scrollbar-track {
+  background: #ddd;
+}
+ 
+.table-container::-webkit-scrollbar-thumb {
+  background: #666; 
+}

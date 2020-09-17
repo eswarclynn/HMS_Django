@@ -13,7 +13,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
   {% load static %}
-  <link href=" {% static 'complaints/complaint.css' %}" rel="stylesheet"> <!--Layout.css-->
+  <link href=" {% static 'officials/application.css' %}" rel="stylesheet"> <!--Layout.css-->
   <script src = "{% static 'complaints/complaint.js' %}"></script>
 
 </head>
@@ -27,7 +27,7 @@
    </nav>
     <div class="container main-container">
         <h2 class="text-center">Register Complaint</h2>
-        
+        <hr>
         <form method="POST" action=" {% url 'complaints:registerComplaint' %}">
             {% csrf_token %}
                          

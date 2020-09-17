@@ -135,3 +135,6 @@ class Block(models.Model):
 
     def __str__(self):
         return self.name
+
+    def short_name(self):
+        return self.name.split()[0]

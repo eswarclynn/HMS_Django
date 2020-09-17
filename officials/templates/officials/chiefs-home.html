@@ -1,323 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Official Home - Hostel Management System</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"><!--Datatables CSS-->
-  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap" rel="stylesheet"> <!--Montserrat-->
-  {% load static %}
-  <link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet"> <!--Layout.css-->
-  <script src = "{% static 'officials/sidenav.js' %}"></script>
+{% extends 'officials/base_officials.html' %}
 
-</head>
+{% block title %}Chief Warden Home - Hostel Management System{% endblock title %}
 
-<body>
-    <nav class="navbar fixed-top row px-4" id="topnav">
-            <div class="col-0 ">
-                <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-            </div>
+{% block content %}
+  
+<p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>, <b>{{user_details.designation}}</b> of NIT-AP !</p>
 
-            <div class="col-10 d-flex justify-content-center">
-                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
-                <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-            </div>
-            
-            <div class="col-0 ">
-                <a href="{% url 'officials:chiefsProfile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
-            </div>
-    </nav>
-
-
-    <div id="mySidenav" class="sidenav">
-        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
-        <a href="{% url 'officials:blockSearch' %}"><span><i class="fa fa-building"></i></span> &nbsp;&nbsp; Block Layout</a>
-        <a href="{% url 'officials:search' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Search</a>
-        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-        <a href="{% url 'officials:register_student' %}" target="_blank"><span><i class="fa fa-user-circle"></i></span> &nbsp;&nbsp;Add Student</a>
-        <a href="{% url 'officials:student_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp;List of Students</a>
-        <a href="{% url 'officials:register_official' %}" target="_blank"><span><i class="fa fa-address-card"></i></span> &nbsp;&nbsp; Add Warden</a>
-        <a href="{% url 'officials:emp_list' %}"><span><i class="fa fa-file-text-o"></i></span> &nbsp;&nbsp; List of Employees</a>
-        <a href="{% url 'officials:register_worker' %}" target="_blank"><span><i class="fa fa-address-book"></i></span> &nbsp;&nbsp; Add Worker</a>
-        <a href="{% url 'officials:workers_list' %}"><span><i class="fa fa-file-text"></i></span> &nbsp;&nbsp; List of Workers</a>
-        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
-        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
-    </div>
-
-
-    <div class="main-container container">
-
-        <p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>, <b>Hostel Board Member</b> of NIT-AP !</p>
-
-        <div class="row">
-            <div class="col-md" data-toggle="tooltip" title="Click to get list!" >
-                <div class="card" id="present" data-toggle="collapse" data-target=".attendance-container" aria-expanded="false" aria-controls="attendance-container">
-                    <div class="row">
-                        <div class="col-8">
-                            <span class="row atttext">Number of inmates present.</span>
-                            <span class="row"><span class="attnum">{{present|length}}</span><span class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
-                        </div>
-                        <div class="col-4">
-                            <span class="atticon"><i class="fa fa-user-plus"></i></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md"  data-toggle="tooltip" title="Click to get list!">
-                <div class="card" id="absent" data-toggle="collapse" data-target=".attendance-container" aria-controls="attendance-container" >
-                    <div class="row">
-                        <div class="col-8">
-                            <span class="row atttext">Number of inmates absent.</span>
-                            <span class="row"><span class="attnum">{{absent|length}}</span><span class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
-                            <script>
-                                var mydate = new Date()
-                                mydate.setDate(mydate.getDate() - 1);
-                                var ele = document.getElementsByClassName('att_date');
-                                for (var i = 0; i < ele.length; i++) {
-                                    ele[i].innerHTML = 'As of '+mydate.toLocaleDateString("en-IN");
-                                }
-                            </script>
-                        </div>
-                        <div class="col-4">
-                            <span class="atticon"><i class="fa fa-user-times"></i></span>
-                        </div>
-                    </div>
-
-                </div>    
-            </div>
-            <div class="col-md">
-                <div class="card" id="comps" >
-                    <div class="row">
-                        <div class="col-8">
-                            <span class="row atttext">Number of complaints received.</span>
-                            <span class="row attnum">{{complaints_list|length}}</span>
-                        </div>
-                        <div class="col-4">
-                            <span class="atticon"><i class="fa fa-font-awesome" ></i></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="row">
+  <div class="col-md" data-toggle="tooltip" title="Click to get list!">
+    <div class="card" id="present" data-toggle="collapse" data-target=".attendance-container" aria-expanded="false"
+      aria-controls="attendance-container">
+      <div class="row">
+        <div class="col-8">
+          <span class="row atttext">Number of inmates present.</span>
+          <span class="row"><span class="attnum">{{present|length}}</span><span
+              class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
         </div>
-
-        <br>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                    <div class="table-container attendance-container container pb-3 collapse" >
-                <h2 class="text-center">List of Absentees</h2>
-                <table class="table table-hover table-muted table-striped attendance_table">
-                    <thead>
-                        <tr>
-                            <th>Roll No.</th>
-                            <th>Name</th>
-                            <th>Year</th>
-                            <th>Branch</th>
-                            <th>Block</th>
-                            <th>Room</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {% for stud in absent %}
-                        <tr>
-                            <td>{{stud.info.regd_no}}</td>
-                            <td>{{stud.info.name}}</td>
-                            <td>{{stud.info.year}}</td>
-                            <td>{{stud.info.branch}}</td>
-                            <td>{{stud.block.block_id_id}}</td>
-                            <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
-                        </tr>
-                        {% empty %}
-                        {% endfor %}   
-                    </tbody>
-                </table>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="table-container attendance-container container pb-3 collapse">
-                <h2 class="text-center">List of Present Students</h2>
-                <table class="table table-hover table-muted table-striped attendance_table" >
-                    <thead>
-                        <tr>
-                            <th>Roll No.</th>
-                            <th>Name</th>
-                            <th>Year</th>
-                            <th>Branch</th>
-                            <th>Block</th>
-                            <th>Room</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        {% for stud in present %}
-                        <tr>
-                            <td>{{stud.info.regd_no}}</td>
-                            <td>{{stud.info.name}}</td>
-                            <td>{{stud.info.year}}</td>
-                            <td>{{stud.info.branch}}</td>
-                            <td>{{stud.block.block_id_id}}</td>
-                            <td>{{stud.block.floor|slice:"0:1"}}-{{stud.block.room_no}}</td>
-                        </tr>
-                        {% empty %}
-                       
-                        {% endfor %}
-                    </tbody>
-                </table>
-                    </div>
-                </div>
-            </div>
+        <div class="col-4">
+          <span class="atticon"><i class="fa fa-user-plus"></i></span>
         </div>
-        <style>
-            #complaints_table {
-                counter-reset: rowNumber;
-            }
-        
-            #complaints_table tbody tr {
-                counter-increment: rowNumber;
-            }
-        
-            #complaints_table tbody tr td:first-child::before {
-                content: counter(rowNumber);
-            }
-            #complaints_table tbody tr:only-child td:first-child::before {
-                content: '';
-            }
-        </style>
-
-        <div class="table-container container-fluid mt-4 pb-4">
-            <form method="POST" action="{% url 'officials:official_home' %}">
-                <h2 style="text-align: center;">Complaints Registered</h2>
-                <table class="table table-hover table-muted table-striped " id="complaints_table">
-                    <thead>
-                        <tr class="text-center">
-                            <th class="text-center overflow-hidden">Roll No.</th>
-                            <th class="text-center overflow-hidden">Type</th>
-                            <th class="text-center overflow-hidden">Complainee</th>
-                            <th class="text-center overflow-hidden">Summary</th>
-                            <th class="text-center overflow-hidden">Date Registered</th>
-                            <th class="text-center overflow-hidden">Status</th>
-                            <th class="text-center overflow-hidden">Action</th>
-                            <th class="text-center overflow-hidden">Remark</th>
-                            <th class="text-center overflow-hidden">Update</th>
-                        </tr>
-                    </thead>
-                        {% csrf_token %}
-                        {% if messages %}
-                                       
-                        {% for message in messages %}
-                             <script>
-                                  alert('{{message}}');
-                             </script>
-                        {% endfor %}
-                             
-                        {% endif %}  
-                        <tbody>
-
-                            {% if complaints %}
-                            {% for item in complaints %}
-                            <tr>
-                                <td>{{item.regd_no}}</td>
-                                <td>{{item.type}}</td>
-                                <td>{{item.complainee}}</td>
-                                <td>{{item.summary}}</td>
-                                <td>{{item.date|date:'d-m-Y'}}</td>
-                                <td>{{item.status}}</td>
-                                <td>                            
-                                    <select id="SC{{item.id}}" name="SC{{item.id}}">
-                                        {% if item.status == 'Registered' %}
-                                            <option value="Registered" selected>Registered</option>   
-                                        {% else %}
-                                            <option value="Registered">Registered</option>
-                                        {% endif %}
-                                        
-                                        {% if item.status == 'Processing' %}
-                                            <option value="Processing" selected>Processing</option>
-                                        {% else %}
-                                            <option value="Processing">Processing</option>
-                                        {% endif %}  
-                                        <option value="Resolved">Resolved</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" name="SCRE{{item.id}}" id="SCRE{{item.id}}" placeholder="Enter Remark..."></td>
-                                <td><button type="submit" name="SCupdate" value="{{item.id}}" class="btn btn-primary">Update</button></td>
-                            </tr>
-                            
-                            {% empty %}
-                            
-                            {% endfor %}
-                            {% endif %}
-                            {% if offComplaints %}
-                            {% for item in offComplaints %}
-                            <tr>
-                                <td>{{item.regd_no}}</td>
-                                <td>{{item.type}}</td>
-                                <td>{{item.complainee}}</td>
-                                <td>{{item.summary}}</td>
-                                <td>{{item.date|date:'d-m-Y'}}</td>
-                                <td>{{item.status}}</td>
-                                <td>                            
-                                    <select id="OC{{item.id}}" name="OC{{item.id}}">
-                                        {% if item.status == 'Registered' %}
-                                            <option value="Registered" selected>Registered</option>   
-                                        {% else %}
-                                            <option value="Registered">Registered</option>
-                                        {% endif %}
-                                        
-                                        {% if item.status == 'Processing'  %}
-                                            <option value="Processing" selected>Processing</option>
-                                        {% else %}
-                                            <option value="Processing">Processing</option>
-                                        {% endif %}  
-                                        <option value="Resolved">Resolved</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" name="OCRE{{item.id}}" id="OCRE{{item.id}}" placeholder="Enter Remark..."></td>
-                                <td><button type="submit" name="OCupdate" value="{{item.id}}" class="btn btn-primary">Update</button></td>
-                            </tr>
-                            
-                            {% empty %}
-
-                            {% endfor %}
-                            {% endif %}
-                            
-                        </tbody>
-                    </table>
-                </form>
-            </div>
+      </div>
     </div>
+  </div>
+  <div class="col-md" data-toggle="tooltip" title="Click to get list!">
+    <div class="card" id="absent" data-toggle="collapse" data-target=".attendance-container"
+      aria-controls="attendance-container">
+      <div class="row">
+        <div class="col-8">
+          <span class="row atttext">Number of inmates absent.</span>
+          <span class="row"><span class="attnum">{{absent|length}}</span><span
+              class="att_date px-4 d-flex align-items-end pb-2" style="color: beige;"></span></span>
+          <script>
+            var mydate = new Date()
+            mydate.setDate(mydate.getDate() - 1);
+            var ele = document.getElementsByClassName('att_date');
+            for (var i = 0; i < ele.length; i++) {
+              ele[i].innerHTML = 'As of ' + mydate.toLocaleDateString("en-IN");
+            }
+          </script>
+        </div>
+        <div class="col-4">
+          <span class="atticon"><i class="fa fa-user-times"></i></span>
+        </div>
+      </div>
 
+    </div>
+  </div>
+  <div class="col-md">
+    <div class="card" id="comps">
+      <div class="row">
+        <div class="col-8">
+          <span class="row atttext">Number of complaints received.</span>
+          <span class="row attnum">{{complaints_list|length}}</span>
+        </div>
+        <div class="col-4">
+          <span class="atticon"><i class="fa fa-font-awesome"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<br>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="table-container attendance-container container pb-3 collapse">
+        <h2 class="text-center">List of Absentees</h2>
+        <table class="table table-hover table-muted table-striped attendance_table">
+          <thead>
+            <tr>
+              <th>Roll No.</th>
+              <th>Name</th>
+              <th>Year</th>
+              <th>Branch</th>
+              <th>Block</th>
+              <th>Room</th>
+            </tr>
+          </thead>
+          <tbody>
 
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('table.attendance_table').DataTable({
-                "pageLength": 6,
-                "lengthChange": false,
-                "info":false,
-                "dom": '<"row"<f"col"><"col"p>>t'
-            });
-            $('#complaints_table').DataTable({
-                "pageLength": 6,
-                "lengthChange": false,
-                "dom": '<"row"<"col-3"i><"col"f><"col"p>>'
-            });
+            {% for stud in absent %}
+            <tr>
+              <td>{{stud.student.regd_no}}</td>
+              <td>{{stud.student.name}}</td>
+              <td>{{stud.student.year}}</td>
+              <td>{{stud.student.branch}}</td>
+              <td>{{stud.student.block.short_name}}</td>
+              <td>{{stud.student.room_detail.floor|slice:"0:1"}}-{{stud.student.room_detail.room_no}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col">
+      <div class="table-container attendance-container container pb-3 collapse">
+        <h2 class="text-center">List of Present Students</h2>
+        <table class="table table-hover table-muted table-striped attendance_table">
+          <thead>
+            <tr>
+              <th>Roll No.</th>
+              <th>Name</th>
+              <th>Year</th>
+              <th>Branch</th>
+              <th>Block</th>
+              <th>Room</th>
+            </tr>
+          </thead>
+          <tbody>
 
-            $('[data-toggle="tooltip"]').tooltip();
-        } );
-    </script>
+            {% for stud in present %}
+            <tr>
+              <td>{{stud.student.regd_no}}</td>
+              <td>{{stud.student.name}}</td>
+              <td>{{stud.student.year}}</td>
+              <td>{{stud.student.branch}}</td>
+              <td>{{stud.student.roomdetail.block.short_name}}</td>
+              <td>{{stud.student.roomdetail.floor|slice:"0:1"}}-{{stud.student.roomdetail.room_no}}</td>
+            </tr>
+            {% empty %}
 
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
-</body>
-</html>
+<div class="table-container container-fluid mt-4 pb-4">
+  <form method="POST" action="{% url 'officials:official_home' %}">
+    <h2 style="text-align: center;">Complaints Registered</h2>
+    <table class="table table-hover table-muted table-striped " id="complaints_table">
+      <thead>
+        <tr class="text-center">
+          <th class="overflow-hidden">Roll No.</th>
+          <th class="overflow-hidden">Type</th>
+          <th class="overflow-hidden">Complainee</th>
+          <th class="overflow-hidden">Summary</th>
+          <th class="overflow-hidden">Last Updated</th>
+          <th class="overflow-hidden">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in complaints %}
+        <tr class="text-center">
+          <td>{{item.entity_id}}</td>
+          <td>{{item.type}}</td>
+          <td>{{item.complainee}}</td>
+          <td>{{item.summary}}</td>
+          <td>{{item.updated_at|date:'d-m-Y'}}</td>
+          <td>{{item.status}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('table.attendance_table').DataTable({
+      "pageLength": 6,
+      "lengthChange": false,
+      "info": false,
+      "dom": '<"row"<f"col"><"col"p>>t'
+    });
+    $('#complaints_table').DataTable({
+      "pageLength": 6,
+      "lengthChange": false,
+      "dom": '<"row"<"col-3"i><"col"f><"col"p>>'
+    });
+
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
+{% endblock content %}

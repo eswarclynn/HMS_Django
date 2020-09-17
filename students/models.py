@@ -17,7 +17,7 @@ class RoomDetail(models.Model):
         block = self.block_id or "None"
         floor = self.floor or "None"
         return "{regd_no}<{block}: {floor}-{room}>".format(
-            regd_no = self.regd_no, 
+            regd_no = self.student, 
             block = block,
             floor = floor,
             room = self.room_no or 0
@@ -33,7 +33,7 @@ class Attendance(models.Model):
     status = models.CharField(max_length=10,default='')
 
     def __str__(self):
-        return str(self.regd_no)
+        return str(self.student)
 
 class Outing(models.Model):
     PERMIT_OPTIONS = (

@@ -5,5 +5,6 @@ from . import views
 app_name= 'complaints'
 
 urlpatterns = [
-    path('register-complaint/', login_required(views.registerComplaint), name='registerComplaint'),
+    path('new/', login_required(views.registerComplaint), name='registerComplaint'),
+    path('<int:pk>/', views.ComplaintDetailView.as_view(), name='complaint_detail'),
 ]

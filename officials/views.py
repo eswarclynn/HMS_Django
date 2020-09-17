@@ -30,59 +30,16 @@ def official_home(request):
     user = request.user
     official = user.official
     if official.is_chief:
-        pres = Attendance.objects.filter(status='Present')
-        present=list()
-        for item in pres:
-            try:
-                present.append({
-                    'info':Institutestd.objects.get(regd_no=str(item.regd_no)),
-                    'block':details.objects.get(regd_no = Institutestd.objects.get(regd_no=str(item.regd_no))),
-                    'block_name': Blocks.objects.get(block_id=details.objects.get(regd_no = Institutestd.objects.get(regd_no=str(item.regd_no))).block_id_id).block_name
-                })
-            except: pass
+        present_students = Attendance.objects.filter(status='Present')
+        absent_students = Attendance.objects.filter(status='Absent')
+        complaints = Complaint.objects.filter(status='Registered') | Complaint.objects.filter(status='Processing')
 
-        abse = attendance.objects.filter(status='Absent')
-        absent=list()
-        for item in abse:
-            try:
-                absent.append({
-                    'info':Institutestd.objects.get(regd_no=str(item.regd_no)),
-                    'block':details.objects.get(regd_no = Institutestd.objects.get(regd_no=str(item.regd_no))),
-                    'block_name': Blocks.objects.get(block_id=details.objects.get(regd_no = Institutestd.objects.get(regd_no=str(item.regd_no))).block_id_id).block_name
-                })
-            except: pass
-
-        complaints = list(Complaints.objects.filter(status='Registered')) + list(Complaints.objects.filter(status='Processing'))
-        offComplaints = list(OfficialComplaints.objects.filter(status='Registered')) + list(OfficialComplaints.objects.filter(status='Processing'))
-        complaints_list = complaints + offComplaints
-        if request.method == 'POST':
-            for i in request.POST:
-                if i == 'SCupdate':
-                    comp_id = request.POST[i]
-                    newComplaint = Complaints.objects.get(id=comp_id)
-                    if newComplaint.status != request.POST['SC'+comp_id] or newComplaint.remark != request.POST['SCRE'+comp_id]:
-                        newComplaint.status = request.POST['SC'+comp_id]
-                        newComplaint.remark = request.POST['SCRE'+comp_id]
-                        newComplaint.save()
-                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
-                        return redirect('officials:official_home') 
-
-                if i == 'OCupdate':
-                    comp_id = request.POST[i]
-                    newComplaint = OfficialComplaints.objects.get(id=comp_id)
-                    if newComplaint.status != request.POST['OC'+comp_id] or newComplaint.remark != request.POST['OCRE'+comp_id]:
-                        newComplaint.status = request.POST['OC'+comp_id]
-                        newComplaint.remark = request.POST['OCRE'+comp_id]
-                        newComplaint.save()
-                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
-                        return redirect('officials:official_home') 
-
-        return render(request, 'officials/chiefs-home.html', {'user_details': user_details, 'present':present, 'absent':absent, 'complaints':complaints,'complaints_list':complaints_list , 'offComplaints':offComplaints})
+        return render(request, 'officials/chiefs-home.html', {'user_details': official, 'present':present_students, 'absent':absent_students, 'complaints':complaints,})
 
     else:
         try:
             block_details = official.block
-        except Blocks.DoesNotExist:
+        except Block.DoesNotExist:
             messages.error(request, 'You are currently not appointed any block! Please contact Admin')
             raise Http404()
 
@@ -130,20 +87,9 @@ def official_home(request):
 @user_passes_test(official_check)
 def profile(request):
     user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
-    block_details = Blocks.objects.filter(emp_id = user_details)
-    complaints=list(user_details.offComplaints.filter(status='Registered')) + list(user_details.offComplaints.filter(status='Processing'))
+    official = user.official
 
-    return render(request, 'officials/profile.html', {'user_details': user_details,'block_details':block_details, 'complaints':complaints})
-
-@user_passes_test(chief_warden_check)
-def chiefsProfile(request):
-    user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
-    block_details = Blocks.objects.filter(emp_id = user_details)
-    complaints=list(user_details.offComplaints.filter(status='Registered')) + list(user_details.offComplaints.filter(status='Processing'))
-
-    return render(request, 'officials/chiefs-profile.html', {'user_details': user_details, 'complaints':complaints})
+    return render(request, 'officials/profile.html', {'official': official})
 
 @user_passes_test(official_check)
 @csrf_exempt
