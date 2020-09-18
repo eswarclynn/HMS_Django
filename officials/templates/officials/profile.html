@@ -1,6 +1,6 @@
 {% extends 'officials/base_officials.html' %}
 
-{% block title %}Official Profile - Hostel Management System{% endblock title %}
+{% block title %}{{user_details.designation}} Profile - Hostel Management System{% endblock title %}
 
 {% block content %}
 <p style="text-align: center; font-size: large;">Hello <b>{{official.name}}</b>!</p>
@@ -22,11 +22,7 @@
   </div>
   <div class="row py-3 border-bottom">
     <div class="col-6 font-weight-bold">Block</div>
-    <div class="col-6">
-      {% for block in block_details %}
-      {{block.name}}
-      {% endfor %}
-    </div>
+    <div class="col-6">{{official.block.name}}</div>
   </div>
   <div class="row py-3 border-bottom">
     <div class="col-6 font-weight-bold">Contact Number</div>
@@ -53,11 +49,11 @@
   <table class="table table-hover table-muted table-striped" id="abstable">
     <thead>
       <tr>
-        <th class="text-center">Sl. No.</th>
         <th class="text-center">Type</th>
         <th class="text-center">Complainee</th>
         <th class="text-center">Summary</th>
         <th class="text-center">Date Registered</th>
+        <th class="text-center">Last Updated</th>
         <th class="text-center">Status</th>
         <th class="text-center">Remarks</th>
       </tr>
@@ -66,11 +62,11 @@
 
       {% for item in complaints %}
       <tr>
-        <td class="text-center">{{forloop.counter}} </td>
         <td class="text-center">{{item.type}}</td>
         <td class="text-center">{{item.complainee}}</td>
         <td class="text-center">{{item.summary}}</td>
-        <td class="text-center">{{item.date|date:'d-m-Y'}}</td>
+        <td class="text-center">{{item.created_at|date:'d-m-Y'}}</td>
+        <td class="text-center">{{item.updated_at|date:'d-m-Y'}}</td>
         <td class="text-center">{{item.status}}</td>
         <td class="text-center">{{item.remark}}</td>
       </tr>

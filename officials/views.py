@@ -29,58 +29,26 @@ def chief_warden_check(user):
 def official_home(request):
     user = request.user
     official = user.official
-    if official.is_chief:
+    if official.is_chief():
         present_students = Attendance.objects.filter(status='Present')
         absent_students = Attendance.objects.filter(status='Absent')
         complaints = Complaint.objects.filter(status='Registered') | Complaint.objects.filter(status='Processing')
-
-        return render(request, 'officials/chiefs-home.html', {'user_details': official, 'present':present_students, 'absent':absent_students, 'complaints':complaints,})
 
     else:
         try:
             block_details = official.block
         except Block.DoesNotExist:
-            messages.error(request, 'You are currently not appointed any block! Please contact Admin')
-            raise Http404()
+            raise Http404('You are currently not appointed any block! Please contact Admin')
 
-        students = details.objects.filter(block_id=block_details.block_id)
-        stud_roll = []
-        for stud in students:
-            stud_roll.append(stud.regd_no)
-    
-        present_list = list()
-        absent_list = list()
-        for student in students:
-            if ATT.objects.get(regd_no_id=student.regd_no_id).status == 'Present':
-                present_list.append(
-                    {
-                        'block':student,
-                        'info':Institutestd.objects.get(regd_no=str(student.regd_no))
-                    }
-                )
-            elif ATT.objects.get(regd_no_id=student.regd_no_id).status == 'Absent':
-                absent_list.append(
-                    {
-                        'block':student,
-                        'info':Institutestd.objects.get(regd_no=str(student.regd_no))
-                    }
-                )
+        student_rooms = RoomDetail.objects.filter(block=block_details)
+        student_ids = student_rooms.values_list('student', flat=True)
+        students = Student.objects.filter(pk__in=student_ids)
+        present_students = Attendance.objects.filter(student__in=students, status='Present')
+        absent_students = Attendance.objects.filter(student__in=students, status='Absent')
+        complaints = Complaint.objects.filter(entity_id__in=students.values_list('regd_no', flat=True), status='Registered') | Complaint.objects.filter(entity_id__in=students.values_list('regd_no', flat=True), status='Processing')
 
-        complaints = list(Complaints.objects.filter(status='Registered', regd_no__in=stud_roll)) + list(Complaints.objects.filter(status='Processing', regd_no__in=stud_roll))
+    return render(request, 'officials/home.html', {'user_details': official, 'present':present_students, 'absent':absent_students, 'complaints':complaints,})
 
-        if request.method == 'POST':
-            for i in request.POST:
-                if i == 'update':
-                    comp_id = request.POST[i]
-                    newComplaint = Complaints.objects.get(id=comp_id)
-                    if newComplaint.status != request.POST[comp_id] or newComplaint.remark != request.POST['RE'+comp_id]:
-                        newComplaint.status = request.POST[comp_id]
-                        newComplaint.remark = request.POST['RE'+comp_id]
-                        newComplaint.save()
-                        messages.success(request, 'Successfully Updated Complaint ID:'+str(newComplaint.id)+'!')
-                        return redirect('officials:official_home') 
-
-        return render(request, 'officials/caretaker-home.html', {'user_details': user_details, 'block_details':block_details,'present_list':present_list,'absent_list':absent_list, 'complaints':complaints})
 
 
 
@@ -88,8 +56,8 @@ def official_home(request):
 def profile(request):
     user = request.user
     official = user.official
-
-    return render(request, 'officials/profile.html', {'official': official})
+    complaints = Complaint.objects.filter(entity_id = official.emp_id)
+    return render(request, 'officials/profile.html', {'official': official, 'complaints': complaints})
 
 @user_passes_test(official_check)
 @csrf_exempt
@@ -259,7 +227,8 @@ def attendance_workers(request):
 @user_passes_test(official_check)
 def attendance_log(request):
     user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
+    official = user.official
+    block = official.block
     try:
         block_details = Blocks.objects.filter(emp_id = user_details)
         stud_set = block_details.details_set.all()
@@ -804,7 +773,7 @@ class StudentRegisterView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Register Student'
+        context['form_title'] = 'Register Student'
         return context
 
 class StudentUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
@@ -815,7 +784,7 @@ class StudentUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edit Student Details'
+        context['form_title'] = 'Edit Student Details'
         return context
 
 class StudentDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
@@ -830,7 +799,7 @@ class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Register Official'
+        context['form_title'] = 'Register Official'
         return context
 
 class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
@@ -841,7 +810,7 @@ class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edit Official Details'
+        context['form_title'] = 'Edit Official Details'
         return context
 
 class OfficialDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
@@ -856,7 +825,7 @@ class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Register Staff'
+        context['form_title'] = 'Register Staff'
         return context
 
 class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
@@ -867,7 +836,7 @@ class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edit Staff Details'
+        context['form_title'] = 'Edit Staff Details'
         return context
 
 class WorkerDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):

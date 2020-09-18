@@ -19,9 +19,12 @@ class RoomDetail(models.Model):
         return "{regd_no}<{block}: {floor}-{room}>".format(
             regd_no = self.student, 
             block = block,
-            floor = floor,
+            floor = floor[0],
             room = self.room_no or 0
         )
+
+    def room(self):
+        return self.floor and self.room_no and "{}-{}".format(self.floor[0], self.room_no)
 
 class Attendance(models.Model):
     OPTIONS = (

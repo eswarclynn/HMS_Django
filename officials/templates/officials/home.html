@@ -1,15 +1,23 @@
 {% extends 'officials/base_officials.html' %}
 
-{% block title %}Chief Warden Home - Hostel Management System{% endblock title %}
+{% block title %}{{user_details.designation}} Home - Hostel Management System{% endblock title %}
 
 {% block content %}
+
+{% load static %}
+{% block style_link %}
+<link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet">
+{% endblock style_link %}
   
-<p style="text-align: center; font-size: large;">Hello <b>{{user_details.name}}</b>, <b>{{user_details.designation}}</b> of NIT-AP !</p>
+<p style="text-align: center; font-size: large;">
+  Hello <b>{{user_details.name}}</b>, <b>{{user_details.designation}}</b> 
+  of {% if user_details.is_chief %} NIT Andhra Pradesh {% else %} {{user_details.block.name}}{% endif %}!
+</p>
 
 <div class="row">
   <div class="col-md" data-toggle="tooltip" title="Click to get list!">
-    <div class="card" id="present" data-toggle="collapse" data-target=".attendance-container" aria-expanded="false"
-      aria-controls="attendance-container">
+    <div class="card" id="present" data-toggle="collapse" data-target="#attendance_tables" aria-expanded="false"
+      aria-controls="attendance_tables">
       <div class="row">
         <div class="col-8">
           <span class="row atttext">Number of inmates present.</span>
@@ -23,8 +31,8 @@
     </div>
   </div>
   <div class="col-md" data-toggle="tooltip" title="Click to get list!">
-    <div class="card" id="absent" data-toggle="collapse" data-target=".attendance-container"
-      aria-controls="attendance-container">
+    <div class="card" id="absent" data-toggle="collapse" data-target="#attendance_tables"
+      aria-controls="attendance_tables">
       <div class="row">
         <div class="col-8">
           <span class="row atttext">Number of inmates absent.</span>
@@ -51,7 +59,7 @@
       <div class="row">
         <div class="col-8">
           <span class="row atttext">Number of complaints received.</span>
-          <span class="row attnum">{{complaints_list|length}}</span>
+          <span class="row attnum">{{complaints|length}}</span>
         </div>
         <div class="col-4">
           <span class="atticon"><i class="fa fa-font-awesome"></i></span>
@@ -62,11 +70,11 @@
 </div>
 
 <br>
-<div class="container-fluid">
+<div class="container-fluid collapse" id="attendance_tables">
   <div class="row">
-    <div class="col">
-      <div class="table-container attendance-container container pb-3 collapse">
-        <h2 class="text-center">List of Absentees</h2>
+    <div class="col-md-6">
+      <h2 class="text-center">List of Absentees</h2>
+      <div class="overflow-auto py-4 px-3">
         <table class="table table-hover table-muted table-striped attendance_table">
           <thead>
             <tr>
@@ -87,16 +95,16 @@
               <td>{{stud.student.year}}</td>
               <td>{{stud.student.branch}}</td>
               <td>{{stud.student.block.short_name}}</td>
-              <td>{{stud.student.room_detail.floor|slice:"0:1"}}-{{stud.student.room_detail.room_no}}</td>
+              <td>{{stud.student.roomdetail.room}}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
-    <div class="col">
-      <div class="table-container attendance-container container pb-3 collapse">
-        <h2 class="text-center">List of Present Students</h2>
+    <div class="col-md-6">
+      <h2 class="text-center">List of Present Students</h2>
+      <div class="overflow-auto py-4 px-3">
         <table class="table table-hover table-muted table-striped attendance_table">
           <thead>
             <tr>
@@ -117,7 +125,7 @@
               <td>{{stud.student.year}}</td>
               <td>{{stud.student.branch}}</td>
               <td>{{stud.student.roomdetail.block.short_name}}</td>
-              <td>{{stud.student.roomdetail.floor|slice:"0:1"}}-{{stud.student.roomdetail.room_no}}</td>
+              <td>{{stud.student.roomdetail.room}}</td>
             </tr>
             {% empty %}
 
@@ -129,9 +137,9 @@
   </div>
 </div>
 
-<div class="table-container container-fluid mt-4 pb-4">
-  <form method="POST" action="{% url 'officials:official_home' %}">
-    <h2 style="text-align: center;">Complaints Registered</h2>
+<form method="POST" action="{% url 'officials:official_home' %}">
+  <h2 style="text-align: center;">Complaints Registered</h2>
+  <div class="overflow-auto p-4">
     <table class="table table-hover table-muted table-striped " id="complaints_table">
       <thead>
         <tr class="text-center">
@@ -145,7 +153,7 @@
       </thead>
       <tbody>
         {% for item in complaints %}
-        <tr class="text-center">
+        <tr class="text-center" data-row-href="{% url 'complaints:complaint_detail' item.pk %}">
           <td>{{item.entity_id}}</td>
           <td>{{item.type}}</td>
           <td>{{item.complainee}}</td>
@@ -156,26 +164,29 @@
         {% endfor %}
       </tbody>
     </table>
-  </form>
-</div>
+  </div>
+</form>
 
+{% endblock content %}
+
+{% block script_links %}  
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 <script>
-  $(document).ready(function () {
-    $('table.attendance_table').DataTable({
-      "pageLength": 6,
-      "lengthChange": false,
-      "info": false,
-      "dom": '<"row"<f"col"><"col"p>>t'
-    });
-    $('#complaints_table').DataTable({
-      "pageLength": 6,
-      "lengthChange": false,
-      "dom": '<"row"<"col-3"i><"col"f><"col"p>>'
-    });
-
-    $('[data-toggle="tooltip"]').tooltip();
+$(document).ready(function () {
+  $('table.attendance_table').DataTable({
+    "pageLength": 6,
+    "lengthChange": false,
+    "info": false,
+    "dom": '<"row"<f"col"><"col"p>>t'
   });
+  $('#complaints_table').DataTable({
+    "pageLength": 6,
+    "lengthChange": false,
+  });
+
+  $('[data-toggle="tooltip"]').tooltip();
+});
 </script>
-{% endblock content %}
+{% endblock script_links %}
+  

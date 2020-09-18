@@ -15,13 +15,12 @@ class LoginView(SuccessMessageMixin, auth_views.LoginView):
     template_name='django_auth/login.html'
 
     def get_success_url(self):
-        user = self.request.user
-        if user.is_student:
-            return reverse('students:student_home')
-        elif user.is_official:
-            return reverse('officials:official_home')
-        elif user.is_worker:
-            return reverse('workers:staff_home')
+        return self.request.user.home_url()
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['form_title'] = 'Log In'
+        return context
 
 class SignUpView(SuccessMessageMixin, CreateView):
     template_name = 'django_auth/signup.html'
@@ -30,13 +29,7 @@ class SignUpView(SuccessMessageMixin, CreateView):
     success_message = "Sign Up Successful!"
 
     def get_success_url(self):
-        user = self.object
-        if user.is_student:
-            return reverse('students:student_home')
-        elif user.is_official:
-            return reverse('officials:official_home')
-        elif user.is_worker:
-            return reverse('workers:staff_home')
+        return self.request.user.home_url()
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -52,22 +45,21 @@ class SignUpView(SuccessMessageMixin, CreateView):
             Worker.objects.filter(staff_id = entity_id).update(user = form.instance)
 
         return response
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['form_title'] = 'Sign Up'
+        return context
 
 class PasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
     template_name = 'django_auth/password_change.html'
 
     def get_success_url(self):
-        user = self.request.user
-        if user.is_student:
-            return reverse('students:student_home')
-        elif user.is_official:
-            return reverse('officials:official_home')
-        elif user.is_worker:
-            return reverse('workers:staff_home')
+        return self.request.user.home_url()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Change Password'
+        context['form_title'] = 'Change Password'
         return context
 
 
@@ -78,7 +70,7 @@ class PasswordResetView(auth_views.PasswordResetView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Reset Password'
+        context['form_title'] = 'Reset Password'
         return context
 
 class PasswordResetDoneView(auth_views.PasswordResetDoneView):
@@ -86,24 +78,21 @@ class PasswordResetDoneView(auth_views.PasswordResetDoneView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Reset Password eMail Sent'
+        context['form_title'] = 'Reset Password eMail Sent'
         return context
 
 class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    template_name = 'django_auth/password_change.html'
+    template_name = 'django_auth/password_reset_confirm.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Reset New Password'
+        context['form_title'] = 'Reset New Password'
         return context
 
 class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'django_auth/password_reset_complete.html'
 
-
-    
-
-
-
-    
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = 'Password Reset Complete'
+        return context
