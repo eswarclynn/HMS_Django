@@ -1,0 +1,66 @@
+{% extends 'officials/base_officials.html' %}
+
+{% block title %}Outing Requests{% endblock title %}
+
+{% block content %}
+
+<h1 class="text-center">Outing Requests</h1>
+<hr>
+<div class="overflow-auto p-4">
+  <table class="table table-hover table-muted table-striped" id="att-table">
+    <thead>
+      <tr>
+        <th>Regd No.</th>
+        <th>Student Name</th>
+        <th>Year</th>
+        <th>Branch</th>
+        <th>Phone</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Allow?</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {% for outing in outings %}
+      <tr data-row-href="{% url 'officials:outing_detail' outing.id %}">
+        <td>{{outing.student.regd_no}}</td>
+        <td>{{outing.student.name}}</td>
+        <td>{{outing.student.year}}</td>
+        <td>{{outing.student.branch}}</td>
+        <td>{{outing.student.phone}}</td>
+        <td>{{outing.fromDate}}</td>
+        <td>{{outing.toDate}}</td>
+        <td>
+          <form action="{% url 'officials:outing_detail' outing.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to grant outing to {{outing.student.name}}?');">{% csrf_token %}
+            <input type="hidden" name="permission" value="Granted" />
+            <button type="submit" class="btn btn-success ml-3">Grant</button>
+          </form>
+          <form action="{% url 'officials:outing_detail' outing.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to reject?');">{% csrf_token %}
+            <input type="hidden" name="permission" value="Rejected" />
+            <button type="submit" class="btn btn-danger ml-3">Reject</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="text-center"><small>Click on a row to view student details and outing history!</small></div>
+{% endblock content %}
+
+
+{% block script_links %}
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('table').DataTable({
+      "lengthMenu": [[10, 25, 50, 100, 250, 500, 1000, -1], [10, 25, 50, 100, 250, 500, 1000, "All"]],
+      "info": false,
+      "dom": '<"row"<"col-3"l><"col"f><"col"p>>t'
+    });
+  });
+</script>
+{% endblock script_links %}

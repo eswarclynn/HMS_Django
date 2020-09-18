@@ -6,7 +6,7 @@
 
 {% load static %}
 {% block style_link %}
-<link href="{% static 'officials/caretaker-home.css' %}" rel="stylesheet">
+<link href="{% static 'officials/home.css' %}" rel="stylesheet">
 {% endblock style_link %}
   
 <p style="text-align: center; font-size: large;">
@@ -137,35 +137,33 @@
   </div>
 </div>
 
-<form method="POST" action="{% url 'officials:official_home' %}">
-  <h2 style="text-align: center;">Complaints Registered</h2>
-  <div class="overflow-auto p-4">
-    <table class="table table-hover table-muted table-striped " id="complaints_table">
-      <thead>
-        <tr class="text-center">
-          <th class="overflow-hidden">Roll No.</th>
-          <th class="overflow-hidden">Type</th>
-          <th class="overflow-hidden">Complainee</th>
-          <th class="overflow-hidden">Summary</th>
-          <th class="overflow-hidden">Last Updated</th>
-          <th class="overflow-hidden">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in complaints %}
-        <tr class="text-center" data-row-href="{% url 'complaints:complaint_detail' item.pk %}">
-          <td>{{item.entity_id}}</td>
-          <td>{{item.type}}</td>
-          <td>{{item.complainee}}</td>
-          <td>{{item.summary}}</td>
-          <td>{{item.updated_at|date:'d-m-Y'}}</td>
-          <td>{{item.status}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</form>
+<h2 style="text-align: center;">Complaints Registered</h2>
+<div class="overflow-auto p-4">
+  <table class="table table-hover table-muted table-striped " id="complaints_table">
+    <thead>
+      <tr class="text-center">
+        <th class="overflow-hidden">Roll No.</th>
+        <th class="overflow-hidden">Type</th>
+        <th class="overflow-hidden">Complainee</th>
+        <th class="overflow-hidden">Summary</th>
+        <th class="overflow-hidden">Last Updated</th>
+        <th class="overflow-hidden">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in complaints %}
+      <tr class="text-center" data-row-href="{% url 'complaints:complaint_detail' item.pk %}">
+        <td>{{item.entity_id}}</td>
+        <td>{{item.type}}</td>
+        <td>{{item.complainee}}</td>
+        <td>{{item.summary}}</td>
+        <td>{{item.updated_at|date:'d-m-Y'}}</td>
+        <td>{{item.status}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% endblock content %}
 

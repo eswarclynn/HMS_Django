@@ -1,0 +1,116 @@
+{% extends 'officials/base_officials.html' %}
+{% block title %}Outing{% endblock title %}
+
+{% block content %} 
+<h2 class="text-center">Outing - {{ outing.student.regd_no }}</h2>
+<hr>
+<div class="row my-3 justify-content-center">
+  <div class="col-md-5 border py-3 mr-md-4">
+    <h4 class="text-center border-bottom border-secondary pb-3">Outing Details</h4>
+    <table class="table table-borderless">
+      <tbody>
+        <tr>
+          <th>From</th>
+          <td>{{ outing.fromDate }} {{ outing.fromTime }}</td>
+        </tr>
+        <tr>
+          <th>To</th>
+          <td>{{ outing.toDate }} {{ outing.toTime }}</td>
+        </tr>
+        <tr>
+          <th>Purpose of Visit</th>
+          <td>{{ outing.purpose }}</td>
+        </tr>
+        <tr>
+          <th>Permission</th>
+          <td>{{ outing.permission }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="my-3 text-center">
+      <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to grant outing to {{outing.student.name}}?');">{% csrf_token %}
+        <input type="hidden" name="permission" value="Granted" />
+        <button type="submit" class="btn btn-success ml-3">Grant</button>
+      </form>
+      <form method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to reject?');">{% csrf_token %}
+        <input type="hidden" name="permission" value="Rejected" />
+        <button type="submit" class="btn btn-danger ml-3">Reject</button>
+      </form>
+    </div>
+
+    <h4 class="text-center border-bottom border-secondary pb-3">Student Details</h4>
+    <table class="table table-borderless">
+      <tbody>
+        <tr>
+          <th>Registration No.</th>
+          <td>{{ outing.student.regd_no }}</td>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <td>{{ outing.student.name }}</td>
+        </tr>
+        <tr>
+          <th>Year</th>
+          <td>{{ outing.student.year }}</td>
+        </tr>
+        <tr>
+          <th>Branch</th>
+          <td>{{ outing.student.branch }}</td>
+        </tr>
+        <tr>
+          <th>Gender</th>
+          <td>{{ outing.student.gender }}</td>
+        </tr>
+        <tr>
+          <th>Phone</th>
+          <td>{{ outing.student.phone }}</td>
+        </tr>
+        <tr>
+          <th>Parent's Phone</th>
+          <td>{{ outing.student.parents_phone }}</td>
+        </tr>
+        <tr>
+          <th>Block</th>
+          <td>
+            {{ outing.student.roomdetail.block.name }}
+          </td>
+        </tr>
+        <tr>
+          <th>Room No.</th>
+          <td>{{ outing.student.roomdetail.room }}</td>
+        </tr>
+        <tr>
+          <th>Person with Disablity</th>
+          <td>{% if outing.student.pwd %}Yes{% else %}No{% endif %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-6 border py-3">
+    <h4 class="text-center border-bottom border-secondary pb-3">Outing History</h4>
+    <div class="overflow-auto p-3">
+      <table class="table table-muted">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Purpose</th>
+            <th>Permission</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in outing.student.outing_set.all %}
+            <tr {% if outing == item %}class="text-primary"{% endif %}>
+              <td>{{ item.fromDate }}</td>
+              <td>{{ item.toDate }}</td>
+              <td>{{ item.purpose }}</td>
+              <td>{{ item.permission }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -5,6 +5,7 @@
 
 {% block content %}
 <h1 class="text-center">Attendance Log</h1>
+<hr>
 <form method="POST" action="{% url 'officials:attendance_log' %}">
   {% csrf_token %}
 

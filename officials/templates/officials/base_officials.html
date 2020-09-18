@@ -21,23 +21,25 @@
 </head>
 
 <body>
-  <nav class="navbar fixed-top row px-4" id="topnav">
-    <div class="col-0 ">
-      <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars"
-          style="font-size: 4vh;color: aliceblue;"></span></span>
-    </div>
-
-    <div class="col-10 d-flex justify-content-center">
-      <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img
-          src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel
-        Management System</span>
-      <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img
-          src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-    </div>
-
-    <div class="col-0 ">
-      <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o"
-          style="font-size:4vh; color:aliceblue"></i></a>
+  <nav class="navbar row fixed-top px-4" id="topnav">
+    <div class="col-12 p-0 d-flex justify-content-between align-items-center">
+      <div class="">
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars"
+            style="font-size: 4vh;color: aliceblue;"></span></span>
+      </div>
+  
+      <div class="d-flex justify-content-center">
+        <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img
+            src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel
+          Management System</span>
+        <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img
+            src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+      </div>
+  
+      <div class="">
+        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o"
+            style="font-size:4vh; color:aliceblue"></i></a>
+      </div>
     </div>
   </nav>
 
@@ -51,16 +53,16 @@
       <a href="{% url 'officials:blockSearch' %}" class="{% if url_name == 'blockSearch' %}active{% endif %}"><span class="mr-3"><i class="fa fa-building"></i></span> Block Layout</a>
       <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span class="mr-3"><i class="fa fa-calendar"></i></span> Attendance Log</a>
       <a href="{% url 'officials:register_student' %}" target="_blank"><span class="mr-3"><i class="fa fa-user-circle"></i></span>Add Student</a>
-      <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> List of Students</a>
-      <a href="{% url 'officials:register_official' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-card"></i></span>Add Warden</a>
-      <a href="{% url 'officials:emp_list' %}"><span class="mr-3" class="{% if url_name == 'emp_list' %}active{% endif %}"><i class="fa fa-file-text-o"></i></span> List of Employees</a>
-      <a href="{% url 'officials:register_worker' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-book"></i></span>Add Worker</a>
-      <a href="{% url 'officials:workers_list' %}"><span class="mr-3" class="{% if url_name == 'workers_list' %}active{% endif %}"><i class="fa fa-file-text"></i></span> List of Workers</a>      
+      <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> Student List</a>
+      <a href="{% url 'officials:register_official' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-card"></i></span>Add Official</a>
+      <a href="{% url 'officials:emp_list' %}"><span class="mr-3" class="{% if url_name == 'emp_list' %}active{% endif %}"><i class="fa fa-file-text-o"></i></span>Official List</a>
+      <a href="{% url 'officials:register_worker' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-book"></i></span>Add Staff</a>
+      <a href="{% url 'officials:workers_list' %}"><span class="mr-3" class="{% if url_name == 'workers_list' %}active{% endif %}"><i class="fa fa-file-text"></i></span>Staff List</a>      
     {% else %}
       <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
       <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
       <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-      <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+      <a href="{% url 'officials:grant_outing' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
     {% endif %}
       
 

@@ -7,6 +7,10 @@ class ComplaintCreationForm(forms.ModelForm):
     class Meta:
         model = Complaint
         fields = ['type', 'complainee_id', 'summary', 'detailed']
+        
+        widgets = {
+            'detailed': forms.Textarea(attrs={'rows': 4})
+        }
 
     def clean_complainee_id(self):
         complainee_id = self.cleaned_data.get('complainee_id')
