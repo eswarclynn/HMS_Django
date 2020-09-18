@@ -138,3 +138,11 @@ class Block(models.Model):
 
     def short_name(self):
         return self.name.split()[0]
+
+    def student_capacity(self):
+        if self.room_type == '4S':   return self.capacity*4
+        elif self.room_type == '2S': return self.capacity*2
+        elif self.room_type == '1S': return self.capacity
+
+    def students(self):
+        return RoomDetail.objects.filter(block=self)

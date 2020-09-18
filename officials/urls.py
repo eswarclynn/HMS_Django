@@ -15,8 +15,8 @@ urlpatterns = [
     path('attendance-staff/', views.attendance_workers, name='attendance_workers'),
     path('attendance-log/', views.attendance_log, name='attendance_log'),
     path('grant-outing/', views.grantOuting, name='grantOuting'),
-    path('block-search/', views.blockSearch, name='blockSearch'),
-    path('search/',views.search, name='search'),
+    path('block-layout/', views.blockSearch, name='blockSearch'),
+    # path('search/',views.search, name='search'),
 
     path('register-student/', views.StudentRegisterView.as_view(), name='register_student'),
     path('edit-student/<int:pk>', views.StudentUpdateView.as_view(), name='edit_student'),

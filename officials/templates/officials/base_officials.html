@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>{% block title %} Hostel Management System {% endblock %}</title>
+  <title>{% block title %}{% endblock %} - Hostel Management System </title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag==" crossorigin="anonymous" />
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap"
     rel="stylesheet">
@@ -48,7 +49,6 @@
     
     {% if request.user.official.is_chief %}
       <a href="{% url 'officials:blockSearch' %}" class="{% if url_name == 'blockSearch' %}active{% endif %}"><span class="mr-3"><i class="fa fa-building"></i></span> Block Layout</a>
-      <a href="{% url 'officials:search' %}" class="{% if url_name == 'search' %}active{% endif %}"><span class="mr-3"><i class="fa fa-list"></i></span> Search</a>
       <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span class="mr-3"><i class="fa fa-calendar"></i></span> Attendance Log</a>
       <a href="{% url 'officials:register_student' %}" target="_blank"><span class="mr-3"><i class="fa fa-user-circle"></i></span>Add Student</a>
       <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> List of Students</a>
@@ -75,9 +75,21 @@
     {% endblock content %}
   </div>
 
+  <script>
+    var toast_messages = [];
+    {% if messages %}
+      {% for message in messages %}
+        toast_messages.push({
+          tag: '{{ message.tags }}',
+          message: '{{ message }}'
+        })
+      {% endfor %}
+    {% endif %}
+  </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous"></script>
   {% block script_links %}{% endblock script_links %}
   <script src="{% static 'officials/application.js' %}"></script>
 

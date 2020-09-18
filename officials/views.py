@@ -223,17 +223,12 @@ def attendance_workers(request):
 
     return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':workers, 'attendance': attendance})
 
-
 @user_passes_test(official_check)
 def attendance_log(request):
     user = request.user
     official = user.official
-    block = official.block
-    try:
-        block_details = Blocks.objects.filter(emp_id = user_details)
-        stud_set = block_details.details_set.all()
-    except:
-        block_details = None
+
+    return render(request, 'officials/attendance-log.html', {'off_details':official})
 
     if request.method == 'POST':
         if(request.POST["date"]):
@@ -286,10 +281,7 @@ def attendance_log(request):
                 return render(request, 'officials/attendance-log.html', {'off_details':user_details, 'block_details':block_details, 'pres_dates':pres, 'abse_dates':abse})
 
             
-    if user_details.designation == 'Deputy Chief-Warden' or user_details.designation == 'Chief-Warden':
-        return render(request, 'officials/attendance-log-chief.html', {'off_details':user_details, 'block_details':block_details,})
-    else:
-        return render(request, 'officials/attendance-log.html', {'off_details':user_details, 'block_details':block_details,})
+
 
 @user_passes_test(official_check)
 def grantOuting(request):
@@ -333,180 +325,95 @@ def grantOuting(request):
     return render(request, 'officials/outingPending.html', {'off_details':user_details, 'stud_list':stud_list})
 
 
-@user_passes_test(chief_warden_check)
-@csrf_exempt
-def search(request):
-    user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
-    send_blocks = Blocks.objects.all()
-    if request.method == 'POST':
-        if request.POST.get('regno'):
-            try:
-                stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
-            except Institutestd.DoesNotExist:
-                messages.error(request, 'Student with registration no. does not exist!')
-                return redirect('officials:search')
-            block_details = details.objects.get(regd_no=stud)
-            block = Blocks.objects.get(block_id=block_details.block_id_id)
-            if attendance.objects.get(regd_no=stud).status=='':isPresent = 'Absent'
-            else: isPresent = attendance.objects.get(regd_no=stud).status
-            items={
-                'stud':stud,
-                'block_details':block_details,
-                'block_name':block.block_name,
-                'isPresent':isPresent
-            }
-            items_list = list()
-            items_list.append(items)
+# @user_passes_test(chief_warden_check)
+# @csrf_exempt
+# def search(request):
+#     user = request.user
+#     user_details = Officials.objects.get(email_id = user.email)
+#     send_blocks = Blocks.objects.all()
+#     if request.method == 'POST':
+#         if request.POST.get('regno'):
+#             try:
+#                 stud = Institutestd.objects.get(regd_no=str(request.POST.get('regno')))
+#             except Institutestd.DoesNotExist:
+#                 messages.error(request, 'Student with registration no. does not exist!')
+#                 return redirect('officials:search')
+#             block_details = details.objects.get(regd_no=stud)
+#             block = Blocks.objects.get(block_id=block_details.block_id_id)
+#             if attendance.objects.get(regd_no=stud).status=='':isPresent = 'Absent'
+#             else: isPresent = attendance.objects.get(regd_no=stud).status
+#             items={
+#                 'stud':stud,
+#                 'block_details':block_details,
+#                 'block_name':block.block_name,
+#                 'isPresent':isPresent
+#             }
+#             items_list = list()
+#             items_list.append(items)
 
-            return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
+#             return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
 
-        else:
-            block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
+#         else:
+#             block_name = Blocks.objects.get(block_id=request.POST['block']).block_name
             
-            studs = details.objects.filter(block_id=request.POST['block'])
-            items_list = list()
-            for stud in studs:
-                info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
-                block_details = details.objects.get(regd_no=info)
-                if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
-                else: isPresent = attendance.objects.get(regd_no=info).status
-                items={
-                    'stud':info,
-                    'block_details':block_details,
-                    'block_name':block_name,
-                    'isPresent':isPresent
-                }
-                items_list.append(items)
-            return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
+#             studs = details.objects.filter(block_id=request.POST['block'])
+#             items_list = list()
+#             for stud in studs:
+#                 info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
+#                 block_details = details.objects.get(regd_no=info)
+#                 if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
+#                 else: isPresent = attendance.objects.get(regd_no=info).status
+#                 items={
+#                     'stud':info,
+#                     'block_details':block_details,
+#                     'block_name':block_name,
+#                     'isPresent':isPresent
+#                 }
+#                 items_list.append(items)
+#             return render(request, 'officials/search.html', {'items_list':(items_list), 'send_blocks':send_blocks})
 
-    return render(request, 'officials/search.html',{'send_blocks':send_blocks})
+#     return render(request, 'officials/search.html',{'send_blocks':send_blocks})
 
 @user_passes_test(chief_warden_check)
 @csrf_exempt
 def blockSearch(request):
     user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
-    send_blocks = Blocks.objects.all()
-    if request.POST.get('submit'):
-        block = Blocks.objects.get(block_id=request.POST['block'])
-        block_id = block.block_id
-        block_name = block.block_name
-        block_gender = block.gender
-        block_care = block.emp_id_id
-        cap_room = block.capacity
-        room_type = block.room_type
-        if room_type == '4S':   cap_stud = cap_room*4
-        elif room_type == '2S': cap_stud = cap_room*2
-        elif room_type == '1S': cap_stud = cap_room
-        
-        studs = details.objects.filter(block_id=request.POST['block'])
-        pres_stud = studs.count()
-        items_list = list()
-        for stud in studs:
-            info = Institutestd.objects.get(regd_no=str(stud.regd_no_id))
-            block_details = details.objects.get(regd_no=info)
-            if attendance.objects.get(regd_no=info).status=='':isPresent = 'Absent'
-            else: isPresent = attendance.objects.get(regd_no=info).status
-            items={
-                'stud':info,
-                'block_details':block_details,
-                'isPresent':isPresent
-            }
-            items_list.append(items)
+    official = user.official
+    blocks = Block.objects.all()
 
-        return render(request, 'officials/roomLayout.html', {
-            'items_list':(items_list), 
-            'send_blocks':send_blocks, 
-            'block_id':block_id,
-            'block_name':block_name,
-            'cap_room': cap_room,
-            'room_type' : room_type,
-            'cap_stud' : cap_stud,
-            'block_gender':block_gender,
-            'block_care':block_care,
-            'pres_stud':pres_stud,
-            'pres_room': (int(pres_stud))//(int(room_type[0])),
-            'vacant_room':cap_room - (int(pres_stud))//(int(room_type[0])) - (int(pres_stud))%(int(room_type[0])),
-            'partial_room':(int(pres_stud))%(int(room_type[0])),
-            })
-
-    if request.POST.get('Add'):
-        roll = (request.POST.get('roll'))
-        location = (request.POST.get('room')).split('-')
-        placing_block = location[0]
-        placing_floor = location[1]
-        placing_room = location[2]
-        print(placing_block)
-
-        if details.objects.filter(regd_no=roll).exists():
-            student = details.objects.get(regd_no=roll)
-            if student.block_id_id != None and student.room_no != None and student.floor != None:
-                messages.error(request, 'Student : '+str(roll)+' already alloted room!')
-                return redirect('officials:blockSearch')
-            else:
-                block_req = Blocks.objects.get(block_id=placing_block)
-                stud_req = Institutestd.objects.get(regd_no=roll)
-                if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
-                    student.block_id = block_req
-                    student.room_no = int(placing_room)
-                    student.floor = placing_floor
-
-                    student.save()
-                    messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+placing_block+'!')
-                    return redirect('officials:blockSearch')
+    if request.POST:
+        block_id = request.GET.get('block')
+        if request.POST.get('Add'):
+            block = Block.objects.get(id = request.POST.get('block_id'))
+            try:
+                student = Student.objects.get(regd_no = request.POST.get('regd_no'))
+                room_detail = student.roomdetail
+                if room_detail.block:
+                    messages.error(request, f'Student {student.regd_no} already alloted room in {room_detail.block.name} {room_detail.room()}!')
                 else:
-                    messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
-                    return redirect('officials:blockSearch')
+                    room_detail.block = block
+                    room_detail.floor = request.POST.get('floor')
+                    room_detail.room_no = request.POST.get('room_no')
+                    room_detail.save()
+                    messages.success(request, f'Student {student.regd_no} successfully alloted room in {room_detail.block.name} {room_detail.room()}!')
+            except Student.DoesNotExist:
+                messages.error(request, f'Student not found!')
 
+        if request.POST.get('remove'):
+            room_detail = RoomDetail.objects.get(id = request.POST.get('roomdetail_id'))
+            room_detail.block = None
+            room_detail.floor = None
+            room_detail.room_no = None
+            room_detail.save()
+            messages.success(request, f'Student {room_detail.student.regd_no} removed from room.')
 
-        else:
-            messages.error(request, 'No Student with roll no. : '+str(roll)+' found!')
-            return redirect('officials:blockSearch')
+        return redirect(reverse_lazy('officials:blockSearch') + '?block={}'.format(block_id))
 
-    if request.POST.get('change'):
-        block_name = request.POST.get('block')
-        block_req = Blocks.objects.get(block_name=block_name)
-        studs = details.objects.filter(block_id=block_req)
-        for stud in studs:
-            if request.POST.get(str(stud.regd_no)):
-                if request.POST.get(str(stud.regd_no)) == 'None':
-                    stud.block_id = None
-                    stud.room_no = None
-                    stud.floor = None
-                    stud.save()
+    if request.GET.get('block'):
+        block = Block.objects.get(id=request.GET.get('block')) 
+        return render(request, 'officials/block_layout.html',{'blocks':blocks, 'current_block': block})
 
-                    messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
-                    return redirect('officials:blockSearch')
-
-
-                else:
-                    roll = request.POST.get(str(stud.regd_no))
-                    stud_req = Institutestd.objects.get(regd_no=roll)
-                    student = details.objects.get(regd_no=roll)
-                    if (stud_req.gender == block_req.gender) and ((stud_req.year == 1 and block_req.room_type == '4S') or (stud_req.year == 2 and block_req.room_type == '2S') or (stud_req.year == 3 and block_req.room_type == '2S') or (stud_req.year == 4 and block_req.room_type == '1S')):
-                        student.block_id = stud.block_id
-                        student.room_no = stud.room_no
-                        student.floor = stud.floor
-                        student.save()
-
-                        stud.block_id = None
-                        stud.room_no = None
-                        stud.floor = None
-                        stud.save()
-
-                        messages.success(request,'Student : '+str(roll)+' alloted room '+student.floor+'-'+str(student.room_no)+' in block '+str(student.block_id_id)+' : '+block_name+'!')
-                        messages.success(request, 'Student : '+str(stud.regd_no)+' removed from block : '+block_name+'!')
-                        return redirect('officials:blockSearch')
-                    else:
-                        messages.error(request, 'Incompatible Block for Student with roll no. : '+str(roll)+'!')
-                        return redirect('officials:blockSearch')
-
-
-
-    return render(request, 'officials/roomLayout.html',{'send_blocks':send_blocks})
-
-
+    return render(request, 'officials/block_layout.html',{'blocks':blocks})
      
 @user_passes_test(chief_warden_check)
 def student_list(request):
