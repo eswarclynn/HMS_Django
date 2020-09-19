@@ -1,0 +1,167 @@
+{% extends 'officials/base_officials.html' %}
+
+{% block title %}Attendance Log{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Attendance Log</h1>
+<hr>
+
+<form method="GET">
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-4 d-flex justify-content-center">
+      <div class="form-group">
+        <label for="by_date" class="">By Date:</label>
+      <input type="date" name="by_date" id="by_date" value="{{ date }}" onclick="document.getElementById('by_regd_no').value = ''">
+      </div>
+    </div>
+    <div class="col-md-4 d-flex justify-content-center">
+      <div class="form-group">
+        <label for="by_regd_no" class="">By Regd. No:</label>
+        <input type="text" name="by_regd_no" id="by_regd_no" onclick="document.getElementById('by_date').value = ''">
+      </div>
+    </div>
+    <!-- <div class="col-sm-12 col-lg-4  form-group">
+      <label for="stud_month">Month:</label><br>
+      <input type="month" name="stud_month" id="stud_month" onchange="showDates()">
+    </div> -->
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-4 text-center">
+      <input type="submit" class="btn btn-primary" />
+    </div>
+  </div>
+</form>
+<hr>
+<div class="row">
+  {% if student %}
+  <div class="col-12">
+    <h3 class="text-center">{{ student.name }}'s Record</h3>
+    <div class="row mt-3">
+      <div class="col-md border mx-4 p-3">
+        <h4 class="text-center">Present Dates</h4>
+        {{ student.attendance.present_dates }}
+      </div>
+      <div class="col-md border mx-4 p-3">
+        <h4 class="text-center">Absent Dates</h4>
+        {{ student.attendance.absent_dates }}
+      </div>
+
+    </div>
+  {% endif %}
+    
+  {% if present_attendance %}
+  <div class="col-md">
+    <h3 class="text-center">Present Students</h3>
+    <span class="ml-4">Date: {{ date }}</span>
+    <div class="overflow-auto p-3">
+      <table class="table table-hover table-muted table-striped attendance-table">
+        <thead>
+          <tr>
+            <th>Roll No.</th>
+            <th>Name</th>
+            {% if official.is_chief %}
+            <th>Block</th>
+            {% endif %}
+            <th>Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for attendance in present_attendance %}
+          <tr>
+            <td>{{ attendance.student.regd_no }}</td>
+            <td>{{ attendance.student.name }}</td>
+            {% if official.is_chief %}
+            <td>{{ attendance.student.roomdetail.block.short_name }}</td>
+            {% endif %}
+            <td>{{ attendance.student.roomdetail.room }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+  {% if absent_attendance %}
+  <div class="col-md">
+    <h3 class="text-center">Absent Students</h3>
+    <span class="ml-4">Date: {{ date }}</span>
+    <div class="overflow-auto p-3">
+      <table class="table table-hover table-muted table-striped attendance-table">
+        <thead>
+          <tr>
+            <th>Roll No.</th>
+            <th>Name</th>
+            {% if official.is_chief %}
+            <th>Block</th>
+            {% endif %}
+            <th>Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for attendance in absent_attendance %}
+          <tr>
+            <td>{{ attendance.student.regd_no }}</td>
+            <td>{{ attendance.student.name }}</td>
+            {% if official.is_chief %}
+            <td>{{ attendance.student.roomdetail.block.short_name }}</td>
+            {% endif %}
+            <td>{{ attendance.student.roomdetail.room }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock content %}
+
+
+{% block script_links %}
+
+<script>
+  function setEnabled(x) {
+    if (x.name == "by_date") {
+      document.getElementById("by_regd_no").value = "";
+    }
+    else if (x.name == "by_regd_no") {
+      document.getElementById("by_date").value = "";
+    }
+  }
+</script>
+
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.attendance-table').DataTable({
+      "lengthMenu": [[10, 25, 50, 100, 250, -1], [10, 25, 50, 100, 250, "All"]],
+      "initComplete": function () {
+        this.api().columns().every(function () {
+          var column = this;
+          // Change here to include other columns (index of columns are used)
+          if (column.index() == 2 || column.index() == 3 || column.index() == 4 || column.index() == 5) {
+            // Create containers for select tags
+            var col = $('<div class="col-md"></div>')
+            // Append label (get from header)
+            col.append(column.header().innerHTML)
+            var select = $('<select class="form-control"><option value=""></option></select>')
+              .appendTo(col)
+              .on('change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                // On change search for selected value and re-draw the table.
+                column.search(val ? '^' + val + '$' : '', true, false).draw();
+              });
+            col.appendTo($('#filters'));
+
+            // Get unique values from the column and append to select.
+            column.data().unique().sort().each(function (d, j) {
+              select.append('<option value="' + d + '">' + d + '</option>')
+            });
+          }
+        });
+      }
+    });
+  });
+</script>
+{% endblock script_links %}

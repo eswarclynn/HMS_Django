@@ -58,11 +58,12 @@
       <a href="{% url 'officials:emp_list' %}"><span class="mr-3" class="{% if url_name == 'emp_list' %}active{% endif %}"><i class="fa fa-file-text-o"></i></span>Official List</a>
       <a href="{% url 'officials:register_worker' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-book"></i></span>Add Staff</a>
       <a href="{% url 'officials:workers_list' %}"><span class="mr-3" class="{% if url_name == 'workers_list' %}active{% endif %}"><i class="fa fa-file-text"></i></span>Staff List</a>      
-    {% else %}
-      <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
-      <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
-      <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-      <a href="{% url 'officials:grant_outing' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+      {% else %}
+      <a href="{% url 'officials:attendance' %}" class="{% if url_name == 'attendance' %}active{% endif %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
+      <a href="{% url 'officials:attendance_workers' %}" class="{% if url_name == 'attendance_workers' %}active{% endif %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
+      <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
+      <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> Student List</a>
+      <a href="{% url 'officials:grant_outing' %}" class="{% if url_name == 'grant_outing' %}active{% endif %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
     {% endif %}
       
 

@@ -49,8 +49,6 @@ def official_home(request):
     return render(request, 'officials/home.html', {'user_details': official, 'present':present_students, 'absent':absent_students, 'complaints':complaints,})
 
 
-
-
 @user_passes_test(official_check)
 def profile(request):
     user = request.user
@@ -58,229 +56,81 @@ def profile(request):
     complaints = Complaint.objects.filter(entity_id = official.emp_id)
     return render(request, 'officials/profile.html', {'official': official, 'complaints': complaints})
 
+
 @user_passes_test(official_check)
 @csrf_exempt
-def takeAttendance(request):
+def attendance(request):
     user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
-    block_details = user_details.blocks
-    students = details.objects.filter(block_id=block_details.block_id)
-    
-    stud_list = list()
-    for student in students:
-        stud_list.append(
-            {
-                'student':student,
-                'info':Institutestd.objects.get(regd_no=str(student.regd_no)),
-            }
-        )
+    official = user.official
+    block = official.block
+    attendance_list  = Attendance.objects.filter(student__in=block.roomdetail_set.all().values_list('student', flat=True))
+    date = None
 
-    if request.method == 'POST':
-        if request.POST.get('submit'):
-            print('taking attendance')
-            date=request.POST["datefield"]
-            attendance_list=list()
-            for stud in stud_list:
-                attendance_list.append(request.POST[str(stud['student'].regd_no)]) # Storing attendance for verification
-                if (request.POST[str(stud['student'].regd_no)] == 'Present'):
-                    current = ATT.objects.get(regd_no_id=str(stud['student'].regd_no))
-                    currAtt = current.dates
-                    if currAtt == '':
-                        currAtt += date
-                    else:
-                        pos = currAtt.find(date)
-                        if pos != -1:
-                            if currAtt[pos-1] == 'X':
-                                currAtt = currAtt[:pos-1]+currAtt[pos:]
-                        else:
-                            currAtt += (','+date)
-                    if current.status == '':
-                        current.status = 'Present'
-                    else:
-                        today = datePy.today()
-                        if(date == str(today)):
-                            current.status = 'Present'
+    if request.method == 'POST' and request.POST.get('submit'):
+        date = request.POST.get('date')
+        for attendance in attendance_list:
+            attendance.mark_attendance(date, request.POST.get(str(attendance.id)))
 
-                    current.dates = currAtt
-                    current.save()
-                else:
-                    current = ATT.objects.get(regd_no_id=str(stud['student'].regd_no))
-                    currAtt = current.dates
-                    if currAtt == '':
-                        currAtt += ('X'+date)
-                    else:
-                        pos = currAtt.find(date)
-                        if pos != -1:
-                            if currAtt[pos-1] != 'X':
-                                currAtt = currAtt[:pos]+'X'+currAtt[pos:]
-                        else:
-                            currAtt += (',X'+date)
+        messages.success(request, f'Attendance marked for date: {date}')
 
-                    if current.status == '':
-                        current.status = 'Absent'
-                    else:
-                        today = datePy.today()
-                        if(date == str(today)):
-                            current.status = 'Absent'
+    if request.GET.get('for_date'):
+        date = request.GET.get('for_date')
+        messages.info(request, f'Selected date: {date}')
+        for item in attendance_list:
+            if item.present_dates and date in set(item.present_dates.split(',')): item.present_on_date = True
+            if item.absent_dates and date in set(item.absent_dates.split(',')): item.absent_on_date = True
 
-                    current.dates = currAtt
-                    current.save()
-
-            else:
-                messages.success(request, f'Attendance marked for the date: {date}')
-                return redirect('officials:attendance')
-
-        if request.POST.get('get_date'):
-            get_date = request.POST.get('get_date')
-            for stud in stud_list:
-                pos = stud['info'].attendance.dates.find(get_date)
-                if pos != -1:
-                    if stud['info'].attendance.dates[pos-1] == 'X':
-                        stud['att'] = 'Absent'
-                    else:
-                        stud['att'] = 'Present'
-            return render(request, 'officials/attendance.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list, 'get_date':get_date})
-              
-
-    return render(request, 'officials/attendance.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':stud_list})
+    return render(request, 'officials/attendance.html', {'official': official, 'attendance_list': attendance_list, 'date': date})
 
 
 @user_passes_test(official_check)
 @csrf_exempt
 def attendance_workers(request):
     user = request.user
-    user_details = Officials.objects.get(email_id = user.email)
-    block_details = user_details.blocks
-    workers = Workers.objects.filter(block=block_details)
+    official = user.official
+    block = official.block
+    attendance_list  = AttendanceWorker.objects.filter(worker__in=block.worker_set.all())
+    date = None 
 
-    if request.method == 'POST':
-        if request.POST.get('submit'):
-            print('taking attendance')
-            date=request.POST["datefield"]
-            attendance_list=list()
-            for stud in workers:
-                attendance_list.append(request.POST[str(stud.staff_id)]) # Storing attendance for verification
-                if (request.POST[str(stud.staff_id)] == 'Present'):
-                    current = stud.attendance
-                    currAtt = current.dates
-                    if currAtt == '':
-                        currAtt += date
-                    else:
-                        pos = currAtt.find(date)
-                        if pos != -1:
-                            if currAtt[pos-1] == 'X':
-                                currAtt = currAtt[:pos-1]+currAtt[pos:]
-                        else:
-                            currAtt += (','+date)
-                    if current.status == '':
-                        current.status = 'Present'
-                    else:
-                        today = datePy.today()
-                        if(date == str(today)):
-                            current.status = 'Present'
+    if request.method == 'POST' and request.POST.get('submit'):
+        date = request.POST.get('date')
+        for attendance in attendance_list:
+            attendance.mark_attendance(date, request.POST.get(str(attendance.id)))
 
-                    current.dates = currAtt
-                    current.save()
-                else:
-                    current = stud.attendance
-                    currAtt = current.dates
-                    if currAtt == '':
-                        currAtt += ('X'+date)
-                    else:
-                        pos = currAtt.find(date)
-                        if pos != -1:
-                            if currAtt[pos-1] != 'X':
-                                currAtt = currAtt[:pos]+'X'+currAtt[pos:]
-                        else:
-                            currAtt += (',X'+date)
+        messages.success(request, f'Staff Attendance marked for date: {date}')
 
-                    if current.status == '':
-                        current.status = 'Absent'
-                    else:
-                        today = datePy.today()
-                        if(date == str(today)):
-                            current.status = 'Absent'
+    if request.GET.get('for_date'):
+        date = request.GET.get('for_date')
+        messages.info(request, f'Selected date: {date}')
+        for item in attendance_list:
+            if item.present_dates and  date in set(item.present_dates.split(',')): item.present_on_date = True
+            if item.absent_dates and date in set(item.absent_dates.split(',')): item.absent_on_date = True
 
-                    current.dates = currAtt
-                    current.save()
+    return render(request, 'officials/attendance_workers.html', {'official': official, 'attendance_list': attendance_list, 'date': date})
 
-            else:
-                messages.success(request, f'Attendance marked for the date: {date}')
-                return redirect('officials:attendance_workers')
-
-        if request.POST.get('get_date'):
-            get_date = request.POST.get('get_date')
-            for stud in workers:
-                pos = stud.attendance.dates.find(get_date)
-                if pos != -1:
-                    if stud.attendance.dates[pos-1] == 'X':
-                        stud.att = 'Absent'
-                    else:
-                        stud.att = 'Present'
-            return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':workers, 'get_date':get_date})
-              
-
-    return render(request, 'officials/attendance-workers.html', {'off_details':user_details, 'block_details':block_details, 'stud_list':workers, 'attendance': attendance})
 
 @user_passes_test(official_check)
 def attendance_log(request):
     user = request.user
     official = user.official
+    student = None
+    present_attendance = None
+    absent_attendance = None
 
-    return render(request, 'officials/attendance-log.html', {'off_details':official})
+    if official.is_chief():
+        attendance_list = Attendance.objects.all()
+    else:
+        attendance_list = Attendance.objects.filter(student__in = official.block.roomdetail_set.all().values_list('student', flat=True))
 
-    if request.method == 'POST':
-        if(request.POST["date"]):
-            date=request.POST["date"]
-            if block_details:
-                studs = list()
-                for item in stud_set:
-                    studs += ATT.objects.filter(regd_no_id=item.regd_no_id)
+    if request.GET.get('by_regd_no'):
+        student = attendance_list.get(student__regd_no = request.GET.get('by_regd_no')).student
 
-            else:   studs = ATT.objects.all()
+    if request.GET.get('by_date'):
+        present_attendance = attendance_list.filter(present_dates__contains = request.GET.get('by_date'))
+        absent_attendance = attendance_list.filter(absent_dates__contains = request.GET.get('by_date'))
 
-            pres_stud = list()
-            abse_stud = list()
-            for stud in studs:
-                att = str(stud.dates)
-                try:
-                    pos = att.index(date)
-                    if att[pos-1] == 'X':
-                        abse_stud.append({
-                            'info': Institutestd.objects.get(regd_no=stud.regd_no_id),
-                            'block': details.objects.get(regd_no=stud.regd_no_id)
-                            })
-                    else: 
-                        pres_stud.append({
-                            'info': Institutestd.objects.get(regd_no=stud.regd_no_id),
-                            'block': details.objects.get(regd_no=stud.regd_no_id)
-                            })
-                except ValueError:
-                    pos = -1
-            if user_details.designation == 'Deputy Chief-Warden' or user_details.designation == 'Chief-Warden':
-                return render(request, 'officials/attendance-log-chief.html', {'off_details':user_details, 'block_details':block_details, 'pres_stud':pres_stud, 'abse_stud':abse_stud})
-            else:
-                return render(request, 'officials/attendance-log.html', {'off_details':user_details, 'block_details':block_details, 'pres_stud':pres_stud, 'abse_stud':abse_stud})
-
-
-        elif(request.POST["regno"]):
-            regno = request.POST["regno"]
-            if not Institutestd.objects.filter(regd_no=str(regno)).exists():
-                messages.error(request, 'Invalid Student Roll No.')
-                return redirect('officials:attendance_log')
-            current = attendance.objects.get(regd_no_id=regno).dates
-            dates = current.split(',')
-            abse = list(filter(lambda x: (x.startswith('X')), dates))
-            pres = list(filter(lambda x: not (x.startswith('X')), dates))
-            abse = list(map(lambda x: x.replace('X',''), abse))
-
-            if user_details.designation == 'Deputy Chief-Warden' or user_details.designation == 'Chief-Warden':
-                return render(request, 'officials/attendance-log-chief.html', {'off_details':user_details, 'block_details':block_details, 'pres_dates':pres, 'abse_dates':abse})
-            else:
-                return render(request, 'officials/attendance-log.html', {'off_details':user_details, 'block_details':block_details, 'pres_dates':pres, 'abse_dates':abse})
-
+    return render(request, 'officials/attendance_log.html', {'official':official, 'student': student, 'date': request.GET.get('by_date'),'present_attendance': present_attendance, 'absent_attendance': absent_attendance})
             
-
 
 @user_passes_test(official_check)
 def grant_outing(request):
@@ -289,6 +139,7 @@ def grant_outing(request):
     outings = Outing.objects.filter(student__in=official.block.roomdetail_set.all().values_list('student', flat=True), permission="Pending")
 
     return render(request, 'officials/grant_outing.html', {'official': official, 'outings': outings})
+
 
 @user_passes_test(official_check)
 def outing_detail(request, pk):
@@ -302,27 +153,6 @@ def outing_detail(request, pk):
         return redirect('officials:grant_outing')
     return render(request, 'officials/outing_show.html', {'outing': outing})
 
-    if request.method == 'POST':
-        for i in request.POST:
-            if i == 'HIS':
-                user_details = Institutestd.objects.get(regd_no=str(request.POST[i]))
-                outing_details = OUTINGDB.objects.filter(regd_no=str(request.POST[i]))
-                return render(request, 'officials/outingHisto.html', {'user_details': user_details, 'outing_details':outing_details})
-            if i == 'GR':
-                updateOuting = OUTINGDB.objects.get(id=str(request.POST[i]))
-                updateOuting.permission = 'Granted'
-                updateOuting.save()
-                messages.success(request, 'Granted Outing permission to '+updateOuting.regd_no.name+'!')
-                return redirect('officials:grantOuting')
-
-            if i == 'RE':
-                updateOuting = OUTINGDB.objects.get(id=str(request.POST[i]))
-                updateOuting.permission = 'Rejected'
-                updateOuting.save()
-                messages.success(request, 'Rejected Outing permission to '+updateOuting.regd_no.name+'!')
-                return redirect('officials:grantOuting')
-
-    return render(request, 'officials/outingPending.html', {'off_details':user_details, 'stud_list':stud_list})
 
 @user_passes_test(chief_warden_check)
 @csrf_exempt

@@ -13,7 +13,6 @@
         <th>Employee ID</th>
         <th>Name</th>
         <th>Designation</th>
-        <th>Department</th>
         <th>Phone Number</th>
         <th>Block</th>
         <th>Action</th>
@@ -24,10 +23,9 @@
 
       {% for stud in object_list %}
       <tr>
-        <td>{{stud.emp_id}}</td>
+        <td>{{stud.staff_id}}</td>
         <td>{{stud.name}}</td>
         <td>{{stud.designation}}</td>
-        <td>{{stud.branch}}</td>
         <td>{{stud.phone}}</td>
         <td>{{stud.block.short_name}}</td>
         <td>

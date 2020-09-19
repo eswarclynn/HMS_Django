@@ -32,12 +32,33 @@ class Attendance(models.Model):
         ('Absent','Absent')
     )
     student = models.OneToOneField('institute.Student', on_delete=models.CASCADE, null=False)
-    dates = models.TextField()
-    status = models.CharField(max_length=10,default='')
+    present_dates = models.TextField(null=True, blank=True)
+    absent_dates = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return str(self.student)
 
+    def mark_attendance(self, date, status):
+        if status == 'present':
+            absent_dates = self.absent_dates and set(self.absent_dates.split(',')) or set()
+            absent_dates.discard(date)
+            self.absent_dates = ','.join(absent_dates)
+            if not self.present_dates: 
+                self.present_dates = date
+            else:
+                self.present_dates = ','.join(set(self.present_dates.split(',') + [date]))
+        elif status == 'absent':
+            present_dates = self.present_dates and set(self.present_dates.split(',')) or set()
+            present_dates.discard(date)
+            self.present_dates = ','.join(present_dates)
+            if not self.absent_dates: 
+                self.absent_dates = date
+            else:
+                self.absent_dates = ','.join(set(self.absent_dates.split(',') + [date]))
+
+        self.save()
+        
 class Outing(models.Model):
     PERMIT_OPTIONS = (
         ('Pending','Pending'),

@@ -6,17 +6,31 @@
 
 <h1 class="text-center">Students List</h1>
 <hr />
-<div id="filters" class="row mb-4 px-4 align-items-center">
-  <span class="col-md"></span>
-  <span class="col-md"></span>
-  Year:<span class="col-md"></span>
-  Branch:<span class="col-md"></span>
-  Gender:<span class="col-md"></span>
-  Block:<span class="col-md"></span>
-  <span class="col-md"></span>
-  <span class="col-md"></span>
-  <span class="col-md"></span>
-
+<div class="row mb-4 px-4 align-items-center">
+  <div class="col-md mt-3 text-center">
+    Year:
+    <select class="ml-2 form-control w-50 d-inline" id="year_select">
+      <option value="">Select</option>
+    </select>
+  </div>
+  <div class="col-md mt-3 text-center">
+    Branch:
+    <select class="ml-2 form-control w-50 d-inline" id="branch_select">
+      <option value="">Select</option>
+    </select>
+  </div>
+  <div class="col-md  mt-3 text-center {% if not request.user.official.is_chief %} d-none {% endif %}">
+    Gender:
+    <select class="ml-2 form-control w-50 d-inline" id="gender_select">
+      <option value="">Select</option>
+    </select>
+  </div>
+  <div class="col-md  mt-3 text-center {% if not request.user.official.is_chief %} d-none {% endif %}">
+    BLock:
+    <select class="ml-2 form-control w-50 d-inline" id="block_select">
+      <option value="">Select</option>
+    </select>
+  </div>
 </div>
 <div class="overflow-auto p-4">
   <table class="table table-hover table-muted table-striped" id="att-table">
@@ -74,14 +88,17 @@
       initComplete: function () {
         this.api().columns().every(function () {
           var column = this;
+          // Change here to include other columns (index of columns are used)
           if (column.index() == 2 || column.index() == 3 || column.index() == 4 || column.index() == 5) {
-            var select = $('<select class="form-control"><option value=""></option></select>')
-              .appendTo($("#filters").find("span").eq(column.index()))
+            // Append label (get from header)
+            var select = $(`#${column.header().innerText.toLowerCase()}_select`)
               .on('change', function () {
                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                // On change search for selected value and re-draw the table.
                 column.search(val ? '^' + val + '$' : '', true, false).draw();
               });
 
+            // Get unique values from the column and append to select.
             column.data().unique().sort().each(function (d, j) {
               select.append('<option value="' + d + '">' + d + '</option>')
             });
@@ -92,3 +109,32 @@
   });
 </script>
 {% endblock script_links %}
+
+<!-- 
+  Code to select filter of columns
+  "initComplete": function () {
+  this.api().columns().every(function () {
+    var column = this;
+    // Change here to include other columns (index of columns are used)
+    if (column.index() == 2 || column.index() == 3 || column.index() == 4 || column.index() == 5) {
+      // Create containers for select tags
+      var col = $('<div class="col-md"></div>')
+      // Append label (get from header)
+      col.append(column.header().innerHTML)
+      var select = $('<select class="form-control"><option value=""></option></select>')
+        .appendTo(col)
+        .on('change', function () {
+          var val = $.fn.dataTable.util.escapeRegex($(this).val());
+          // On change search for selected value and re-draw the table.
+          column.search(val ? '^' + val + '$' : '', true, false).draw();
+        });
+      col.appendTo($('#filters'));
+
+      // Get unique values from the column and append to select.
+      column.data().unique().sort().each(function (d, j) {
+        select.append('<option value="' + d + '">' + d + '</option>')
+      });
+    }
+  });
+}
+ -->
