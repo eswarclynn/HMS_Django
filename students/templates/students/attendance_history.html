@@ -7,24 +7,7 @@
 <h2 class="text-center">Attendance History</h2>
 <hr />
 
-<div class="text-center">
-  <div class="form-group">
-    Select Month: 
-    <select id="select_month" class="form-control d-inline w-25 ml-3" onchange="selectMonth(event)">
-      <option value="">Select Month</option>
-    </select>
-  </div>
-</div>
-<div class="row justify-content-center">
-  <div class="col-12 col-md-5 border border-success mx-4 p-3 mt-3">
-    <h4 class="text-center">Present Dates</h4>
-    <div class="row mx-3" id="present_dates_container"></div>
-  </div>
-  <div class="col-12 col-md-5 border border-danger mx-4 p-3 mt-3">
-    <h4 class="text-center">Absent Dates</h4>
-    <div class="row mx-3" id="absent_dates_container"></div>
-  </div>
-</div>
+{% include 'students/dates_partial.html' %}
 {% endblock content %}
 
 {% block script_links %}

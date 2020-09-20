@@ -116,6 +116,8 @@ def attendance_log(request):
     student = None
     present_attendance = None
     absent_attendance = None
+    present_dates = None
+    absent_dates = None
 
     if official.is_chief():
         attendance_list = Attendance.objects.all()
@@ -124,13 +126,30 @@ def attendance_log(request):
 
     if request.GET.get('by_regd_no'):
         student = attendance_list.get(student__regd_no = request.GET.get('by_regd_no')).student
+        if student.attendance.present_dates: present_dates = student.attendance.present_dates.split(',') 
+        if student.attendance.absent_dates: absent_dates = student.attendance.absent_dates.split(',')
 
     if request.GET.get('by_date'):
         present_attendance = attendance_list.filter(present_dates__contains = request.GET.get('by_date'))
         absent_attendance = attendance_list.filter(absent_dates__contains = request.GET.get('by_date'))
 
-    return render(request, 'officials/attendance_log.html', {'official':official, 'student': student, 'date': request.GET.get('by_date'),'present_attendance': present_attendance, 'absent_attendance': absent_attendance})
-            
+    return render(request, 'officials/attendance_log.html', {'official':official, 'student': student, 'date': request.GET.get('by_date'),'present_attendance': present_attendance, 'absent_attendance': absent_attendance, 'present_dates': present_dates, 'absent_dates': absent_dates})
+
+
+@user_passes_test(official_check)
+def generate_attendance_sheet(request, block_id=None):
+    from .utils import AttendanceBookGenerator
+    from django.utils import timezone
+    from django.http import HttpResponse
+    # from openpyxl import Workbook
+    
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
+    response['Content-Disposition'] = 'attachment; filename=Attendance({date}).xlsx'.format(date=timezone.now().strftime('%d-%m-%Y'),)
+    BookGenerator = AttendanceBookGenerator(block_id)
+    workbook = BookGenerator.generate_workbook()
+    workbook.save(response)
+
+    return response
 
 @user_passes_test(official_check)
 def grant_outing(request):

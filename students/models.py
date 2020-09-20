@@ -78,3 +78,6 @@ class Outing(models.Model):
 
     def is_editable(self):
         return self.is_upcoming() and self.permission == 'Pending'
+
+    class Meta:
+        ordering = ['-fromDate']

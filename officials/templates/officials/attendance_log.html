@@ -20,10 +20,6 @@
         <input type="text" name="by_regd_no" id="by_regd_no" onclick="document.getElementById('by_date').value = ''">
       </div>
     </div>
-    <!-- <div class="col-sm-12 col-lg-4  form-group">
-      <label for="stud_month">Month:</label><br>
-      <input type="month" name="stud_month" id="stud_month" onchange="showDates()">
-    </div> -->
   </div>
   <div class="row justify-content-center">
     <div class="col-4 text-center">
@@ -36,17 +32,7 @@
   {% if student %}
   <div class="col-12">
     <h3 class="text-center">{{ student.name }}'s Record</h3>
-    <div class="row mt-3">
-      <div class="col-md border mx-4 p-3">
-        <h4 class="text-center">Present Dates</h4>
-        {{ student.attendance.present_dates }}
-      </div>
-      <div class="col-md border mx-4 p-3">
-        <h4 class="text-center">Absent Dates</h4>
-        {{ student.attendance.absent_dates }}
-      </div>
-
-    </div>
+    {% include 'students/dates_partial.html' %}
   {% endif %}
     
   {% if present_attendance %}
@@ -114,6 +100,10 @@
   </div>
   {% endif %}
 
+  <div class="text-center mt-5">
+    <a href="{% url 'officials:generate_attendance_sheet' %}" class="btn btn-primary">Download Attendance Sheet</a>
+  </div>
+
 {% endblock content %}
 
 
@@ -164,4 +154,18 @@
     });
   });
 </script>
+<script>
+  var present_dates = [];
+  var absent_dates = [];
+
+  {% for date in present_dates %}
+    present_dates.push(new Date('{{ date }}'));
+  {% endfor %}
+
+  {% for date in absent_dates %}
+    absent_dates.push(new Date('{{ date }}'));
+  {% endfor %}
+</script>
+{% load static %}
+<script src="{% static 'students/attendance_history.js' %}"></script>
 {% endblock script_links %}
