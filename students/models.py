@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class RoomDetail(models.Model):
@@ -67,9 +68,13 @@ class Outing(models.Model):
     )
 
     student = models.ForeignKey('institute.Student', on_delete=models.CASCADE, null=False)
-    fromDate = models.DateField(null=False)
-    fromTime = models.TimeField(null=False)
-    toDate = models.DateField(null=False)
-    toTime = models.TimeField(null=False)
+    fromDate = models.DateTimeField(null=False)
+    toDate = models.DateTimeField(null=False)
     purpose = models.CharField(max_length=150, null=False)
     permission = models.CharField(max_length=20, choices=PERMIT_OPTIONS, default='Pending', null=False)
+
+    def is_upcoming(self):
+        return self.fromDate > timezone.now()
+
+    def is_editable(self):
+        return self.is_upcoming() and self.permission == 'Pending'

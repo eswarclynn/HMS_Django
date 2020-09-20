@@ -58,8 +58,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def home_url(self):
         if self.is_student:
-            return reverse('students:student_home')
+            return reverse('students:home')
         elif self.is_official:
-            return reverse('officials:official_home')
+            return reverse('officials:home')
         elif self.is_worker:
             return reverse('workers:staff_home')

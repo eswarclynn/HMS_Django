@@ -29,16 +29,22 @@
       </div>
   
       <div class="d-flex justify-content-center">
-        <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img
-            src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel
-          Management System</span>
-        <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img
-            src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+        <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
       </div>
   
       <div class="">
-        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o"
-            style="font-size:4vh; color:aliceblue"></i></a>
+        
+        {% if request.user.if_official %}
+        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        {% endif %}
+        {% if request.user.is_student %}
+        <a href="{% url 'students:home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        {% endif %}
+        {% if request.user.is_worker %}
+        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        {% endif %}
+          
       </div>
     </div>
   </nav>
@@ -47,25 +53,32 @@
   <div id="mySidenav" class="sidenav">
     <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
     {% with url_name=request.resolver_match.url_name %}
-    <a href="{% url 'officials:official_home' %}" class="{% if url_name == 'official_home' %}active{% endif %}"><span class="mr-3"><i class="fa fa-tachometer"></i></span>Dashboard</a>
     
-    {% if request.user.official.is_chief %}
+    {% if request.user.is_official and request.user.official.is_chief %}
+      <a href="{% url 'officials:home' %}" class="{% if url_name == 'home' %}active{% endif %}"><span class="mr-3"><i class="fa fa-tachometer"></i></span>Dashboard</a>
       <a href="{% url 'officials:blockSearch' %}" class="{% if url_name == 'blockSearch' %}active{% endif %}"><span class="mr-3"><i class="fa fa-building"></i></span> Block Layout</a>
       <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span class="mr-3"><i class="fa fa-calendar"></i></span> Attendance Log</a>
       <a href="{% url 'officials:register_student' %}" target="_blank"><span class="mr-3"><i class="fa fa-user-circle"></i></span>Add Student</a>
       <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> Student List</a>
       <a href="{% url 'officials:register_official' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-card"></i></span>Add Official</a>
-      <a href="{% url 'officials:emp_list' %}"><span class="mr-3" class="{% if url_name == 'emp_list' %}active{% endif %}"><i class="fa fa-file-text-o"></i></span>Official List</a>
+      <a href="{% url 'officials:emp_list' %}" class="{% if url_name == 'emp_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text-o"></i></span>Official List</a>
       <a href="{% url 'officials:register_worker' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-book"></i></span>Add Staff</a>
-      <a href="{% url 'officials:workers_list' %}"><span class="mr-3" class="{% if url_name == 'workers_list' %}active{% endif %}"><i class="fa fa-file-text"></i></span>Staff List</a>      
-      {% else %}
-      <a href="{% url 'officials:attendance' %}" class="{% if url_name == 'attendance' %}active{% endif %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
-      <a href="{% url 'officials:attendance_workers' %}" class="{% if url_name == 'attendance_workers' %}active{% endif %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
-      <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-      <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> Student List</a>
-      <a href="{% url 'officials:grant_outing' %}" class="{% if url_name == 'grant_outing' %}active{% endif %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
+      <a href="{% url 'officials:workers_list' %}"  class="{% if url_name == 'workers_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span>Staff List</a>      
     {% endif %}
-      
+    {% if request.user.is_official and not request.user.official.is_chief %}
+      <a href="{% url 'officials:home' %}" class="{% if url_name == 'home' %}active{% endif %}"><span class="mr-3"><i class="fa fa-tachometer"></i></span>Dashboard</a>
+      <a href="{% url 'officials:attendance' %}" class="{% if url_name == 'attendance' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-list"></i></span> Attendance</a>
+      <a href="{% url 'officials:attendance_workers' %}" class="{% if url_name == 'attendance_workers' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-users"></i></span> Attendance-Staff</a>
+      <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-calendar"></i></span> Attendance Log</a>
+      <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> Student List</a>
+      <a href="{% url 'officials:grant_outing' %}" class="{% if url_name == 'grant_outing' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-map-marker" ></i></span> Outing Requests</a>
+    {% endif %}
+    {% if request.user.is_student %}
+      <a href="{% url 'students:home' %}" class="{% if url_name == 'home' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-tachometer"></i></span> Dashboard</a>
+      <a href="{% url 'students:outing_new' %}" target="_blank" class="{% if url_name == 'outing_new' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-map-marker"></i></span> Outing Application</a>
+      <a href="{% url 'students:attendance_history' %}" class="{% if url_name == 'attendance_history' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-list" ></i></span> Attendance History</a>
+      <a href="{% url 'students:outing_list' %}" class="{% if url_name == 'outing_list' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-history" ></i></span> Outing History</a>
+    {% endif %}
 
     <a href="{% url 'workers:medical_issue' %}" target="_blank"><span class="mr-3"><i class="fa fa-medkit"></i></span> Medical Issue</a>
     <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span class="mr-3"><i class="fa fa-commenting"></i></span>Register Complaint</a>

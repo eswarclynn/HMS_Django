@@ -9,7 +9,7 @@ from .forms import StudentForm
 app_name= 'officials'
 
 urlpatterns = [
-    path('home/', views.official_home, name='official_home'),
+    path('home/', views.home, name='home'),
     path('profile/', views.profile, name='profile'),
     path('attendance/', views.attendance, name='attendance'),
     path('attendance-staff/', views.attendance_workers, name='attendance_workers'),

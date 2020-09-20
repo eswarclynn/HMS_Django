@@ -61,7 +61,7 @@
         <td>{{stud.roomdetail.room}}</td>
         <td>{{stud.phone}}</td>
         {% if request.user.official.is_chief %}
-        <td class="d-flex">
+        <td nowrap>
           <a href="{% url 'officials:edit_student' stud.id %}" target="_blank" class="btn btn-primary px-3">Edit</a>
           <form action="{% url 'officials:delete_student' stud.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{stud.name}}?');">{% csrf_token %}
             <input type="submit" class="btn btn-danger ml-3" value="Delete" />

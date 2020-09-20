@@ -28,7 +28,7 @@
         <td>{{stud.branch}}</td>
         <td>{{stud.phone}}</td>
         <td>{{stud.block.short_name}}</td>
-        <td>
+        <td nowrap>
           <a href="{% url 'officials:edit_official' stud.id %}" target="_blank" class="btn btn-primary">Edit</a>
           <form action="{% url 'officials:delete_official' stud.id %}" method="POST" class="d-inline"
             onsubmit="return confirm('Are you sure you want to delete {{stud.name}}?');">{% csrf_token %}

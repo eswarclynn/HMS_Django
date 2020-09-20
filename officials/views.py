@@ -25,7 +25,7 @@ def chief_warden_check(user):
 # Create your views here.
 @user_passes_test(official_check)
 @csrf_exempt 
-def official_home(request):
+def home(request):
     user = request.user
     official = user.official
     if official.is_chief():
@@ -247,20 +247,20 @@ def blockSearch(request):
 
 
 from .forms import StudentForm
-from django.views.generic import FormView, CreateView, UpdateView, DeleteView, ListView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
-class OfficialTextMixin(UserPassesTestMixin):
+class OfficialTestMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.is_official
 
-class ChiefWardenTestMixin(OfficialTextMixin):
+class ChiefWardenTestMixin(OfficialTestMixin):
     def test_func(self):
         is_official = super().test_func() 
         return is_official and self.request.user.official.is_chief()
 
-class StudentListView(OfficialTextMixin, ListView):
+class StudentListView(OfficialTestMixin, ListView):
     model = Student
     template_name = 'officials/student_list.html'
 

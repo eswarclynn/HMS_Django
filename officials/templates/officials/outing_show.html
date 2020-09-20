@@ -11,11 +11,11 @@
       <tbody>
         <tr>
           <th>From</th>
-          <td>{{ outing.fromDate }} {{ outing.fromTime }}</td>
+          <td>{{ outing.fromDate }}</td>
         </tr>
         <tr>
           <th>To</th>
-          <td>{{ outing.toDate }} {{ outing.toTime }}</td>
+          <td>{{ outing.toDate }}</td>
         </tr>
         <tr>
           <th>Purpose of Visit</th>
@@ -102,8 +102,8 @@
         <tbody>
           {% for item in outing.student.outing_set.all %}
             <tr {% if outing == item %}class="text-primary"{% endif %}>
-              <td>{{ item.fromDate }}</td>
-              <td>{{ item.toDate }}</td>
+              <td>{{ item.fromDate|date:"d-m-Y" }}</td>
+              <td>{{ item.toDate|date:"d-m-Y" }}</td>
               <td>{{ item.purpose }}</td>
               <td>{{ item.permission }}</td>
             </tr>
