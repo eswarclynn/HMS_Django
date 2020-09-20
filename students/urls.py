@@ -9,6 +9,5 @@ urlpatterns = [
     path('outings', views.OutingListView.as_view(), name='outing_list'),
     path('outing/new', views.OutingCreateView.as_view(), name='outing_new'),
     path('outing/<int:pk>/edit', views.OutingUpdateView.as_view(), name='outing_edit'),
-    path('outing/<int:pk>/delete', views.OutingDeleteView.as_view(), name='outing_delete'),
     path('attendance_history', views.attendance_history, name='attendance_history'),
 ]

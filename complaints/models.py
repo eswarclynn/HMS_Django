@@ -44,3 +44,11 @@ class Complaint(models.Model):
             return Official.objects.get(emp_id = self.entity_id)
         else:
             return Worker.objects.get(emp_id = self.entity_id)
+
+    def can_edit(self, user):
+        if user.is_official and user.official.is_chief():
+            return True
+        elif user.is_official and ((self.entity_type != 'Student' and self.entity().block == user.official.block) or self.entity().roomdetail.block == user.official.block):
+            return True
+
+        return False

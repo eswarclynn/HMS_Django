@@ -16,9 +16,16 @@ class ComplaintDetailView(LoginRequiredMixin, DetailView):
     template_name = 'complaints/show.html'
     context_object_name = 'complaint'
 
+    def get(self, request, *args, **kwargs):
+        response =  super().get(request, *args, **kwargs)
+        if self.request.user.is_student and (self.object.entity() != self.request.user.student): 
+            raise Http404()
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = ComplaintUpdationForm(instance=self.get_object())
+        context['can_edit'] = self.object.can_edit(self.request.user)
+        context['form'] = ComplaintUpdationForm(instance=self.object)
         return context
     
 
@@ -48,7 +55,6 @@ class ComplaintCreateView(LoginRequiredMixin, CreateView):
     
 class ComplaintUpdateView(LoginRequiredMixin, UpdateView):
     model = Complaint
-    template_name = 'complaints/new.html'
     form_class = ComplaintUpdationForm
 
     def get_success_url(self):

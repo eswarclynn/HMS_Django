@@ -45,9 +45,6 @@
               {% if outing.is_editable %}
                 <a href="{% url 'students:outing_edit' outing.id %}" target="_blank" class="btn btn-primary">Edit</a>
               {% endif %}
-              <form action="{% url 'students:outing_delete' outing.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete outing {{outing.id}}?');">{% csrf_token %}
-                <input type="submit" class="btn btn-danger ml-3" value="Delete" />
-              </form>
             </td>
           </tr>
         {% endif %}
@@ -66,7 +63,6 @@
         <th>To</th>
         <th>Purpose of Visit</th>
         <th>Permission</th>
-        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -89,11 +85,6 @@
               {% endif %}
             >
               {{ outing.permission }}
-            </td>
-            <td nowrap>
-              <form action="{% url 'students:outing_delete' outing.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{stud.name}}?');">{% csrf_token %}
-                <input type="submit" class="btn btn-danger ml-3" value="Delete" />
-              </form>
             </td>
           </tr>
         {% endif %}

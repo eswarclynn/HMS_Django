@@ -35,6 +35,11 @@
         </tr>
       </tbody>
     </table>
+    <div class="text-center">
+      <form action="{% url 'complaints:complaint_delete' complaint.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{complaint.id}}?');">{% csrf_token %}
+        <input type="submit" class="btn btn-danger ml-3" value="Delete" />
+      </form>
+    </div>
   </div>
   <div class="col-md-6 border py-3">
     <h4 class="text-center border-bottom border-secondary pb-3">Complainant Details</h4>
@@ -70,26 +75,27 @@
       </tbody>
     </table>
   </div>
-  <div class="col-11 mt-4 border p-3">
-    <form action="{% url 'complaints:complaint_edit' complaint.id %}" method="post">
-      {% csrf_token %}
-      {% load crispy_forms_tags %}
-      {{form|as_crispy_errors}}
-      <div class="row">
-        <div class="col-md-10">
-          {{form.status|as_crispy_field}}
+
+  
+  {% if can_edit %}    
+    <div class="col-11 mt-4 border p-3">
+      <form action="{% url 'complaints:complaint_edit' complaint.id %}" method="post">
+        {% csrf_token %}
+        {% load crispy_forms_tags %}
+        {{form|as_crispy_errors}}
+        <div class="row">
+          <div class="col-md-10">
+            {{form.status|as_crispy_field}}
+          </div>
+          <div class="col-12 order-2 order-md-3">
+            {{form.remark|as_crispy_field}}
+          </div>
+          <div class="col-md-2 d-flex align-items-end py-3 order-3 order-md-2 justify-content-center">
+            <input type="submit" value="Update" class="btn btn-primary">
+          </div>
         </div>
-        <div class="col-12 order-2 order-md-3">
-          {{form.remark|as_crispy_field}}
-        </div>
-        <div class="col-md-2 d-flex align-items-end py-3 order-3 order-md-2 justify-content-center">
-          <input type="submit" value="Update" class="btn btn-primary">
       </form>
-      <form action="{% url 'complaints:complaint_delete' complaint.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{complaint.id}}?');">{% csrf_token %}
-        <input type="submit" class="btn btn-danger ml-3" value="Delete" />
-      </form>
-        </div>
-      </div>
-  </div>
+    </div>
+  {% endif %}
 </div>
 {% endblock content %}

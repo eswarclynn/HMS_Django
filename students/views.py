@@ -81,18 +81,10 @@ class OutingUpdateView(StudentTestMixin, SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
 
-class OutingDeleteView(StudentTestMixin, SuccessMessageMixin, DeleteView):
-    model = Outing
-    success_url = reverse_lazy('students:outing_list')
-
-
 @user_passes_test(student_check)
 def attendance_history(request):
-    user_details = Institutestd.objects.get(email_id = request.user.email)
-    current = attendance.objects.get(regd_no_id=reg_no).dates
-    dates = current.split(',')
-    abse = list(filter(lambda x: (x.startswith('X')), dates))
-    pres = list(filter(lambda x: not (x.startswith('X')), dates))
-    abse = list(map(lambda x: x.replace('X',''), abse))
+    student = request.user.student
+    if student.attendance.present_dates: present_dates = student.attendance.present_dates.split(',') 
+    if student.attendance.absent_dates: absent_dates = student.attendance.absent_dates.split(',')
 
-    return render(request, 'students/attendance-history.html', {'user_details':user_details, 'pres':pres, 'abse':abse})
+    return render(request, 'students/attendance_history.html', {'student': student, 'present_dates': present_dates, 'absent_dates': absent_dates})

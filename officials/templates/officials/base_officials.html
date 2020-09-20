@@ -35,7 +35,7 @@
   
       <div class="">
         
-        {% if request.user.if_official %}
+        {% if request.user.is_official %}
         <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         {% endif %}
         {% if request.user.is_student %}
