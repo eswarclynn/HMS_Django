@@ -5,28 +5,34 @@ from openpyxl import Workbook
 from openpyxl import styles
 
 class AttendanceBookGenerator:
-    def __init__(self, block_id=None):
+    def __init__(self, block_id, year_month):
         self.block_id = block_id
+        self.year_month = year_month
     
     def generate_workbook(self):
         workbook  = Workbook()
         workbook.remove(workbook.active)
 
-        if self.block_id:
-            SheetGenerator = BlockAttendanceSheetGenerator(self.block_id)
-            SheetGenerator.generate_block_sheet(workbook)
-        else:
+        if self.block_id == 'all':
             for block in Block.objects.all():
-                SheetGenerator = BlockAttendanceSheetGenerator(block.id)
+                SheetGenerator = BlockAttendanceSheetGenerator(block.id, self.year_month)
                 SheetGenerator.generate_block_sheet(workbook)
+        else:
+            SheetGenerator = BlockAttendanceSheetGenerator(self.block_id, self.year_month)
+            SheetGenerator.generate_block_sheet(workbook)
 
         return workbook
 
 
 class BlockAttendanceSheetGenerator:
-    def __init__(self, block_id):
+    def __init__(self, block_id, year_month):
         self.block = Block.objects.get(id = block_id)
         self.attendance_list = Attendance.objects.filter(student__in = self.block.roomdetail_set.all().values_list('student', flat=True))
+        if year_month == 'all':
+            self.month = 'all'
+            self.year = 'all'
+        else:
+            self.year, self.month = [int(x) for x in year_month.split("-")]
 
     def generate_block_sheet(self, workbook):
         worksheet = workbook.create_sheet(title = "{}".format(self.block.name))
@@ -65,15 +71,19 @@ class BlockAttendanceSheetGenerator:
         return present_absent_list
 
     def generate_dates(self):
-        date_set = self.get_marked_dates()
-        month_set = self.get_month_year_set(date_set)
-        generated_dates = []
+        if self.year == 'all' or self.month == 'all':
+            date_set = self.get_marked_dates()
+            month_set = self.get_month_year_set(date_set)
+            generated_dates = []
 
-        for item in month_set:
-            dates_of_month = self.get_dates_of_month(item[0], item[1])
-            generated_dates += dates_of_month
+            for item in month_set:
+                dates_of_month = self.get_dates_of_month(item[0], item[1])
+                generated_dates += dates_of_month
 
-        self.generated_dates = sorted(generated_dates)
+            self.generated_dates = sorted(generated_dates)
+        
+        else:
+            self.generated_dates = self.get_dates_of_month(self.month, self.year)
 
     def get_dates_of_month(self, month, year):
             day = timezone.timedelta(days=1)

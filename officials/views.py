@@ -137,15 +137,18 @@ def attendance_log(request):
 
 
 @user_passes_test(official_check)
-def generate_attendance_sheet(request, block_id=None):
+def generate_attendance_sheet(request):
     from .utils import AttendanceBookGenerator
     from django.utils import timezone
     from django.http import HttpResponse
-    # from openpyxl import Workbook
     
+    year_month = request.GET.get("year_month")
+    block_id = request.GET.get("block_id")
+
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',)
     response['Content-Disposition'] = 'attachment; filename=Attendance({date}).xlsx'.format(date=timezone.now().strftime('%d-%m-%Y'),)
-    BookGenerator = AttendanceBookGenerator(block_id)
+    
+    BookGenerator = AttendanceBookGenerator(block_id, year_month)
     workbook = BookGenerator.generate_workbook()
     workbook.save(response)
 
