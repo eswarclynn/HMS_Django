@@ -1,76 +1,88 @@
 {% extends 'officials/base_officials.html' %}
-{% block title %}Complaint{% endblock title %}
+{% block title %}{{object.model_name}}{% endblock title %}
 
 {% block content %} 
-<h2 class="text-center">{{ complaint.type }} Complaint</h2>
+<h2 class="text-center">{{ object.type }} {{ object.model_name }}</h2>
 <hr>
 <div class="row my-3 justify-content-center">
   <div class="col-md-5 border py-3 mr-md-4">
-    <h4 class="text-center border-bottom border-secondary pb-3">Complaint Details</h4>
+    <h4 class="text-center border-bottom border-secondary pb-3">{{object_name}} Details</h4>
     <table class="table table-borderless">
       <tbody>
         <tr>
-          <th>Type</th>
-          <td>{{ complaint.type }}</td>
+          <th>ID</th>
+          <td>{{ object.id }}</td>
         </tr>
+        {% if object.type %}          
+        <tr>
+          <th>Type</th>
+          <td>{{ object.type }}</td>
+        </tr>
+        {% endif %}
+        {% if object.complainee %}
         <tr>
           <th>Complainee</th>
-          <td>{{ complaint.complainee.regd_no }} - {{ complaint.complainee.name }}</td>
+          <td>{{ object.complainee.regd_no }} - {{ object.complainee.name }}</td>
         </tr>
+        {% endif %}
         <tr>
           <th>Summary</th>
-          <td>{{ complaint.summary }}</td>
+          <td>{{ object.summary }}</td>
         </tr>
         <tr>
           <th>Details</th>
-          <td>{{ complaint.detailed }}</td>
+          <td>{{ object.detailed }}</td>
         </tr>
         <tr>
           <th>Status</th>
-          <td>{{ complaint.status }}</td>
+          <td>{{ object.status }}</td>
         </tr>
         <tr>
           <th>Remarks</th>
-          <td>{{ complaint.remark }}</td>
+          <td>{{ object.remark }}</td>
         </tr>
       </tbody>
     </table>
     <div class="text-center">
-      <form action="{% url 'complaints:complaint_delete' complaint.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete complaint {{complaint.id}}?');">{% csrf_token %}
+      {% if item.model_name == 'Complaints' %}
+        <form action="{% url 'complaints:complaint_delete' object.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{object.model_name}} {{object.id}}?');">{% csrf_token %}
+      {% else %}
+        <form action="{% url 'complaints:medicalissue_delete' object.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{object.model_name}} {{object.id}}?');">{% csrf_token %}
+      {% endif %}
         <input type="submit" class="btn btn-danger ml-3" value="Delete" />
       </form>
     </div>
   </div>
   <div class="col-md-6 border py-3">
-    <h4 class="text-center border-bottom border-secondary pb-3">Complainant Details</h4>
+    <h4 class="text-center border-bottom border-secondary pb-3">Registrant Details</h4>
     <table class="table table-borderless">
       <tbody>
         <tr>
           <th>Registration No./Employee ID/ Staff ID</th>
-          <td>{{ complaint.entity_id }}</td>
+          <td>{{ object.entity_id }}</td>
         </tr>
         <tr>
           <th>Name</th>
-          <td>{{ complaint.entity.name }}</td>
+          <td>{{ object.entity.name }}</td>
         </tr>
         <tr>
           <th>Block</th>
           <td>
-            {% if complaint.entity_type == 'Student' %}
-              {{complaint.entity.roomdetail.block.short_name}} {{complaint.entity.roomdetail.room}}
+            {% if object.entity_type == 'Student' %}
+              {{object.entity.roomdetail.block.short_name}} {{object.entity.roomdetail.room}}
             {% endif %}
-            {% if complaint.entity_type == 'Official' %}
-              {{complaint.entity.block}}
+            {% if object.entity_type == 'Official' %}
+              {{object.entity.block}}
             {% endif %}
           </td>
         </tr>
         <tr>
           <th>Phone</th>
-          <td>{{ complaint.entity.phone }}</td>
+          <td>{{ object.entity.phone }}</td>
         </tr>
         <tr>
           <th>eMail</th>
-          <td>{{ complaint.entity.email }}</td>
+          <td>{{ object.entity.email }}</td>
         </tr>
       </tbody>
     </table>
@@ -79,7 +91,11 @@
   
   {% if can_edit %}    
     <div class="col-11 mt-4 border p-3">
-      <form action="{% url 'complaints:complaint_edit' complaint.id %}" method="post">
+      {% if item.model_name == 'Complaints' %}
+        <form action="{% url 'complaints:complaint_edit' object.id %}" method="post">
+      {% else %}
+        <form action="{% url 'complaints:medicalissue_edit' object.id %}" method="post">
+      {% endif %}
         {% csrf_token %}
         {% load crispy_forms_tags %}
         {{form|as_crispy_errors}}

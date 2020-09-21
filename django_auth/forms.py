@@ -18,7 +18,7 @@ class SignUpForm(UserCreationForm):
         labels = {
             'is_student': 'Student',
             'is_official': 'Official',
-            'is_worker': 'Worker'
+            'is_worker': 'Staff'
         }
 
     def clean(self):

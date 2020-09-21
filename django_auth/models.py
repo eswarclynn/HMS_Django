@@ -62,4 +62,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         elif self.is_official:
             return reverse('officials:home')
         elif self.is_worker:
-            return reverse('workers:staff_home')
+            return reverse('workers:home')

@@ -1,0 +1,91 @@
+{% extends 'officials/base_officials.html' %}
+
+{% block title %}Staff Home{% endblock title %}
+
+{% block content %}
+<h2 class="text-center">Hello {{worker.name}}!</h2>
+<div class="row justify-content-center p-3">
+  <div class="col-12 col-md-4 border p-3 mr-md-3">
+    <h3 class="text-center border-bottom border-secondary pb-3">Your Details</h3>
+    <table class="table table-borderless">
+      <tbody id="tbody">
+        <tr>
+          <th>Name</td>
+          <td>{{worker.name}}</td>
+        </tr>
+        <tr>
+          <th>Staff ID.</td>
+          <td>{{worker.staff_id}}</td>
+        </tr>
+        <tr>
+          <th>Designation</td>
+          <td>{{worker.designation}}</td>
+        </tr>
+        <tr>
+          <th>Block</td>
+          <td>{{worker.block.name}}</td>
+        </tr>
+        <tr>
+          <th>Contact Number</td>
+          <td>{{worker.phone}}</td>
+        </tr>
+        <tr>
+          <th>e-Mail ID</td>
+          <td>{{worker.email}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <a href="{% url 'django_auth:change_password' %}"><button class="btn btn-primary">Change Password</button></a>
+    </div>
+  </div>
+  <div class="col-12 col-md-7 border py-3">
+    <h3 class="text-center border-bottom border-secondary pb-3">Complaints Registered</h3>
+    <div class="overflow-auto p-3">
+      <table class="table table-hover table-muted table-striped" id="complaints_table">
+        <thead>
+          <tr>
+            <th class="text-center">By</th>
+            <th class="text-center">Name</th>
+            <th class="text-center">Summary</th>
+            <th class="text-center">Last Updated</th>
+            <th class="text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+  
+          {% for item in complaints %}
+          
+          {% if item.model_name == 'Complaints' %}
+            <tr data-row-href="{% url 'complaints:complaint_detail' item.id %}">
+          {% else %}
+            <tr data-row-href="{% url 'complaints:medicalissue_detail' item.id %}">
+          {% endif %}
+            
+            <td class="text-center">{{item.entity_id}}</td>
+            <td class="text-center">{{item.entity.name}}</td>
+            <td class="text-center">{{item.summary}}</td>
+            <td class="text-center">{{item.updated_at|date:'d-m-Y'}}</td>
+            <td class="text-center">{{item.status}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+{% block script_links %}
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#complaints_table').DataTable({
+      "pageLength": 6,
+    });
+  });
+</script>
+{% endblock script_links %}
+  

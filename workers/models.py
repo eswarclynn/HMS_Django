@@ -36,25 +36,6 @@ class Worker(models.Model):
             att = Attendance.objects.create(worker = self)
 
 
-class MedicalIssue(models.Model):
-    STATUS = (
-        ('Registered','Registered'),
-        ('Resolved','Resolved')
-    )
-    ENTITY_TYPE = (
-        ('Student', 'Student'),
-        ('Official', 'Official'),
-        ('Worker', 'Worker')
-    )
-
-    entity_type = models.CharField(max_length=40, choices=ENTITY_TYPE, null=False)
-    entity_id = models.IntegerField()
-    status = models.CharField(max_length=20,null=False,default='Registered',choices=STATUS)
-    summary = models.CharField(max_length=200,null=False)
-    detailed = models.TextField(null=False)
-    remarks = models.TextField(null=True, blank=True)
-
-
 class Attendance(models.Model):
     OPTIONS = (
         ('Present','Present'),
