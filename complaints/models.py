@@ -1,5 +1,6 @@
 from django.db import models
-from institute.models import Student
+from institute.models import Student, Official
+from workers.models import Worker
 
 # Create your models here.
 class Complaint(models.Model):
@@ -35,3 +36,19 @@ class Complaint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     remark = models.TextField(null=True, blank=True)
+    
+    def entity(self):
+        if self.entity_type == 'Student':
+            return Student.objects.get(regd_no = self.entity_id)
+        elif self.entity_type == 'Official':
+            return Official.objects.get(emp_id = self.entity_id)
+        else:
+            return Worker.objects.get(emp_id = self.entity_id)
+
+    def can_edit(self, user):
+        if user.is_official and user.official.is_chief():
+            return True
+        elif user.is_official and ((self.entity_type != 'Student' and self.entity().block == user.official.block) or self.entity().roomdetail.block == user.official.block):
+            return True
+
+        return False

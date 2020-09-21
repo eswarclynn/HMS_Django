@@ -1,0 +1,159 @@
+{% extends 'officials/base_officials.html' %}
+
+{% block title %}Student Home{% endblock title %}
+
+{% block style_links %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'officials/home.css' %}">
+{% endblock style_links %}
+
+{% block content %}
+<h2 class="text-center">Hello {{student.name}}!</h2>
+
+<div class="row mt-4">
+  <div class="col-md">
+    <div class="card" id="present">
+      <div class="row">
+        <div class="col-8">
+          <span class="row atttext">Number of days present.</span>
+          <span class="row attnum">{{ present_dates_count }}</span>
+        </div>
+        <div class="col-4">
+          <span class="atticon"><i class="fa fa-user-plus"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md">
+    <div class="card" id="absent">
+      <div class="row">
+        <div class="col-8">
+          <span class="row atttext">Number of days absent.</span>
+          <span class="row attnum">{{ absent_dates_count }}</span>
+        </div>
+        <div class="col-4">
+          <span class="atticon"><i class="fa fa-user-times"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md">
+    <div class="card" id="comps">
+      <div class="row">
+        <div class="col-8">
+          <span class="row atttext">Number of outings.</span>
+          <span class="row attnum">{{ outing_count }}</span>
+        </div>
+        <div class="col-4">
+          <span class="atticon"><i class="fa fa-font-awesome"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mx-md-4 mt-4 justify-content-center">
+  <div class="col-md-4 border p-3">
+    <h3 class="text-center border-bottom border-secondary pb-3">Your Details</h3>
+    <table class="table table-borderless">
+      <tbody id="tbody">
+        <tr>
+          <th>Name</td>
+          <td>{{student.name}}</td>
+        </tr>
+        <tr>
+          <th>Registration No.</td>
+          <td>{{student.regd_no}}</td>
+        </tr>
+        <tr>
+          <th>Roll No.</td>
+          <td>{{student.roll_no}}</td>
+        </tr>
+        <tr>
+          <th>Year</td>
+          <td>{{student.year}}</td>
+        </tr>
+        <tr>
+          <th>Branch</td>
+          <td>{{student.branch}}</td>
+        </tr>
+        <tr>
+          <th>Room</td>
+          <td id="phone-field">
+            {{ student.roomdetail.room }}</td>
+        </tr>
+        <tr>
+          <th>Block</td>
+          <td>{{student.roomdetail.block.name}}</td>
+        </tr>
+        <tr>
+          <th>Contact Number</td>
+          <td>{{student.phone}}</td>
+        </tr>
+        <tr>
+          <th>e-Mail ID</td>
+          <td>{{student.email}}</td>
+        </tr>
+        <tr>
+          <th>Address</td>
+          <td>{{student.address}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center">
+      <a href="{% url 'django_auth:change_password' %}"><button class="btn btn-primary">Change Password</button></a>
+    </div>
+  </div>
+  <div class="col-md-7 border p-3 ml-md-4">
+    <h3 class="text-center border-bottom border-secondary pb-3">Complaints Registered</h3>
+    <div class="overflow-auto p-3">
+      <table class="table table-hover table-muted table-striped" id="complaints_table">
+        <thead>
+          <tr>
+            <th class="text-center">Type</th>
+            <th class="text-center">Complainee</th>
+            <th class="text-center">Summary</th>
+            <th class="text-center">Last Updated</th>
+            <th class="text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+  
+          {% for item in complaints %}
+          <tr data-row-href="{% url 'complaints:complaint_detail' item.id %}">
+            <td class="text-center">{{item.type}}</td>
+            <td class="text-center">{{item.complainee}}</td>
+            <td class="text-center">{{item.summary}}</td>
+            <td class="text-center">{{item.updated_at|date:'d-m-Y'}}</td>
+            <td class="text-center">{{item.status}}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center"> No complaints registered! </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+
+{% block script_links %}
+
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#complaints_table').DataTable({
+      "pageLength": 6,
+      "lengthChange": false,
+      "filter": false
+    });
+
+
+  });
+</script>
+
+{% endblock script_links %}

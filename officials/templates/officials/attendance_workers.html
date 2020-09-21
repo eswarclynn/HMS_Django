@@ -1,0 +1,61 @@
+{% extends 'officials/base_officials.html' %}
+
+{% block title %}Staff Attendance{% endblock title %}
+
+{% block content %}
+
+<h1 class="text-center">Staff Attendance</h1>
+<hr>
+<form method="post">
+  <div class="row justify-content-between">
+    <div class="col-12 col-md-3 text-center">Block: <strong>{{ official.block }}</strong></div>
+    <div class="col-12 col-md-3 text-center">Date: <input type="date" name="date" id="date" class="ml-3" onchange="fetchDate(event)" value="{{ date }}" required /></div>
+  </div>
+  <div class="overflow-auto p-3">
+    <table class="table table-hover table-muted table-striped">
+      <thead>
+        <tr>
+          <th>Regd No.</th>
+          <th>Name</th>
+          <th>Designation</th>
+          <th>Attendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendance_list %}
+          <tr>
+            <td>{{ attendance.worker.staff_id }}</td>
+            <td>{{ attendance.worker.name }}</td>
+            <td>{{ attendance.worker.designation }}</td>
+            <td>
+              <select name="{{ attendance.id }}" class="form-control {% if attendance.present_on_date  %} is-valid {% endif %} {% if attendance.absent_on_date %} is-invalid {% endif %}">
+                <option value="">Select</option>
+                <option value="present" {% if attendance.present_on_date  %} selected {% endif %} >Present</option>
+                <option value="absent" {% if attendance.absent_on_date %} selected {% endif %}>Absent</option>
+              </select>
+            </td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="5" class="text-center">
+            <input type="submit" class="btn btn-primary" name="submit" value="Submit" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</form>
+
+<form method="GET" id="fetch_date_form">
+  <input type="hidden" name="for_date" id="for_date">
+</form>
+{% endblock content %}
+
+{% block script_links %}
+<script>
+  function fetchDate(event) {
+    document.querySelector('#for_date').value = event.target.value
+    document.querySelector('#fetch_date_form').submit();
+  }
+</script>
+{% endblock script_links %}

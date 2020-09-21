@@ -102,6 +102,9 @@ class Official(models.Model):
     phone = models.CharField(max_length=10, null=False)
     email = models.EmailField(null=False)
 
+    def is_chief(self):
+        return (self.designation == 'Deputy Chief-Warden' or self.designation == 'Chief-Warden')
+
 
     def __str__(self):
         return str(self.emp_id)
@@ -132,3 +135,14 @@ class Block(models.Model):
 
     def __str__(self):
         return self.name
+
+    def short_name(self):
+        return self.name.split()[0]
+
+    def student_capacity(self):
+        if self.room_type == '4S':   return self.capacity*4
+        elif self.room_type == '2S': return self.capacity*2
+        elif self.room_type == '1S': return self.capacity
+
+    def students(self):
+        return RoomDetail.objects.filter(block=self)

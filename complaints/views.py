@@ -1,58 +1,68 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from .models import Complaint
 from institute.models import Student, Official
+from workers.models import Worker
 from django.http.response import Http404
 from django.contrib import messages
+from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import ComplaintCreationForm
+from complaints.forms import ComplaintUpdationForm
 
 # Create your views here.
-def registerComplaint(request):
-    if request.method == 'POST':
-        if request.user.is_student:
-            user = Institutestd.objects.get(email_id=request.user.email)
-            if request.POST.get('complainee'):
-                newComplaint = Complaints(
-                regd_no = user,
-                type = request.POST['type'],
-                complainee =  Institutestd.objects.get(regd_no=request.POST['complainee']),
-                summary = request.POST['summary'],
-                detailed = request.POST['detailed'],
-                )
-            else:
-                newComplaint = Complaints(
-                regd_no = user,
-                type = request.POST['type'],
-                summary = request.POST['summary'],
-                detailed = request.POST['detailed'],
-                )
-        elif request.user.is_official:
-            user = Officials.objects.get(email_id=request.user.email)
-            if request.POST.get('complainee'):
-                newComplaint = OfficialComplaints(
-                regd_no = user,
-                type = request.POST['type'],
-                complainee =  Institutestd.objects.get(regd_no=request.POST['complainee']),
-                summary = request.POST['summary'],
-                detailed = request.POST['detailed'],
-                )
-            else:
-                newComplaint = OfficialComplaints(
-                regd_no = user,
-                type = request.POST['type'],
-                summary = request.POST['summary'],
-                detailed = request.POST['detailed'],
-                )
+class ComplaintDetailView(LoginRequiredMixin, DetailView):
+    model = Complaint
+    template_name = 'complaints/show.html'
+    context_object_name = 'complaint'
 
-        elif request.user.is_worker:
-            messages.success(request, 'Complaint Registered Successfully!')
-            return redirect('complaints:registerComplaint')
+    def get(self, request, *args, **kwargs):
+        response =  super().get(request, *args, **kwargs)
+        if self.request.user.is_student and (self.object.entity() != self.request.user.student): 
+            raise Http404()
+        return response
 
-        else:
-            raise Http404('Please Log In and then register complaint!')
-        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['can_edit'] = self.object.can_edit(self.request.user)
+        context['form'] = ComplaintUpdationForm(instance=self.object)
+        return context
+    
 
+class ComplaintCreateView(LoginRequiredMixin, CreateView):
+    model = Complaint
+    template_name = 'complaints/new.html'
+    form_class = ComplaintCreationForm
 
-        newComplaint.save()
-        messages.success(request, 'Complaint Registered Successfully!')
-        return redirect('complaints:registerComplaint')
+    def get_success_url(self):
+        return self.request.user.home_url()
 
-    return render(request, 'complaints/complaint.html')
+    def form_valid(self, form):
+        form.instance.entity_id = (self.request.user.is_student and self.request.student.regd_no) or \
+                                    (self.request.user.is_official and self.request.user.official.emp_id) or \
+                                    (self.request.user.is_worker and self.request.user.worker.staff_id)
+        form.instance.entity_type = (self.request.user.is_student and 'Student') or \
+                                    (self.request.user.is_official and 'Official') or \
+                                    (self.request.user.is_worker and 'Worker')
+        form.instance.complainee = form.cleaned_data.get('complainee_id') and Student.objects.get(regd_no = form.cleaned_data.get('complainee_id'))
+
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = 'Register Complaint'
+        return context
+    
+class ComplaintUpdateView(LoginRequiredMixin, UpdateView):
+    model = Complaint
+    form_class = ComplaintUpdationForm
+
+    def get_success_url(self):
+        # return self.request.user.home_url()
+        return reverse('complaints:complaint_detail', args=[self.get_object().pk])
+
+class ComplaintDeleteView(LoginRequiredMixin, DeleteView):
+    model = Complaint
+
+    def get_success_url(self):
+        return self.request.user.home_url()

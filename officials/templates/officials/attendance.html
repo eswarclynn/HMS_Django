@@ -1,161 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Attendance - Hostel Management System</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+{% extends 'officials/base_officials.html' %}
 
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
-  {% load static %}
-  <link href="{% static 'officials/caretaker-home.css' %} " rel="stylesheet"> <!--attendance.css-->
+{% block title %}Student Attendance{% endblock title %}
 
-  <script src = "{% static 'officials/attendance.js' %}"></script>
+{% block content %}
 
-</head>
-
-<body>
-    <nav class="navbar fixed-top row px-4" id="topnav">
-        <div class="col-0 ">
-            <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars" style="font-size: 4vh;color: aliceblue;" ></span></span>
-        </div>
-
-        <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
-            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-        </div>
-        
-        <div class="col-0 ">
-            <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
-        </div>
-    </nav>
-
-
-    <div id="mySidenav" class="sidenav">
-        <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{% url 'officials:official_home' %}"><span><i class="fa fa-tachometer"></i></span> &nbsp;&nbsp; Dashboard</a>
-        <a href="{% url 'officials:attendance' %}"><span><i class="fa fa-list"></i></span> &nbsp;&nbsp; Attendance</a>
-        <a href="{% url 'officials:attendance_workers' %}"><span><i class="fa fa-users"></i></span> &nbsp;&nbsp; Attendance-Staff</a>
-        <a href="{% url 'officials:attendance_log' %}"><span><i class="fa fa-calendar"></i></span> &nbsp;&nbsp; Attendance Log</a>
-        <a href="{% url 'officials:grantOuting' %}"><span><i class="fa fa-map-marker" ></i></span> &nbsp;&nbsp; Outing Requests</a>
-        <!--<a href=""><span><i class="fa fa-tint" ></i></span> &nbsp;&nbsp; Water Can Info</a>-->
-        <a href="{% url 'workers:medical_issue' %}" target="_blank"><span><i class="fa fa-medkit" ></i></span> &nbsp;&nbsp; Medical Issue</a>
-        <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span><i class="fa fa-commenting"></i></span> &nbsp;&nbsp; Register Complaint</a>
-        <a href="{% url 'django_auth:logout' %}"><span><i class="fa fa-sign-out"></i></span>&nbsp;&nbsp; Log Out</a>
+<h1 class="text-center">Student Attendance</h1>
+<hr>
+<form method="post">
+  <div class="row justify-content-between">
+    <div class="col-12 col-md-3 mt-3 text-center">Block: <strong>{{ official.block }}</strong></div>
+    <div class="col-12 col-md-3 mt-3 text-center">
+      Floor: 
+      <select id="floor_select" class="form-control d-inline w-50">
+        <option value="">Select Floor</option>
+        <option value="G-">Ground</option>
+        <option value="F-">First</option>
+        <option value="S-">Second</option>
+      </select>
     </div>
-
-
-    <div class="container main-container">
-
-        <div class="container table-container" style="padding: 20px; ">
-
-            <h1 style="text-align: center;">Attendance Submission</h1>
-
-            <table class="table table-hover table-muted table-striped" id="att-table">
-                <form method="POST" action="{% url 'officials:attendance' %}" id="outer_form">
-                {% csrf_token %}
-
-                {% if messages %}
-                                   
-                {% for message in messages %}
-                     <script>
-                          alert('{{message}}');
-                     </script>
-                {% endfor %}
-                     
-                {% endif %}
-
-                <div class="row" style="margin-bottom: 10px;">
-
-                    <span class="col-md d-flex justify-content-center justify-content-md-start">Block : <b>{{block_details.block_name}}</b></span>
-
-                    <span class="col-md d-flex justify-content-center justify-content-md-end">
-                        
-                        {% if get_date %}
-                            Date: <input type="date"  id="datefield" value="{{get_date}}" name="datefield" class="ml-3" onchange="date_click()" required/>
-                        {% else %}
-                            Date: <input type="date"  id="datefield" name="datefield" class="ml-3" onchange="date_click()" required/>
-                        {% endif %}
-                            
-
-                        <input type="submit" name="get_date" id="get_date" class="d-none">
-                        <script>
-                            function date_click(){
-                                document.getElementById("get_date").value = document.getElementById("datefield").value;
-                                console.log(document.getElementById("get_date"));
-                                document.getElementById("get_date").click();
-                            }
-                        </script>
-                    </span>
-                </div>
-                <thead>
-                    <tr>
-                        <th>Roll No.</th>
-                        <th>Name</th>
-                        <th>Room No.</th>
-                        <th>Attendance</th>
-                    </tr>
-                </thead>
-                
-                    <tbody>
-                        
-                        {% for stud in stud_list %}
-                        <tr>
-                            <td>{{stud.student.regd_no}}</td>
-                            <td>{{stud.info.name}}</td>
-                            <td>{{stud.student.floor|slice:"0:1"}}-{{stud.student.room_no}}</td>
-                            <td>
-                                
-                                {% if stud.att %}
-                                    
-                                    {% if stud.att == 'Present' %}
-                                    <select class="form-control w-50 d-inline-block is-valid" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
-                                        <option value="Present" selected>Present</option>
-                                        <option value="Absent">Absent</option>
-                                    </select> 
-                                        
-                                    {% else %}
-                                    <select class="form-control w-50 d-inline-block is-invalid" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
-                                        <option value="Present">Present</option>
-                                        <option value="Absent" selected>Absent</option>
-                                    </select> 
-                                        
-                                    {% endif %}
-                                    <span class="ml-3 text-primary">Editing Attendance</span>
-
-                                {% else %}
-                                <select class="form-control w-50" id="{{stud.student.regd_no}}" name="{{stud.student.regd_no}}"  required>
-                                    <option value="Present" selected>Present</option>
-                                    <option value="Absent">Absent</option>
-                                </select>  
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                            
-                        <tr >
-                            <td colspan="6" style="text-align: center;"><input type="submit" name="submit" class="btn btn-success py-2 px-4" ></td>
-                        </tr>    
-    
-                    </tbody>
-
-                    
-                </form>
-
-            </table>
-        </div>
-
-
-
+    <div class="col-12 col-md-3 mt-3 text-center">Date: <input type="date" name="date" id="date" class="ml-3" onchange="fetchDate(event)" value="{{ date }}" required /></div>
+  </div>
+  <div class="overflow-auto p-3">
+    <table class="table table-hover table-muted table-striped">
+      <thead>
+        <tr>
+          <th>Regd No.</th>
+          <th>Name</th>
+          <th>Room</th>
+          <th>Attendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendance_list %}
+          <tr>
+            <td>{{ attendance.student.regd_no }}</td>
+            <td>{{ attendance.student.name }}</td>
+            <td>{{ attendance.student.roomdetail.room }}</td>
+            <td>
+              <select name="{{ attendance.id }}" class="form-control {% if attendance.present_on_date  %} is-valid {% endif %} {% if attendance.absent_on_date %} is-invalid {% endif %}">
+                <option value="">Select</option>
+                <option value="present" {% if attendance.present_on_date  %} selected {% endif %} >Present</option>
+                <option value="absent" {% if attendance.absent_on_date %} selected {% endif %}>Absent</option>
+              </select>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <input type="submit" class="btn btn-primary" name="submit" value="Submit" />
+      </div>
     </div>
+  </div>
+</form>
 
+<form method="GET" id="fetch_date_form">
+  <input type="hidden" name="for_date" id="for_date">
+</form>
+{% endblock content %}
 
-</body>
-</html>
-
-
+{% block script_links %}
+<script>
+  function fetchDate(event) {
+    document.querySelector('#for_date').value = event.target.value
+    document.querySelector('#fetch_date_form').submit();
+  }
+</script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.table').DataTable({
+      "lengthMenu": [[10, 25, 50, 100, 250, -1], [10, 25, 50, 100, 250, "All"]],
+      "info": false,
+      "dom": '<"row"<"col-md"l><"col-md"f><"col-md"p>>t',
+      "initComplete": function ()  {
+        var column = this.api().columns(2);
+        $('#floor_select').on('change', function () {
+          var val = $.fn.dataTable.util.escapeRegex($(this).val());
+          column.search(val ? '^' + val : '', true, false).draw();
+        });
+      }
+    });
+  });
+</script>
+{% endblock script_links %}

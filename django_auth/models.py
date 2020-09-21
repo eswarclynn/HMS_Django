@@ -3,6 +3,7 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 
 class UserManager(BaseUserManager):
     def create_user(self, email, type_flag, password=None):
@@ -54,3 +55,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     USERNAME_FIELD = 'email'
+
+    def home_url(self):
+        if self.is_student:
+            return reverse('students:home')
+        elif self.is_official:
+            return reverse('officials:home')
+        elif self.is_worker:
+            return reverse('workers:staff_home')

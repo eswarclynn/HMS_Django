@@ -1,0 +1,52 @@
+.main-container {
+    max-width: 1300px;
+}
+
+.card {
+    padding: 10px 0 10px 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition:  0.5s;
+}
+
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(61, 11, 94, 0.445);
+
+}
+
+#present {
+    background: rgb(80,251,186);
+    background: radial-gradient(circle, rgba(5, 172, 108, 0.637) 0%, rgba(14,126,3,1) 100%);
+}
+
+#absent {
+    background: rgb(252,185,137);
+    background: radial-gradient(circle, rgb(255, 168, 106) 0%, rgba(236,0,0,1) 100%);
+}
+
+#comps {
+    background: rgb(10,237,251);
+    background: radial-gradient(circle, rgba(10,237,251,1) 0%, rgba(72,139,252,1) 100%);
+}
+
+.attnum {
+    font-size: 2.5em;
+    font-weight: bolder;
+
+    vertical-align: middle;
+    color: aliceblue;
+}
+
+.atttext {
+
+    color: rgba(255, 255, 255, 0.89);
+    font-weight: 100;
+}
+
+.atticon {
+    color: rgb(240, 248, 255);
+
+    font-size: 3em;
+}

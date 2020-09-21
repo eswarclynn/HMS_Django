@@ -23,8 +23,8 @@ class Worker(models.Model):
     name = models.CharField(max_length=100, null=False)
     designation = models.CharField(max_length=50,choices=EMP)
     gender = models.CharField(max_length=10,choices=GENDER)
-    phone = models.CharField(max_length=12,null=False)
-    email = models.EmailField()
+    phone = models.CharField(max_length=10)
+    email = models.EmailField(null=True, blank=True)
     block = models.ForeignKey(Block, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
@@ -64,8 +64,29 @@ class Attendance(models.Model):
         Worker,
         on_delete=models.CASCADE,
     )
-    dates = models.TextField(blank=True)
-    status = models.CharField(max_length=10,default='',blank=True)
+    present_dates = models.TextField(null=True, blank=True)
+    absent_dates = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return str(self.worker.staff_id)
+
+    def mark_attendance(self, date, status):
+        if status == 'present':
+            absent_dates = self.absent_dates and set(self.absent_dates.split(',')) or set()
+            absent_dates.discard(date)
+            self.absent_dates = ','.join(absent_dates)
+            if not self.present_dates: 
+                self.present_dates = date
+            else:
+                self.present_dates = ','.join(set(self.present_dates.split(',') + [date]))
+        elif status == 'absent':
+            present_dates = self.present_dates and set(self.present_dates.split(',')) or set()
+            present_dates.discard(date)
+            self.present_dates = ','.join(present_dates)
+            if not self.absent_dates: 
+                self.absent_dates = date
+            else:
+                self.absent_dates = ','.join(set(self.absent_dates.split(',') + [date]))
+
+        self.save()

@@ -1,10 +1,20 @@
 from django.shortcuts import redirect, render
+from django.http import Http404
 from institute.models import Block, Student, Official
 from students.models import Attendance, Outing
-from django.http import HttpResponse
-import datetime
+from complaints.models import Complaint
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import user_passes_test
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
+from .forms import OutingForm
+
+
+class StudentTestMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_student
 
 def student_check(user):
     return user.is_authenticated and user.is_student
@@ -12,67 +22,69 @@ def student_check(user):
 # Create your views here.
 
 @user_passes_test(student_check)
-def student_home(request):
+def home(request):
     user = request.user
-    user_details = Institutestd.objects.get(email_id=user.email)
-    current = attendance.objects.get(regd_no_id=user_details.regd_no).dates
-    dates = current.split(',')
-    abse = len(list(filter(lambda x: (x.startswith('X')), dates)))
-    pres = len(list(filter(lambda x: not (x.startswith('X')), dates)))
-    complaints=list(user_details.complaints.filter(status="Registered")) + list(user_details.complaints.filter(status="Processing"))
+    student = user.student
+    present_dates_count = len(student.attendance.present_dates.split(','))
+    absent_dates_count = len(student.attendance.absent_dates.split(','))
+    outing_count = len(student.outing_set.all())
+    complaints = Complaint.objects.filter(entity_id = student.regd_no, status="Registered") | Complaint.objects.filter(entity_id = student.regd_no, status="Processing")
 
-    return render(request, 'students/student-home.html', {'user_details': user_details, 'pres':pres, 'abse':abse, 'complaints':complaints})
+    return render(request, 'students/home.html', {'student': student, 'present_dates_count':present_dates_count, 'absent_dates_count':absent_dates_count, 'outing_count': outing_count, 'complaints':complaints})
 
-@user_passes_test(student_check)
-def outing_app(request):
-    if request.method == 'POST':
-        fromDate = request.POST['fromDate']
-        fromTime = request.POST['fromTime']
-        toDate = request.POST['toDate']
-        toTime = request.POST['toTime']
-        purpose = request.POST['purpose']
-        student = Institutestd.objects.get(email_id = request.user.email)
-        parents_mobile = student.ph_phone
 
-        print(fromDate, fromTime, toDate, toTime, purpose, parents_mobile)
+class OutingListView(StudentTestMixin, ListView):
+    model = Student
+    template_name = 'students/outing_list.html'
+    context_object_name = 'outing_list'
 
-        fromDateObj = datetime.datetime.strptime(fromDate, '%Y-%m-%d')
-        toDateObj = datetime.datetime.strptime(toDate, '%Y-%m-%d')
-        fromTimeObj = datetime.datetime.strptime(fromTime, '%H:%M')
-        toTimeObj = datetime.datetime.strptime(toTime, '%H:%M')
+    def get_queryset(self):
+        return self.request.user.student.outing_set.all()
 
-        application = outing(
-            regd_no= student,
-            fromDate=fromDateObj,
-            fromTime=fromTimeObj,
-            toDate=toDateObj,
-            toTime=toTimeObj,
-            purpose=purpose,
-            parent_mobile=parents_mobile
-        )
-        application.save()
-        messages.success(request, 'Outing Application submitted successfully! Check Outing History for status')
-        return redirect('students:outing_app')
 
-    return render(request, 'students/OutingApp.html')
+class OutingCreateView(StudentTestMixin, SuccessMessageMixin, CreateView):
+    model = Outing
+    form_class = OutingForm
+    template_name = 'students/outing_form.html'
+    success_url = reverse_lazy('students:outing_list')
+    success_message = 'Outing application successfully created!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = 'Outing Application'
+        return context
+
+    def form_valid(self, form):
+        form.instance.student = self.request.user.student
+        return super().form_valid(form)
+
+class OutingUpdateView(StudentTestMixin, SuccessMessageMixin, UpdateView):
+    model = Outing
+    form_class = OutingForm
+    template_name = 'students/outing_form.html'
+    success_url = reverse_lazy('students:outing_list')
+    success_message = 'Outing application successfully updated!'
+
+    def get(self, request, *args, **kwargs):
+        response =  super().get(request, *args, **kwargs)
+        if not (self.object.student == self.request.user.student and self.object.is_editable()): 
+            raise Http404('Cannot edit the outing application.')
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = 'Edit Outing Application'
+        return context
+
+    def form_valid(self, form):
+        form.instance.student = self.request.user.student
+        return super().form_valid(form)
 
 
 @user_passes_test(student_check)
 def attendance_history(request):
-    user_details = Institutestd.objects.get(email_id = request.user.email)
-    current = attendance.objects.get(regd_no_id=reg_no).dates
-    dates = current.split(',')
-    abse = list(filter(lambda x: (x.startswith('X')), dates))
-    pres = list(filter(lambda x: not (x.startswith('X')), dates))
-    abse = list(map(lambda x: x.replace('X',''), abse))
+    student = request.user.student
+    if student.attendance.present_dates: present_dates = student.attendance.present_dates.split(',') 
+    if student.attendance.absent_dates: absent_dates = student.attendance.absent_dates.split(',')
 
-    return render(request, 'students/attendance-history.html', {'user_details':user_details, 'pres':pres, 'abse':abse})
-
-
-@user_passes_test(student_check)
-def outing_history(request):
-    user_details = Institutestd.objects.get(email_id = request.user.email)
-    outing_details = outing.objects.filter(regd_no=user_details.regd_no)
-
-    return render(request, 'students/outingHisto.html', {'user_details': user_details, 'outing_details':outing_details})
-
+    return render(request, 'students/attendance_history.html', {'student': student, 'present_dates': present_dates, 'absent_dates': absent_dates})

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>{% block title %}{% endblock %} - Hostel Management System </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag==" crossorigin="anonymous" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap"
+    rel="stylesheet">
+  {% load static %}
+  <link href="{% static 'officials/application.css' %}" rel="stylesheet">
+  {% block style_links %}{% endblock style_links %}
+    
+</head>
+
+<body>
+  <nav class="navbar row fixed-top px-4" id="topnav">
+    <div class="col-12 p-0 d-flex justify-content-between align-items-center">
+      <div class="">
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars"
+            style="font-size: 4vh;color: aliceblue;"></span></span>
+      </div>
+  
+      <div class="d-flex justify-content-center">
+        <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+        <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+      </div>
+  
+      <div class="">
+        
+        {% if request.user.is_official %}
+        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        {% endif %}
+        {% if request.user.is_student %}
+        <a href="{% url 'students:home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        {% endif %}
+        {% if request.user.is_worker %}
+        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        {% endif %}
+          
+      </div>
+    </div>
+  </nav>
+
+
+  <div id="mySidenav" class="sidenav">
+    <a style="cursor: pointer;" class="closebtn" onclick="closeNav()">&times;</a>
+    {% with url_name=request.resolver_match.url_name %}
+    
+    {% if request.user.is_official and request.user.official.is_chief %}
+      <a href="{% url 'officials:home' %}" class="{% if url_name == 'home' %}active{% endif %}"><span class="mr-3"><i class="fa fa-tachometer"></i></span>Dashboard</a>
+      <a href="{% url 'officials:blockSearch' %}" class="{% if url_name == 'blockSearch' %}active{% endif %}"><span class="mr-3"><i class="fa fa-building"></i></span> Block Layout</a>
+      <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span class="mr-3"><i class="fa fa-calendar"></i></span> Attendance Log</a>
+      <a href="{% url 'officials:register_student' %}" target="_blank"><span class="mr-3"><i class="fa fa-user-circle"></i></span>Add Student</a>
+      <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> Student List</a>
+      <a href="{% url 'officials:register_official' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-card"></i></span>Add Official</a>
+      <a href="{% url 'officials:emp_list' %}" class="{% if url_name == 'emp_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text-o"></i></span>Official List</a>
+      <a href="{% url 'officials:register_worker' %}" target="_blank"><span class="mr-3"><i class="fa fa-address-book"></i></span>Add Staff</a>
+      <a href="{% url 'officials:workers_list' %}"  class="{% if url_name == 'workers_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span>Staff List</a>      
+    {% endif %}
+    {% if request.user.is_official and not request.user.official.is_chief %}
+      <a href="{% url 'officials:home' %}" class="{% if url_name == 'home' %}active{% endif %}"><span class="mr-3"><i class="fa fa-tachometer"></i></span>Dashboard</a>
+      <a href="{% url 'officials:attendance' %}" class="{% if url_name == 'attendance' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-list"></i></span> Attendance</a>
+      <a href="{% url 'officials:attendance_workers' %}" class="{% if url_name == 'attendance_workers' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-users"></i></span> Attendance-Staff</a>
+      <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-calendar"></i></span> Attendance Log</a>
+      <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-file-text"></i></span> Student List</a>
+      <a href="{% url 'officials:grant_outing' %}" class="{% if url_name == 'grant_outing' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-map-marker" ></i></span> Outing Requests</a>
+    {% endif %}
+    {% if request.user.is_student %}
+      <a href="{% url 'students:home' %}" class="{% if url_name == 'home' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-tachometer"></i></span> Dashboard</a>
+      <a href="{% url 'students:outing_new' %}" target="_blank" class="{% if url_name == 'outing_new' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-map-marker"></i></span> Outing Application</a>
+      <a href="{% url 'students:attendance_history' %}" class="{% if url_name == 'attendance_history' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-list" ></i></span> Attendance History</a>
+      <a href="{% url 'students:outing_list' %}" class="{% if url_name == 'outing_list' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-history" ></i></span> Outing History</a>
+    {% endif %}
+
+    <a href="{% url 'workers:medical_issue' %}" target="_blank"><span class="mr-3"><i class="fa fa-medkit"></i></span> Medical Issue</a>
+    <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span class="mr-3"><i class="fa fa-commenting"></i></span>Register Complaint</a>
+    <a href="{% url 'django_auth:logout' %}"><span class="mr-3"><i class="fa fa-sign-out"></i></span>Log Out</a>
+  </div>
+  {% endwith %}
+  
+  <div class="container main-container">
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+  <script>
+    var toast_messages = [];
+    {% if messages %}
+      {% for message in messages %}
+        toast_messages.push({
+          tag: '{{ message.tags }}',
+          message: '{{ message }}'
+        })
+      {% endfor %}
+    {% endif %}
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous"></script>
+  {% block script_links %}{% endblock script_links %}
+  <script src="{% static 'officials/application.js' %}"></script>
+
+</body>
+</html>

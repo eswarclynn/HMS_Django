@@ -9,7 +9,7 @@ class AttendanceAdmin(admin.ModelAdmin):
     list_display = ('student', 'status')
 
 class OutingAdmin(admin.ModelAdmin):
-    list_display = ('student', 'fromDate', 'fromTime', 'toDate', 'toTime', 'purpose', 'permission')
+    list_display = ('student', 'fromDate', 'toDate', 'purpose', 'permission')
 
 admin.site.register(RoomDetail, RoomDetailAdmin)
 admin.site.register(Attendance, AttendanceAdmin)

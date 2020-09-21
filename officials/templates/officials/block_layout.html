@@ -1,0 +1,324 @@
+{% extends 'officials/base_officials.html' %}
+
+{% block title %}Blockwise Layout {% endblock title %}
+
+{% block style_links %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'officials/block_layout.css' %}">
+{% endblock style_links %}
+  
+{% block content %}
+
+<h2 class="text-center">Block Layout</h2>
+<hr />
+<form method="GET" action="{% url 'officials:blockSearch' %}">
+  <div class="row mt-3 mb-3">
+    <div class="col d-flex justify-content-end">
+      <label for="block"><strong> Block :</strong></span>
+    </div>
+    <div class="col form-group d-flex justify-content-center">
+      <select class="form-control w-50" id="block" name="block" required>
+        <option value="">Select Block</option>
+        {% for item in blocks %}
+        <option value="{{item.id}}" {% if item.id == current_block.id %} selected="selected" {% endif %}>{{item.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col d-flex-inline justify-content-start">
+      <button class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+</form>
+
+
+<div class="row text-center">
+  <div class="col">
+    Block: <strong>{{current_block.name}}</strong>
+  </div>
+  <div class="col">
+    Room Type: <strong> {{current_block.room_type}} </strong>
+  </div>
+  <div class="col">
+    Gender: <strong>{{current_block.gender}}</strong>
+  </div>
+  <div class="col">
+    Caretaker: <strong>{{current_block.caretaker.name}}</strong>
+  </div>
+</div>
+<div class="row text-center mt-3">
+  <div class="col ">
+    Capacity: <strong>{{current_block.capacity}} rooms - {{current_block.student_capacity}} students</strong>
+  </div>
+  <div class="col">
+    Filled: <strong><span id="filled_room"></span> rooms - {{current_block.students.count}} students</strong>
+  </div>
+  <div class="col ">
+    Vacant: <strong><span id="vacant_room"></span> rooms</strong>
+  </div>
+  <div class="col">
+    Partially Vacant: <strong><span id="partial_room"></span> rooms</strong>
+  </div>
+</div>
+
+<div class="row d-flex justify-content-end mr-2 mt-4">
+  <span class="mr-2 mt-1">Select Floor: </span>
+  <div>
+    <select name="floor" id="floor" class="form-control d-inline bg-info text-white" onchange="showFloor()">
+      <option value="ground">Ground Floor</option>
+      <option value="first">First Floor</option>
+      <option value="second">Second Floor</option>
+    </select>
+  </div>
+</div>
+
+{% if current_block|lower == 'tungabhadra hall of residence'  %}
+<div>
+  {% include 'officials/Tunga.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'krishnaveni hall of residence'  %}
+<div>
+  {% include 'officials/Krishnaveni.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'munneru hall of residence'  %}
+<div>
+  {% include 'officials/Munneru.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'bhima hall of residence'  %}
+<div>
+  {% include 'officials/Bhima.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'ghataprabha hall of residence'  %}
+<div>
+  {% include 'officials/Ghata.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'indravathi hall of residence'  %}
+<div>
+  {% include 'officials/Indravathi.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'manjeera hall of residence'  %}
+<div>
+  {% include 'officials/Manjeera.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'purna hall of residence'  %}
+<div>
+  {% include 'officials/Purna.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'banganga hall of residence'  %}
+<div>
+  {% include 'officials/Banganga.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'godavari hall of residence'  %}
+<div>
+  {% include 'officials/Godavari.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'pranahita hall of residence'  %}
+<div>
+  {% include 'officials/Pranahita.html' %}
+</div>
+{% endif %}
+{% if current_block|lower == 'sabari hall of residence'  %}
+<div>
+  {% include 'officials/Sabari.html' %}
+</div>
+{% endif %}
+
+
+
+<div class="container-fluid mt-4 d-none" id="table-container">
+  <h2 id="room" class="text-center"></h2>
+  <table class="table table-hover table-muted table-striped">
+    <thead>
+      <th>Regd No.</th>
+      <th>Roll No.</th>
+      <th>Name</th>
+      <th>Year</th>
+      <th>Branch</th>
+      <th>Phone</th>
+      <th>EMail</th>
+      <th>Remove</th>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}
+
+{% block script_links %}
+  
+<script>
+  $(document).ready(function () {
+    var filled_count = 0;
+    var partial_count = 0;
+    var vacant_count = 0;
+    var room_capacity = parseInt('{{current_block.room_type|slice:"0:1"}}');
+
+    $('.room-card').each(function () {
+      room = this.innerHTML;
+      floor = room[0];
+      no = parseInt(room.slice(2));
+
+      if (floor == 'G') {
+        floor = 'Ground';
+      } else if (floor == 'F') {
+        floor = 'First';
+      } else if (floor == 'S') {
+        floor = 'Second';
+      }
+
+      let count = 0;
+
+      {% for item in current_block.students %}
+        if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
+          count += 1;
+        }
+      {% endfor %}
+
+      if (count == room_capacity) {
+        filled_count += 1;
+      } else if (0 < count && count < room_capacity) {
+        $(this).addClass("partial");
+        partial_count += 1;
+      } else if (count == 0) {
+        $(this).addClass('vacant');
+        vacant_count += 1;
+      }
+    });
+
+    document.getElementById('filled_room').innerHTML = filled_count;
+    document.getElementById('partial_room').innerHTML = partial_count;
+    document.getElementById('vacant_room').innerHTML = vacant_count;
+
+    $('.room-card').hover(function() {
+        let room = $(this).html();
+        let floor = room[0];
+        let no = parseInt(room.slice(2));
+  
+        if (floor == 'G') {
+          floor = 'Ground';
+        } else if (floor == 'F') {
+          floor = 'First';
+        } else if (floor == 'S') {
+          floor = 'Second';
+        }
+  
+        let roll = "";
+        {% for item in current_block.students %}
+          if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
+            roll += '{{item.student.regd_no}}, ';
+          }
+        {% endfor %}
+        $(this).tooltip({title: roll}).tooltip('show');
+    });
+  
+    $('.room-card').click(function() {
+      table = document.getElementById("table-container");
+      placeDetails($(this).html());
+      if (table.classList.contains('d-none')) {
+        table.classList.add('d-block');
+        table.classList.remove('d-none');
+      }
+      else if (table.classList.contains('d-block')) {
+        table.classList.add('d-none');
+        table.classList.remove('d-block');
+      }
+  
+      document.querySelector('#table-container table > tbody').scrollIntoView();
+  
+    });
+  });
+
+
+  function showFloor() {
+
+    let floor = document.getElementById("floor").value;
+
+    if (floor == "ground") {
+      document.getElementById("ground-con").style.display = "block";
+      document.getElementById("first-con").style.display = "none";
+      document.getElementById("second-con").style.display = "none";
+    }
+    else if (floor == "first") {
+      document.getElementById("ground-con").style.display = "none";
+      document.getElementById("first-con").style.display = "block";
+      document.getElementById("second-con").style.display = "none";
+    }
+    else if (floor == "second") {
+      document.getElementById("ground-con").style.display = "none";
+      document.getElementById("first-con").style.display = "none";
+      document.getElementById("second-con").style.display = "block";
+    }
+  }
+
+  function placeDetails(room_string) {
+
+    let room = room_string;
+    let floor = room[0];
+    let no = parseInt(room.slice(2));
+    let room_capacity = parseInt('{{ current_block.room_type|slice:"0:1" }}');
+    document.querySelector('#table-container > h2#room').innerHTML = room_string;
+
+    if (floor == 'G') {
+      floor = 'Ground';
+    } else if (floor == 'F') {
+      floor = 'First';
+    } else if (floor == 'S') {
+      floor = 'Second';
+    }
+
+    let tbody = document.querySelector('#table-container table > tbody');
+    tbody.innerHTML = "";
+
+    let count = 0;
+    {% for item in current_block.students %}
+      if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
+        let row = document.createElement('tr');
+        row.innerHTML = `
+          <td>{{item.student.regd_no}}</td>\
+          <td>{{item.student.roll_no}}</td>\
+          <td>{{item.student.name}}</td>\
+          <td>{{item.student.year}}</td>\
+          <td>{{item.student.branch}}</td>\
+          <td>{{item.student.phone}}</td>\
+          <td>{{item.student.email}}</td>\
+          <td>\
+            <form method="POST" onsubmit="return confirm('Are you sure?')">{% csrf_token %}
+              <input type="hidden" name="roomdetail_id" value="{{item.id}}" />
+              <input type='submit' name='remove' value='Remove' class='btn btn-danger' />\
+            </form>
+          </td>`;
+        tbody.appendChild(row);
+        count++;
+      }
+    {% endfor %}
+
+    if (count < room_capacity) {
+      const template = document.createElement('template');
+      let row = document.createElement('tr');
+      row.innerHTML = `
+        <td colspan='10' class='text-center'>\
+          <form method="POST">{% csrf_token %}
+            Add Student to room :\
+            <input type='text' name='regd_no' class='ml-4'> \
+            <input type='hidden' name='block_id' value='{{current_block.id}}' /> \
+            <input type='hidden' name='floor' value='${floor}' /> \
+            <input type='hidden' name='room_no' value='${no}' /> \
+            <input type='submit' name='Add' value='Add' class='btn btn-primary ml-5'>\
+          </form>
+        </td>`;
+      tbody.appendChild(row); 
+    }
+  }
+
+</script>
+{% endblock script_links %}

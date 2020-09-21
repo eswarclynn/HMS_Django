@@ -35,10 +35,10 @@ class SignUpForm(UserCreationForm):
         if (is_student and is_official) or (is_student and is_worker) or (is_worker and is_official):
             raise forms.ValidationError('User cannot be of more than one type.')
 
-        if is_student and (not email.endswith('@student.nitandhra.ac.in')):
+        if email and is_student and (not email.endswith('@student.nitandhra.ac.in')):
             raise forms.ValidationError('Students should use institute eMail ID')
 
-        if (is_worker or is_official) and (not email.endswith('@nitandhra.ac.in')):
+        if email and (is_worker or is_official) and (not email.endswith('@nitandhra.ac.in')):
             raise forms.ValidationError('Staff should use institute eMail ID')
 
         if not ((is_student and Student.objects.filter(regd_no = entity_id).exists()) or (is_official and Official.objects.filter(emp_id = entity_id).exists()) or  (is_worker and Worker.objects.filter(staff_id = entity_id).exists())):

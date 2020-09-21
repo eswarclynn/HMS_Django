@@ -1,0 +1,28 @@
+{% extends 'officials/base_officials.html' %}
+
+{% block title %}Attendance History{% endblock title %}
+
+
+{% block content %}
+<h2 class="text-center">Attendance History</h2>
+<hr />
+
+{% include 'students/dates_partial.html' %}
+{% endblock content %}
+
+{% block script_links %}
+<script>
+  var present_dates = [];
+  var absent_dates = [];
+
+  {% for date in present_dates %}
+    present_dates.push(new Date('{{ date }}'));
+  {% endfor %}
+
+  {% for date in absent_dates %}
+    absent_dates.push(new Date('{{ date }}'));
+  {% endfor %}
+</script>
+{% load static %}
+<script src="{% static 'students/attendance_history.js' %}"></script>
+{% endblock script_links %}
