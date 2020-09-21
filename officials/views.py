@@ -7,7 +7,7 @@ from django.contrib import messages
 from datetime import date as datePy
 from django.http.response import Http404
 from complaints.models import Complaint
-from workers.models import MedicalIssue, Worker, Attendance as AttendanceWorker
+from workers.models import Worker, Attendance as AttendanceWorker
 from django.db.models import QuerySet
 from django.db.models import Sum
 import re

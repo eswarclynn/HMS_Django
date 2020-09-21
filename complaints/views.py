@@ -7,14 +7,13 @@ from django.http.response import Http404
 from django.contrib import messages
 from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import ComplaintCreationForm
+from django.contrib.messages.views import SuccessMessageMixin
+from .forms import ComplaintCreationForm, MedicalIssueUpdationForm
 from complaints.forms import ComplaintUpdationForm
 
 # Create your views here.
 class ComplaintDetailView(LoginRequiredMixin, DetailView):
-    model = Complaint
     template_name = 'complaints/show.html'
-    context_object_name = 'complaint'
 
     def get(self, request, *args, **kwargs):
         response =  super().get(request, *args, **kwargs)
@@ -25,14 +24,17 @@ class ComplaintDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['can_edit'] = self.object.can_edit(self.request.user)
-        context['form'] = ComplaintUpdationForm(instance=self.object)
+        if self.model == Complaint:
+            context['form'] = ComplaintUpdationForm(instance=self.object)
+        else:
+            context['form'] = MedicalIssueUpdationForm(instance=self.object)
         return context
-    
 
-class ComplaintCreateView(LoginRequiredMixin, CreateView):
-    model = Complaint
+class ComplaintCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'complaints/new.html'
-    form_class = ComplaintCreationForm
+    
+    def get_success_message(self, cleaned_data):
+        return '{} created successfully!'.format(self.model.__name__)
 
     def get_success_url(self):
         return self.request.user.home_url()
@@ -44,25 +46,27 @@ class ComplaintCreateView(LoginRequiredMixin, CreateView):
         form.instance.entity_type = (self.request.user.is_student and 'Student') or \
                                     (self.request.user.is_official and 'Official') or \
                                     (self.request.user.is_worker and 'Worker')
-        form.instance.complainee = form.cleaned_data.get('complainee_id') and Student.objects.get(regd_no = form.cleaned_data.get('complainee_id'))
+
+        if self.model == Complaint:
+            form.instance.complainee = form.cleaned_data.get('complainee_id') and Student.objects.get(regd_no = form.cleaned_data.get('complainee_id'))
 
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_title'] = 'Register Complaint'
+        context['form_title'] = 'Register {}'.format(self.model.__name__)
+        context['object_name'] = self.model.__name__
         return context
     
-class ComplaintUpdateView(LoginRequiredMixin, UpdateView):
-    model = Complaint
-    form_class = ComplaintUpdationForm
+class ComplaintUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    def get_success_message(self, cleaned_data):
+        return '{} updated successfully!'.format(self.get_object().model_name())
 
     def get_success_url(self):
         # return self.request.user.home_url()
-        return reverse('complaints:complaint_detail', args=[self.get_object().pk])
+        return reverse('complaints:{}_detail'.format((self.model.__name__).lower()), args=[self.get_object().pk])
 
 class ComplaintDeleteView(LoginRequiredMixin, DeleteView):
-    model = Complaint
 
     def get_success_url(self):
         return self.request.user.home_url()

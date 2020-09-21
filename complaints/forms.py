@@ -1,6 +1,6 @@
 from django import forms
 from institute.models import Student
-from .models import Complaint
+from .models import Complaint, MedicalIssue
 
 class ComplaintCreationForm(forms.ModelForm):
     complainee_id = forms.IntegerField(required=False)
@@ -18,10 +18,31 @@ class ComplaintCreationForm(forms.ModelForm):
             raise forms.ValidationError("Invalid registration number.")
         return complainee_id
 
+    def clean(self):
+        cleaned_data = super().clean()
+        type = cleaned_data.get('type')
+        complainee_id = cleaned_data.get('complainee_id')
+
+        if (type == 'Indisciplinary' or type == 'Discrimination/ Harassment' or type == 'Damage to property') and not complainee_id:
+            raise forms.ValidationError("Please specify the registration no. of the person against whom the complaint has to be registered.")
+        elif complainee_id:
+            raise forms.ValidationError("Cannot assign complainee to {} complaint.".format(type))
+        
+        return cleaned_data
+
 class ComplaintUpdationForm(forms.ModelForm):
 
     class Meta:
         model = Complaint
+        fields = ['status', 'remark', ]
+
+        widgets = {
+            'remark': forms.Textarea(attrs={'rows': 4})
+        }
+
+class MedicalIssueUpdationForm(forms.ModelForm):
+    class Meta:
+        model = MedicalIssue
         fields = ['status', 'remark', ]
 
         widgets = {

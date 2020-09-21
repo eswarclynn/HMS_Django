@@ -22,14 +22,12 @@ class LoginView(SuccessMessageMixin, auth_views.LoginView):
         context['form_title'] = 'Log In'
         return context
 
-class SignUpView(SuccessMessageMixin, CreateView):
+class SignUpView(CreateView):
     template_name = 'django_auth/signup.html'
     form_class = SignUpForm
 
-    success_message = "Sign Up Successful!"
-
     def get_success_url(self):
-        return self.request.user.home_url()
+        return reverse('django_auth:login')
 
     def form_valid(self, form):
         response = super().form_valid(form)

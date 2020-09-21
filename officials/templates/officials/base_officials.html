@@ -42,7 +42,7 @@
         <a href="{% url 'students:home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         {% endif %}
         {% if request.user.is_worker %}
-        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        <a href="{% url 'workers:home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
         {% endif %}
           
       </div>
@@ -80,7 +80,7 @@
       <a href="{% url 'students:outing_list' %}" class="{% if url_name == 'outing_list' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-history" ></i></span> Outing History</a>
     {% endif %}
 
-    <a href="{% url 'workers:medical_issue' %}" target="_blank"><span class="mr-3"><i class="fa fa-medkit"></i></span> Medical Issue</a>
+    <a href="{% url 'complaints:registerMedical' %}" target="_blank"><span class="mr-3"><i class="fa fa-medkit"></i></span> Medical Issue</a>
     <a href="{% url 'complaints:registerComplaint' %}" target="_blank"><span class="mr-3"><i class="fa fa-commenting"></i></span>Register Complaint</a>
     <a href="{% url 'django_auth:logout' %}"><span class="mr-3"><i class="fa fa-sign-out"></i></span>Log Out</a>
   </div>

@@ -14,7 +14,6 @@ class OutingForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
         from_date = cleaned_data.get('fromDate')
         to_date = cleaned_data.get('toDate')
 
@@ -25,7 +24,6 @@ class OutingForm(forms.ModelForm):
 
     def clean_fromDate(self):
         from_date = self.cleaned_data.get('fromDate')
-        print(self.cleaned_data)
         if from_date <= timezone.now():
             raise forms.ValidationError("From Date should be later than the moment!")
         return from_date
