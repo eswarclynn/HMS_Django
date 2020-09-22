@@ -24,25 +24,24 @@
   <nav class="navbar row fixed-top px-4" id="topnav">
     <div class="col-12 p-0 d-flex justify-content-between align-items-center">
       <div class="">
-        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars"
-            style="font-size: 4vh;color: aliceblue;"></span></span>
+        <span style="cursor: pointer;" onclick="openNav()"><span class="fa fa-bars nav-icon"></span></span>
       </div>
   
       <div class="d-flex justify-content-center">
-        <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
-        <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
+        <span class="d-none d-md-block nav-title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
+        <span class="d-block d-md-none nav-title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
       </div>
   
       <div class="">
         
         {% if request.user.is_official %}
-        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        <a href="{% url 'officials:profile' %}"><i class="fa fa-user-circle-o nav-icon"></i></a>
         {% endif %}
         {% if request.user.is_student %}
-        <a href="{% url 'students:home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        <a href="{% url 'students:home' %}"><i class="fa fa-user-circle-o nav-icon"></i></a>
         {% endif %}
         {% if request.user.is_worker %}
-        <a href="{% url 'workers:home' %}"><i class="fa fa-user-circle-o" style="font-size:4vh; color:aliceblue"></i></a>
+        <a href="{% url 'workers:home' %}"><i class="fa fa-user-circle-o nav-icon"></i></a>
         {% endif %}
           
       </div>

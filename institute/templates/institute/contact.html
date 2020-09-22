@@ -1,246 +1,172 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contact Us - Hostel Management System</title>    
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'institute/grid-gallery.css' %}">
-    <link rel="stylesheet" href="{% static 'institute/topnav.css' %}">
-</head>
+{% extends 'institute/base_public_pages.html' %}
 
-<body>
-    <nav class="navbar fixed-top row px-4" id="topnav">
-        <div class="col-0 ">
-            <a href="{% url 'institute:index' %}" style="cursor: pointer;"><span class="fa fa-reply" style="font-size: 4vh;color: aliceblue;" ></span></a>
-        </div>
-        <div class="col-10 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif; line-height: 0 !important;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">NIT Andhra Pradesh - Hostel Management System</span>
-            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-        </div>   
-        <div class="d-none d-md-block" style="position: absolute; top: 15px; right: 10px;"><a href="{% url 'institute:developer-team' %}" class="btn waves-effect waves-light blue">Developer Team</a></div>
-        <div class="d-block d-md-none" style="position: absolute; top: 8px; right: 10px;"><a href="{% url 'institute:developer-team' %}" class="btn-floating waves-effect waves-light blue"><i class="fa fa-code" aria-hidden="true"></i></a></div>
-        
-    </nav>
+{% block title %}Dev Team{% endblock title %}
 
-    <section class="gallery-block grid-gallery" style="padding-top: 60px;">
-        <div class="container-fluid mt-5" >
-            <div class="heading">
-                <h2 style="color: rgb(70, 25, 100);">NIT AP Hostel Committee</h2>
-            </div>
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-5 col-lg-2 d-flex justify-content-center item" >
-                    <div class="main" >
-                        <div class="card" style="height: 410px !important;">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator" src="{% static 'institute/DIN.jpg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Dr. Dinesh P Sankar Reddy<i class="material-icons right">more_vert</i></span>
-                                <p>Registrar</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Dr. Dinesh P Sankar Reddy<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Registrar</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-7975624892<br>
-                                    eMail ID: <a href="mailto:registrar@nitandhra.ac.in">registrar@nitandhra.ac.in</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-2 d-flex justify-content-center item">
-                    <div class="main" >
-                        <div class="card" style="height: 410px !important;">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator" src="{% static 'institute/TR.jpg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Dr. Tejavathu Ramesh<i class="material-icons right">more_vert</i></span>
-                                <p>Deputy Registrar (Hostels)</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Dr. Tejavathu Ramesh<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Deputy Registrar (Hostels)</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-9034003377<br>
-                                    eMail ID: <a href="mailto:dr_hostels@nitandhra.ac.in">dr_hostels@nitandhra.ac.in</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-2 d-flex justify-content-center item">
-                    <div class="main" >
-                        <div class="card" style="height: 410px !important;">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator" src="{% static 'institute/JKM.jpg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Dr. J. Krishnamurthy<i class="material-icons right">more_vert</i></span>
-                                <p>Chief Warden</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Dr. J. Krishnamurthy<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Chief Warden</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-7975624892<br>
-                                    eMail ID: <a href="mailto:chiefwarden@nitandhra.ac.in">chiefwarden@nitandhra.ac.in</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-2 d-flex justify-content-center item ">
-                    <div class="main" >
-                        <div class="card" style="height: 410px !important;">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator" src="{% static 'institute/SRL.jpg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Dr. Ch. Srilatha<i class="material-icons right">more_vert</i></span>
-                                <p>Deputy Chief Warden-Girls</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Dr. Ch. Srilatha<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Deputy Chief Warden-Girls</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-8330967036<br>
-                                    eMail ID: <a href="mailto:srilatha.chebrolu@nitandhra.ac.in">srilatha.chebrolu@nitandhra.ac.in</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-2 d-flex justify-content-center item ">
-                    <div class="main" >
-                        <div class="card" style="height: 410px !important;">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator " src="{% static 'institute/RMD.jpg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Dr. M. Ramudu<i class="material-icons right">more_vert</i></span>
-                                <p>Deputy Chief Warden-Boys</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Dr. M. Ramudu<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Deputy Chief Warden-Boys</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-9949142717<br>
-                                    eMail ID: <a href="mailto:ramudu@nitandhra.ac.in">ramudu@nitandhra.ac.in</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="heading">
-                <h2 style="color: rgb(70, 25, 100);">Incharges</h2>
-            </div>
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-5 col-lg-3 d-flex justify-content-center item">
-                    <div class="main" >
-                        <div class="card">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator" src="{% static 'institute/placeholder.jpeg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Mr. Rakesh Singh<i class="material-icons right">more_vert</i></span>
-                                <p>Security Officer</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Mr. Rakesh Singh<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Security Officer</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-9945636541
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-3 d-flex justify-content-center item ">
-                    <div class="main">
-                        <div class="card">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator" src="{% static 'institute/placeholder.jpeg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Mr. Raghu Ram<i class="material-icons right">more_vert</i></span>
-                                <p>Housekeeping Incharge</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Mr. Raghu Ram<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Housekeeping Incharge</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-9784263011
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-lg-3 d-flex justify-content-center item ">
-                    <div class="main" >
-                        <div class="card">
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <div class="activator" style="width: auto; height: 280px;">
-                                    <img class="activator " src="{% static 'institute/placeholder.jpeg' %}">
-                                </div> 
-                            </div>
-                            <div class="card-content">
-                                <span class="card-title activator grey-text text-darken-4">Mr. Alan Turing<i class="material-icons right">more_vert</i></span>
-                                <p>Mess Incharge</p>
-                            </div>
-                            <div class="card-reveal">
-                                <span class="card-title grey-text text-darken-4">Mr. Alan Turing<i class="material-icons right">close</i></span>
-                                <span class="card-title"><small>Mess Incharge</small></span><br>
-                                <h5>Contact:</h5>
-                                <p>
-                                    Phone: +91-9876543210
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>              
+{% block style_links %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'institute/cards.css' %}">
+{% endblock style_links %}
+
+
+{% block content %}
+<div class="container-fluid my-5 pt-5">
+  <div class="row justify-content-center mx-md-3 p-3">
+    <div class="col-12">
+      <div class="row justify-content-between">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+          <h2 class="d-inline border-bottom border-info">Contact Us!</h2>
         </div>
-    </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-    <script>
-        baguetteBox.run('.grid-gallery', { animation: 'slideIn'});
-    </script>
-</body>
-</html>
+        <div class="col-md-2 text-center text-md-right mt-3 mt-md-0">
+          <a href="{% url 'institute:developers' %}" class="btn btn-primary">Dev Team</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mt-3">
+      <h4 class="text-center">NIT Andhra Pradesh Hostel Committee</h4>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-2 p-3 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'institute/DIN.jpg' %}" alt="Block Image"
+          style="width: auto; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title">Dr. Dinesh P Sankar Reddy</h5>
+          <div class="card-text">
+            <p >Registrar</p>
+          </div>
+          <div class="card-reveal">
+            <h4>Dr. Dinesh P Sankar Reddy</h4>
+            <p >Registrar</p>
+            <h5 class="mt-4">Contact:</h5>
+            <p>Phone: +91-7975624892</p>
+            <p>eMail ID: <a href="mailto:registrar@nitandhra.ac.in">registrar@nitandhra.ac.in</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-2 p-3 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'institute/TR.jpg' %}" alt="Block Image"
+          style="width: auto; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title">Dr. Tejavathu Ramesh</h5>
+          <div class="card-text">
+            <p >Deputy Registrar (Hostels)</p>
+          </div>
+          <div class="card-reveal">
+            <h4>Dr. Tejavathu Ramesh</h4>
+            <p >Deputy Registrar (Hostels)</p>
+            <h5 class="mt-4">Contact:</h5>
+            <p>Phone: +91-9034003377</p>
+            <p>eMail ID: <a href="mailto:dr_hostels@nitandhra.ac.in">dr_hostels@nitandhra.ac.in</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-2 p-3 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'institute/JKM.jpg' %}" alt="Block Image"
+          style="width: auto; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title">Dr. J. Krishnamurthy</h5>
+          <div class="card-text">
+            <p>Chief Warden</p>
+          </div>
+          <div class="card-reveal">
+            <h4>Dr. J. Krishnamurthy</h4>
+            <span>Chief Warden</span>
+            <h5 class="mt-4">Contact:</h5>
+            <p>Phone: +91-7975624892</p>
+            <p>eMail ID: <a href="mailto:chiefwarden@nitandhra.ac.in">chiefwarden@nitandhra.ac.in</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-2 p-3 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'institute/srilatha.jpg' %}" alt="Block Image"
+          style="width: auto; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title">Dr. Srilatha Chebrolu</h5>
+          <div class="card-text">
+            <p>Deputy Chief Warden-Girls</p>
+          </div>
+          <div class="card-reveal">
+            <h4>Dr. Srilatha Chebrolu</h4>
+            <span>Deputy Chief Warden-Girls</span>
+            <h5 class="mt-4">Contact:</h5>
+            <p>Phone: +91-8330967036</p>
+            <p>eMail ID: <a href="mailto:srilatha.chebrolu@nitandhra.ac.in">srilatha.chebrolu@nitandhra.ac.in</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-2 p-3 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'institute/RMD.jpg' %}" alt="Block Image"
+          style="width: auto; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title">Dr. M. Ramudu</h5>
+          <div class="card-text">
+            <p>Deputy Chief Warden-Boys</p>
+          </div>
+          <div class="card-reveal">
+            <h4>Dr. Srilatha Chebrolu</h4>
+            <span>Deputy Chief Warden-Boys</span>
+            <h5 class="mt-4">Contact:</h5>
+            <p>Phone: +91-9949142717</p>
+            <p>eMail ID: <a href="mailto:ramudu@nitandhra.ac.in">ramudu@nitandhra.ac.in</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mx-md-3 p-3 mt-4 border-top border-secondary">
+    <div class="col-12 mt-3">
+      <h4 class="text-center">Hostel Incharges</h4>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-2 p-3 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'institute/placeholder.jpg' %}" alt="Block Image"
+          style="width: auto; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title">Mr. Rakesh Singh</h5>
+          <div class="card-text">
+            <p>Security Officer</p>
+          </div>
+          <div class="card-reveal">
+            <h4>Mr. Rakesh Singh</h4>
+            <span>Security Officer</span>
+            <h5 class="mt-4">Contact:</h5>
+            <p>Phone: +91 9945636541</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4 col-xl-2 p-3 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'institute/placeholder.jpg' %}" alt="Block Image"
+          style="width: auto; height: 250px;">
+        <div class="card-body">
+          <h5 class="card-title">Mr. Raghu Ram</h5>
+          <div class="card-text">
+            <p>Housekeeping Incharge</p>
+          </div>
+          <div class="card-reveal">
+            <h4>Mr. Raghu Ram</h4>
+            <span>Housekeeping Incharge</span>
+            <h5 class="mt-4">Contact:</h5>
+            <p>Phone: +91 9784263011</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script_links %}
+<script src="{% static 'institute/cards.js' %}"></script>
+{% endblock script_links %}

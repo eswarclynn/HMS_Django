@@ -1,0 +1,16 @@
+.card {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.card .card-reveal{    
+    padding: 20px;
+    position: absolute;
+    background-color: #FFF;
+    width: 100%;
+    overflow-y: auto;
+    left:0;
+    bottom:0;
+    height: 100%;
+    z-index: 1;
+    display: none;    
+}
