@@ -24,7 +24,6 @@ def chief_warden_check(user):
 
 # Create your views here.
 @user_passes_test(official_check)
-@csrf_exempt 
 def home(request):
     user = request.user
     official = user.official

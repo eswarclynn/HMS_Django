@@ -1,0 +1,7 @@
+body {
+    background: linear-gradient(to top, #dfe9f3 0%, white 100%) no-repeat center center fixed;
+}
+
+#topnav .nav-title{
+    text-decoration: none;
+}

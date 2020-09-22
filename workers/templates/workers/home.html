@@ -56,7 +56,7 @@
   
           {% for item in complaints %}
           
-          {% if item.model_name == 'Complaints' %}
+          {% if item.model_name == 'Complaint' %}
             <tr data-row-href="{% url 'complaints:complaint_detail' item.id %}">
           {% else %}
             <tr data-row-href="{% url 'complaints:medicalissue_detail' item.id %}">

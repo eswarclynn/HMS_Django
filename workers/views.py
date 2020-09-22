@@ -1,6 +1,5 @@
 from django.shortcuts import redirect, render
 from django.http import Http404, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from workers.models import Worker
 from institute.models import Block, Student, Official
 from complaints.models import Complaint, MedicalIssue
@@ -12,7 +11,6 @@ def worker_check(user):
     return user.is_authenticated and user.is_worker
 
 # Create your views here.
-@csrf_exempt
 @user_passes_test(worker_check)
 def home(request):
     user = request.user

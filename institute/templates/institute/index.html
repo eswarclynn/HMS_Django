@@ -1,60 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Hostel Management System</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+{% extends 'institute/base_public_pages.html' %}
 
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Roboto-->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,500&display=swap" rel="stylesheet"> <!--Montserrat-->
-  {% load static %}
-  <link href="{% static 'institute/index.css' %}" type="text/css" rel="stylesheet"> <!--index.css-->
+{% block title %}Home{% endblock title %}
 
-</head>
+{% block style_links %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'institute/index.css' %}">
+{% endblock style_links %}
 
-<body>
-    <nav class="navbar fixed-top row px-4" id="topnav">
-        <div class="col-12 d-flex justify-content-center">
-            <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">National Institute Of Technology, Andhra Pradesh - Hostel Management System</span>
-            <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-        </div>   
-   </nav>
 
-    <div class="container main-container">
-        <div class="row ">
-            <div class="col d-none d-md-flex align-items-center">
-                <img src="{% static 'institute/bg.jpeg' %}" alt="Institute_Arch" class="img-thumbnail" style="width:inherit;">
-            </div>
-            <div class="col p-5">
-                <h4 style="color: black; font-weight:800; margin-bottom: 1.3em;" class="text-center">NATIONAL INSTITUTE OF TECHNOLOGY, ANDHRA PRADESH<br> - HOSTEL MANAGEMENT SYSTEM</h4>              
-                <div class="row">
-                    <div class="col-6 text-center text-md-right">
-                        <a href="{% url 'django_auth:login'%}"><button class="link-item">Log In</button></a>
-                    </div>
-                    <div class="col text-center text-md-left">
-                        <a href="{% url 'django_auth:signup' %}"><button class="link-item">Sign Up</button></a>
-                    </div>
-                </div>
-                <div class="row mt-5 text-center">
-                    <div class="col-12">
-                        <a href="{% url 'institute:gallery' %}" class="small"><button class="link-item">Gallery - Take a look</button></a>
-                    </div>
-                    <div class="col-12 mt-2">
-                        <a href="{% url 'institute:hostels' %}" class="small"><button class="link-item">Blocks Informations</button></a>
-                    </div>
-                    <div class="col-12 mt-2">
-                        <a href="{% url 'institute:contact' %}" class="small"><button class="link-item">Contact Us!</button></a>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
+{% block content %}  
+<div class="container main-container">
+  <div class="row">
+    <div class="col d-none d-md-flex align-items-center">
+      <img src="{% static 'institute/bg.jpeg' %}" alt="Institute_Arch" class="img-thumbnail" style="width:inherit;">
     </div>
-</body>
-</html>
+    <div class="col p-md-5">
+      <h4 style="color: black; font-weight:800; margin-bottom: 1.3em;" class="text-center">NATIONAL INSTITUTE OF TECHNOLOGY, ANDHRA PRADESH<br> - HOSTEL MANAGEMENT SYSTEM</h4>
+      <div class="row">
+        <div class="col-6 text-center text-md-right">
+          <a href="{% url 'django_auth:login'%}"><button class="link-item">Log In</button></a>
+        </div>
+        <div class="col text-center text-md-left">
+          <a href="{% url 'django_auth:signup' %}"><button class="link-item">Sign Up</button></a>
+        </div>
+      </div>
+      <div class="row mt-5 text-center">
+        <div class="col-12">
+          <a href="{% url 'institute:gallery' %}" class="small"><button class="link-item">Gallery - Take a look</button></a>
+        </div>
+        <div class="col-12 mt-2">
+          <a href="{% url 'institute:hostels' %}" class="small"><button class="link-item">Blocks Informations</button></a>
+        </div>
+        <div class="col-12 mt-2">
+          <a href="{% url 'institute:contact' %}" class="small"><button class="link-item">Contact Us!</button></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}
+  

@@ -1,93 +1,75 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Gallery - Hostel Management System</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% extends 'institute/base_public_pages.html' %}
 
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'institute/grid-gallery.css' %}">
-        <link rel="stylesheet" href="{% static 'institute/topnav.css' %}">
-    </head>
+{% block title %}Gallery{% endblock title %}
 
-    <body>
 
-        <nav class="navbar fixed-top row px-4" id="topnav">
-            <div class="col-0 ">
-                <a href="{% url 'institute:index' %}" style="cursor: pointer;"><span class="fa fa-reply" style="font-size: 4vh;color: aliceblue;" ></span></a>
-            </div>
-            <div class="col-10 d-flex justify-content-center">
-                <span class="d-none d-md-block " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-3">National Institute Of Technology, Andhra Pradesh - Hostel Management System</span>
-                <span class="d-block d-md-none " style="color:darkorange; font-family: 'Bree Serif', serif;" id="title"><img src="{% static 'officials/logo_small.png' %}" alt="Institute Logo" class="mr-2">NIT AP - Hostels</span>
-            </div>   
-            <div class="col-0"></div>
-       </nav>
+{% block style_links %}
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css" />
+<link rel="stylesheet" href="{% static 'institute/grid-gallery.css' %}">
+{% endblock style_links %}
 
-        <br><br>
 
-        <section class="gallery-block grid-gallery"  style="padding-top: 40px;">
-            <div class="container">
-                <div class="heading">
-                    <h2 style="color: rgb(70, 25, 100);">NIT AP Hostels Gallery</h2>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img1.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img1.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img2.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img2.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img6.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img6.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img4.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img4.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img5.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img5.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img3.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img3.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img7.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img7.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href=".{% static 'institute/img10.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img10.jpg' %}">
-                        </a>
-                    </div>
-                    <div class="col-md-6 col-lg-4 item">
-                        <a class="lightbox" href="{% static 'institute/img9.jpg' %}">
-                            <img class="img-fluid image scale-on-hover" src="{% static 'institute/img9.jpg' %}">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-        <script>
-            baguetteBox.run('.grid-gallery', { animation: 'slideIn'});
-        </script>
-    </body>
-</html>
+{% block content %}
+<section class="gallery-block grid-gallery my-5 pt-5">
+  <div class="container">
+    <div class="heading">
+      <h2 class="mb-4">NIT AP Hostels Gallery</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img1.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img1.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img2.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img2.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img6.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img6.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img4.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img4.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img5.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img5.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img3.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img3.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img7.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img7.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href=".{% static 'institute/img10.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img10.jpg' %}">
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4 item d-flex justify-content-center">
+        <a class="lightbox" href="{% static 'institute/img9.jpg' %}">
+          <img class="img-fluid image scale-on-hover" src="{% static 'institute/img9.jpg' %}">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+{% block script_links %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+<script>
+  baguetteBox.run('.grid-gallery', { animation: 'slideIn' });
+</script>
+{% endblock script_links %}
