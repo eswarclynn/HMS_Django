@@ -64,7 +64,9 @@ class PasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, auth_views.Pas
 class PasswordResetView(auth_views.PasswordResetView):
     template_name = 'django_auth/password_change.html'
     subject_template_name = 'django_auth/password_reset_subject.txt'
-    email_template_name = 'django_auth/password_reset_email.html'
+    email_template_name = 'django_auth/password_reset_email_text.html'
+    html_email_template_name = 'django_auth/password_reset_email_html.html'
+    success_url = reverse_lazy('django_auth:password_reset_done')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,6 +83,7 @@ class PasswordResetDoneView(auth_views.PasswordResetDoneView):
 
 class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     template_name = 'django_auth/password_reset_confirm.html'
+    success_url = reverse_lazy('django_auth:password_reset_complete')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
