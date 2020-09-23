@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import views as auth_views
 from django.views.generic.edit import CreateView
 from django.views.generic import TemplateView
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
@@ -32,7 +33,7 @@ class SignUpView(CreateView):
     form_class = SignUpForm
 
     def get_success_url(self):
-        return reverse('django_auth:login')
+        return reverse('django_auth:account_activation_sent')
 
     def form_valid(self, form):
         form.instance.is_active = False
@@ -48,13 +49,14 @@ class SignUpView(CreateView):
         is_student = form.cleaned_data.get('is_student')
         is_official = form.cleaned_data.get('is_official')
         is_worker = form.cleaned_data.get('is_worker')
-        entity_id = form.cleaned_data.get('entity_id')
+        email = form.cleaned_data.get('email')
+
         if is_student:
-            Student.objects.filter(regd_no = entity_id).update(user = form.instance)
+            Student.objects.filter(account_email = email).update(user = form.instance)
         elif is_official:
-            Official.objects.filter(emp_id = entity_id).update(user = form.instance)
+            Official.objects.filter(account_email = email).update(user = form.instance)
         elif is_worker:
-            Worker.objects.filter(staff_id = entity_id).update(user = form.instance)
+            Worker.objects.filter(account_email = email).update(user = form.instance)
 
         return response
     
@@ -74,6 +76,7 @@ def account_activate(request, uidb64, token):
         user.is_active = True
         user.email_confirmed = True
         user.save()
+        messages.success(request, 'Account email verified!')
         login(request, user)
         return redirect(user.home_url())
     else:
@@ -84,7 +87,7 @@ class ActivationEmailSent(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_title'] = 'Change Password'
+        context['form_title'] = 'Account Activation Email sent'
         return context
 
 class PasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, auth_views.PasswordChangeView):
