@@ -1,0 +1,15 @@
+{% extends 'django_auth/mail_template.html' %}
+
+{% block title %}Activate Account{% endblock title %}
+
+{% block content %}
+<p>Tap the button below to verify your email and activate your account. </p>
+<a href="{{ protocol }}://{{ domain }}{% url 'django_auth:account_activate' uidb64=uid token=token %}" target="_blank" class="btn">Reset Password</a>
+<p>If that doesn't work, copy and paste the following link in your browser:</p>
+<p><a href="{{ protocol }}://{{ domain }}{% url 'django_auth:account_activate' uidb64=uid token=token %}" target="_blank">{{ protocol }}://{{ domain }}{% url 'django_auth:account_activate' uidb64=uid token=token %}</a></p>
+{% endblock content %}
+                
+
+{% block footer %}
+If you do not recognize this activity, kindly contact us at <a href="mailto:chiefwarden@nitandhra.ac.in">chiefwarden@nitandhra.ac.in</a>
+{% endblock footer %}

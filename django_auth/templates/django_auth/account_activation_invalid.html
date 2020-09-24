@@ -1,0 +1,11 @@
+{% extends 'officials/base_public_forms.html' %}
+{% block title %}{{ form_title }}{% endblock title %}
+
+{% block content %}
+<div class="card-body text-center">
+	Uh oh! Seems like you followed the wrong link. <span class="text-primary">Please verify the link from your inbox!</span>
+</div>
+<div class="card-footer text-center p-4">
+	<a href="{% url 'django_auth:login' %}" class="btn btn-warning px-4 py-2">Login</a>
+</div>
+{% endblock content %}

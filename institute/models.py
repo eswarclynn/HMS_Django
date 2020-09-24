@@ -34,10 +34,11 @@ class Student(models.Model):
     )
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    account_email = models.EmailField(unique=True, null=False)
     regd_no = models.CharField(unique=True, null=False, max_length=20)
     roll_no = models.CharField(unique=True, null=False, max_length=20)
     name = models.CharField(max_length=100, null=False)
-    email = models.EmailField(null=False)
+    email = models.EmailField(null=True, blank=True)
     branch = models.CharField(max_length=3,choices=BRANCH,null=False)
     gender = models.CharField(max_length=7,choices=GENDER,null=False)
     pwd = models.BooleanField(null=False, default=False)
@@ -95,12 +96,14 @@ class Official(models.Model):
     )
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    account_email = models.EmailField(unique=True, null=False)
     emp_id = models.CharField(unique=True,null=False, max_length=20)
     name = models.CharField(max_length=100)
     designation = models.CharField(max_length=20,choices=EMP)
     branch=models.CharField(max_length=20,choices=BRANCH)
     phone = models.CharField(max_length=10, null=False)
-    email = models.EmailField(null=False)
+    email = models.EmailField(null=True, blank=True)
+    block = models.ForeignKey('institute.Block', on_delete=models.SET_NULL, null=True, blank=True)
 
     def is_chief(self):
         return (self.designation == 'Deputy Chief-Warden' or self.designation == 'Chief-Warden')
@@ -122,11 +125,6 @@ class Block(models.Model):
         ('Female','Female'),
      )
 
-    caretaker = models.OneToOneField(
-        Official,
-        on_delete=models.CASCADE,
-        null=True, blank=True
-    )
     block_id = models.CharField(unique=True, max_length=20)
     name = models.CharField(max_length=50,null=False)
     room_type = models.CharField(max_length=2,choices=OPTION)
@@ -146,3 +144,6 @@ class Block(models.Model):
 
     def students(self):
         return RoomDetail.objects.filter(block=self)
+
+    def caretaker(self):
+        return self.official_set.all().first()

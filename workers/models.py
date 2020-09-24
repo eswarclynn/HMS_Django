@@ -19,6 +19,7 @@ class Worker(models.Model):
     )
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    account_email = models.EmailField(unique=True, null=False)
     staff_id = models.CharField(unique=True, null=False, max_length=20)
     name = models.CharField(max_length=100, null=False)
     designation = models.CharField(max_length=50,choices=EMP)
