@@ -23,7 +23,7 @@ class StudentForm(forms.ModelForm):
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
             'dop': forms.DateInput(attrs={'type': 'date'}),
-            'address': forms.Textarea(attrs={'rows': 8}),
+            'address': forms.Textarea(attrs={'rows': 5}),
         }
 
         labels = {

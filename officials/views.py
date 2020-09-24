@@ -322,7 +322,7 @@ class OfficialListView(ChiefWardenTestMixin, ListView):
 class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
     model = Official
-    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'email']
+    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'account_email', 'email']
     success_url = reverse_lazy('officials:emp_list')
 
     def get_context_data(self, **kwargs):
@@ -333,7 +333,7 @@ class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
 class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/official-register-form.html'
     model = Official
-    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'email']
+    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'account_email', 'email']
     success_url = reverse_lazy('officials:emp_list')
 
     def get_context_data(self, **kwargs):
@@ -352,7 +352,7 @@ class WorkerListView(ChiefWardenTestMixin, ListView):
 class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
     model = Worker
-    fields = ['staff_id', 'name', 'designation', 'email', 'phone', 'gender', 'block']
+    fields = ['staff_id', 'name', 'designation', 'account_email', 'email', 'phone', 'gender', 'block']
     success_url = reverse_lazy('officials:workers_list')
 
     def get_context_data(self, **kwargs):
@@ -363,7 +363,7 @@ class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
 class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/official-register-form.html'
     model = Worker
-    fields = ['staff_id', 'name', 'designation', 'email', 'phone', 'gender', 'block']
+    fields = ['staff_id', 'name', 'designation', 'account_email', 'email', 'phone', 'gender', 'block']
     success_url = reverse_lazy('officials:workers_list')
 
     def get_context_data(self, **kwargs):

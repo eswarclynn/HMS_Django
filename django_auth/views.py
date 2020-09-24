@@ -1,24 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import views as auth_views
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, FormView
 from django.views.generic import TemplateView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from .models import User
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm, ActivationEmailForm
 from institute.models import Student, Official
 from workers.models import Worker
-from django.contrib.auth import login
+from django.contrib.auth import login, get_user_model
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from .tokens import account_activation_token
+
+User = get_user_model()
 
 # Create your views here.
 
 class LoginView(SuccessMessageMixin, auth_views.LoginView):
     template_name='django_auth/login.html'
+    form_class = LoginForm
 
     def get_success_url(self):
         return self.request.user.home_url()
@@ -36,7 +39,6 @@ class SignUpView(CreateView):
         return reverse('django_auth:account_activation_sent')
 
     def form_valid(self, form):
-        form.instance.is_active = False
         form.instance.email_confirmed = False
 
         response = super().form_valid(form)
@@ -52,13 +54,13 @@ class SignUpView(CreateView):
         email = form.cleaned_data.get('email')
 
         if is_student:
-            Student.objects.filter(account_email = email).update(user = form.instance)
+            Student.objects.filter(account_email = email).update(user = user)
         elif is_official:
-            Official.objects.filter(account_email = email).update(user = form.instance)
+            Official.objects.filter(account_email = email).update(user = user)
         elif is_worker:
-            Worker.objects.filter(account_email = email).update(user = form.instance)
+            Worker.objects.filter(account_email = email).update(user = user)
 
-        return response
+        return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
@@ -73,7 +75,6 @@ def account_activate(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
         user.email_confirmed = True
         user.save()
         messages.success(request, 'Account email verified!')
@@ -82,7 +83,25 @@ def account_activate(request, uidb64, token):
     else:
         return render(request, 'django_auth/account_activation_invalid.html', {'form_title': 'Account Activation Failed'})
 
-class ActivationEmailSent(TemplateView):
+class ActivationEmailResendView(FormView):
+    template_name = 'django_auth/password_change.html'
+    form_class = ActivationEmailForm
+    success_url = reverse_lazy('django_auth:account_activation_sent')
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        users = User.objects.filter(email = email, is_active = True, email_confirmed = False)
+        for user in users:
+            user.send_activation_email(self.request)
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = 'Send Account Activation Email'
+        return context
+
+class ActivationEmailSentView(TemplateView):
     template_name = 'django_auth/account_activation_sent.html'
 
     def get_context_data(self, **kwargs):
