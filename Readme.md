@@ -24,14 +24,14 @@ APP_EMAIL_PASSWORD=<placeholder_email_password>
 ```
 Key generated at https://miniwebtool.com/django-secret-key-generator/
 
-#### Setup MySQL DB (In MySQL CLI or Workbench)
+#### Setup MySQL DB(In MySQL CLI or Workbench)
  - `CREATE SCHEMA hosteldb;`
  - `CREATE USER 'hosteladmin'@'localhost' IDENTIFIED WITH mysql_native_password BY '12345';`
  - `grant all on hosteldb.* to 'hosteladmin'@'localhost';`
  - `flush privileges;`
  - Please follow instructions given at https://medium.com/@omaraamir19966/connect-django-with-mysql-database-f946d0f6f9e3 to install **mysqlclient** inside PreferredDirectory/HMS_Django
 
-#### Migrate, Superuser and Run Server(CMD/Terminal at PreferredDirectory/HMS_Django)
+#### Migrate, Create Superuser and Run Server(CMD/Terminal at PreferredDirectory/HMS_Django)
  - `python manage.py migrate`
  - `python manage.py createsuperuser`
  - Fill in required details
