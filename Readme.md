@@ -1,5 +1,9 @@
 ## Hostel Management System - National Institute of Technology, Andhra Pradesh
 
+A hostel management system for paperless and reliable management of hostels. To be deployed at the Hostels of National Institute of Technology, Andhra Pradesh.
+
+Hosted at: http://hmsepc.herokuapp.com/
+
 ### Dev Environment Setup - Windows: 
 
 **Requires python and pip**
