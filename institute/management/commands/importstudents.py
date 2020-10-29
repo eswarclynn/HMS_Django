@@ -1,5 +1,4 @@
-import os
-import csv
+import os, csv, traceback
 from django.utils import timezone
 from django.core.management.base import BaseCommand, CommandError
 from institute.models import Student
@@ -14,7 +13,7 @@ class Command(BaseCommand):
 
     def convert_date(self, date):
         month, day, year = list(map(lambda x: int(x), date.split("/")))
-        return timezone.datetime(year=year, month=month, day=day)
+        return timezone.datetime(year=year, month=month, day=day) + "st"
 
     def add_arguments(self, parser):
         parser.add_argument("file_name", nargs="+", type=str)
@@ -52,7 +51,9 @@ class Command(BaseCommand):
 
                     except Exception as e:
                         if data["StudentID"]:
-                            print("Error while inserting student {} - {}: {}".format(data["StudentID"], data["FullName"], e))
+                            print("Error while inserting student {} - {}".format(data["StudentID"], data["FullName"]))
+                            traceback.print_exc()
+                            print()
                         else:
                             pass
                         rejected += 1 
