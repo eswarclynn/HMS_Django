@@ -25,8 +25,8 @@ def student_check(user):
 def home(request):
     user = request.user
     student = user.student
-    present_dates_count = len(student.attendance.present_dates.split(','))
-    absent_dates_count = len(student.attendance.absent_dates.split(','))
+    present_dates_count = (student.attendance.present_dates and len(student.attendance.present_dates.split(','))) or 0
+    absent_dates_count = (student.attendance.absent_dates and len(student.attendance.absent_dates.split(','))) or 0
     outing_count = len(student.outing_set.all())
     complaints = Complaint.objects.filter(entity_id = student.regd_no, status="Registered") | Complaint.objects.filter(entity_id = student.regd_no, status="Processing")
 
