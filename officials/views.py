@@ -33,9 +33,7 @@ def home(request):
         complaints = Complaint.objects.filter(status='Registered') | Complaint.objects.filter(status='Processing')
 
     else:
-        try:
-            block_details = official.block
-        except Block.DoesNotExist:
+        if not official.block: 
             raise Http404('You are currently not appointed any block! Please contact Admin')
 
         student_rooms = official.block.roomdetail_set.all()
