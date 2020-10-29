@@ -3,7 +3,7 @@ from institute.models import Student
 from .models import Complaint, MedicalIssue
 
 class ComplaintCreationForm(forms.ModelForm):
-    complainee_id = forms.IntegerField(required=False)
+    complainee_id = forms.IntegerField(required=False, help_text='Only for Indisciplinary, Discrimination/Harassment or Damage to property complaints.')
     class Meta:
         model = Complaint
         fields = ['type', 'complainee_id', 'summary', 'detailed']

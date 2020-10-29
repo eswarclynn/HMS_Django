@@ -84,7 +84,7 @@ class OutingUpdateView(StudentTestMixin, SuccessMessageMixin, UpdateView):
 @user_passes_test(student_check)
 def attendance_history(request):
     student = request.user.student
-    if student.attendance.present_dates: present_dates = student.attendance.present_dates.split(',') 
-    if student.attendance.absent_dates: absent_dates = student.attendance.absent_dates.split(',')
+    present_dates = (student.attendance.present_dates and student.attendance.present_dates.split(',')) or None
+    absent_dates = (student.attendance.absent_dates and student.attendance.absent_dates.split(',')) or None
 
     return render(request, 'students/attendance_history.html', {'student': student, 'present_dates': present_dates, 'absent_dates': absent_dates})

@@ -40,7 +40,7 @@ class ComplaintCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return self.request.user.home_url()
 
     def form_valid(self, form):
-        form.instance.entity_id = (self.request.user.is_student and self.request.student.regd_no) or \
+        form.instance.entity_id = (self.request.user.is_student and self.request.user.student.regd_no) or \
                                     (self.request.user.is_official and self.request.user.official.emp_id) or \
                                     (self.request.user.is_worker and self.request.user.worker.staff_id)
         form.instance.entity_type = (self.request.user.is_student and 'Student') or \
