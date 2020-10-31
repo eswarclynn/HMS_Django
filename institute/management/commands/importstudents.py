@@ -26,16 +26,17 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS("Reading: {}".format(file_path)))
                 
                 created, rejected = [0, 0]
-                for index, data in enumerate(csv_reader):
+                for data in csv_reader:
                     try:
                         # TODO: Modify Model to hold null data for blood group, community, 
                         # Required values for roll_no, year, branch, institute email, 
                         student = Student()
                         student.regd_no = data["StudentID"]
-                        student.roll_no = data["StudentID"]
+                        student.roll_no = data["roll_no"]
                         student.name = data["FullName"]
-                        student.year = data["Year"]
-                        student.account_email = "{}@student.nitandhra.ac.in".format(data["StudentID"])
+                        student.year = data["year"]
+                        student.branch = data["branch"]
+                        student.account_email = "{}@student.nitandhra.ac.in".format(student.roll_no)
                         student.email = data["StudentEmail"]
                         student.address = data["Address"]
                         student.phone = data["StudentMobile"]
