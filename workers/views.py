@@ -1,10 +1,7 @@
 from django.shortcuts import redirect, render
-from django.http import Http404, HttpResponse
+from django.core.exceptions import PermissionDenied
 from workers.models import Worker
-from institute.models import Block, Student, Official
 from complaints.models import Complaint, MedicalIssue
-from students.models import RoomDetail
-from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
 
 def worker_check(user):
@@ -18,9 +15,11 @@ def home(request):
 
     if worker.designation == 'Electrician':
         complaints = Complaint.objects.filter(type='Electrical', status='Registered') | Complaint.objects.filter(type='Electrical', status='Processing')
-    if worker.designation == 'Mess Incharge':
+    elif worker.designation == 'Mess Incharge':
         complaints = Complaint.objects.filter(type='Food Issues', status='Registered') | Complaint.objects.filter(type='Food Issues', status='Processing')
-    if worker.designation == 'Doctor':
+    elif worker.designation == 'Doctor':
         complaints = MedicalIssue.objects.filter(status='Registered')
+    else:
+        raise PermissionDenied
 
     return render(request, 'workers/home.html', {'worker': worker, 'complaints': complaints,})

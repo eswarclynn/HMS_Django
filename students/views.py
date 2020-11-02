@@ -25,8 +25,8 @@ def student_check(user):
 def home(request):
     user = request.user
     student = user.student
-    present_dates_count = len(student.attendance.present_dates.split(','))
-    absent_dates_count = len(student.attendance.absent_dates.split(','))
+    present_dates_count = (student.attendance.present_dates and len(student.attendance.present_dates.split(','))) or 0
+    absent_dates_count = (student.attendance.absent_dates and len(student.attendance.absent_dates.split(','))) or 0
     outing_count = len(student.outing_set.all())
     complaints = Complaint.objects.filter(entity_id = student.regd_no, status="Registered") | Complaint.objects.filter(entity_id = student.regd_no, status="Processing")
 
@@ -84,7 +84,7 @@ class OutingUpdateView(StudentTestMixin, SuccessMessageMixin, UpdateView):
 @user_passes_test(student_check)
 def attendance_history(request):
     student = request.user.student
-    if student.attendance.present_dates: present_dates = student.attendance.present_dates.split(',') 
-    if student.attendance.absent_dates: absent_dates = student.attendance.absent_dates.split(',')
+    present_dates = (student.attendance.present_dates and student.attendance.present_dates.split(',')) or None
+    absent_dates = (student.attendance.absent_dates and student.attendance.absent_dates.split(',')) or None
 
     return render(request, 'students/attendance_history.html', {'student': student, 'present_dates': present_dates, 'absent_dates': absent_dates})
