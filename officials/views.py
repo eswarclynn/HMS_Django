@@ -16,10 +16,7 @@ def official_check(user):
     return user.is_authenticated and user.is_official
 
 def chief_warden_check(user):
-    if official_check(user):
-        official = user.official
-        chief_check = official.designation == 'Deputy Chief-Warden' or official.designation == 'Chief-Warden'
-    return official_check(user) and chief_check
+    return official_check(user) and user.official.is_chief()
 
 
 # Create your views here.
@@ -320,7 +317,7 @@ class OfficialListView(ChiefWardenTestMixin, ListView):
 class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
     model = Official
-    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'account_email', 'email']
+    fields = ['emp_id', 'name', 'designation', 'phone', 'account_email', 'email']
     success_url = reverse_lazy('officials:emp_list')
 
     def get_context_data(self, **kwargs):
@@ -331,7 +328,7 @@ class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
 class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/official-register-form.html'
     model = Official
-    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'account_email', 'email']
+    fields = ['emp_id', 'name', 'designation', 'phone', 'account_email', 'email']
     success_url = reverse_lazy('officials:emp_list')
 
     def get_context_data(self, **kwargs):
