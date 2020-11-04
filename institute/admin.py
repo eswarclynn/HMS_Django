@@ -6,7 +6,7 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ('regd_no', 'name', 'user', 'roll_no', 'year', 'branch','gender', 'phone')
 
 class OfficialAdmin(admin.ModelAdmin):
-    list_display = ('emp_id', 'name', 'user', 'designation', 'branch', 'phone', 'block')
+    list_display = ('emp_id', 'name', 'user', 'designation', 'phone', 'block')
 
 class BlocksAdmin(admin.ModelAdmin):
     list_display = ('block_id', 'name', 'room_type', 'gender', 'capacity')

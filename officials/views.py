@@ -320,7 +320,7 @@ class OfficialListView(ChiefWardenTestMixin, ListView):
 class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
     model = Official
-    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'account_email', 'email']
+    fields = ['emp_id', 'name', 'designation', 'phone', 'account_email', 'email']
     success_url = reverse_lazy('officials:emp_list')
 
     def get_context_data(self, **kwargs):
@@ -331,7 +331,7 @@ class OfficialRegisterView(ChiefWardenTestMixin, CreateView):
 class OfficialUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/official-register-form.html'
     model = Official
-    fields = ['emp_id', 'name', 'designation', 'branch', 'phone', 'account_email', 'email']
+    fields = ['emp_id', 'name', 'designation', 'phone', 'account_email', 'email']
     success_url = reverse_lazy('officials:emp_list')
 
     def get_context_data(self, **kwargs):

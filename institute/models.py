@@ -1,5 +1,6 @@
 from django.db import models
-from students.models import RoomDetail, Attendance
+from django.core.exceptions import ValidationError
+from students.models import Document, FeeDetail, RoomDetail, Attendance
 from django.conf import settings
 
 # Create your models here.
@@ -11,26 +12,9 @@ class Student(models.Model):
         (4, 4),
     )
 
-    BRANCH=(
-        ('CSE','Computer Science and Engineering'),
-        ('ECE','Electronics and Communication Engineering'),
-        ('EEE','Electrical and Electronics Engineering'),
-        ('CHE','Chemical Engineering'),
-        ('MME','Metallurgical and Materials Engineering'),
-        ('MEC','Mechanical Engineering'),
-        ('CIV','Civil Engineering'),
-        ('BIO','Biotechnology'),
-    )
     GENDER=(
         ('Male','Male'),
         ('Female','Female'),
-    )
-    COMMUNITY = (
-        ('GEN', 'GEN'),
-        ('OBC', 'OBC'),
-        ('SC', 'SC'),
-        ('ST', 'ST'),
-        ('EWS', 'EWS')
     )
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -39,28 +23,21 @@ class Student(models.Model):
     roll_no = models.CharField(unique=True, null=False, max_length=20)
     name = models.CharField(max_length=100, null=False)
     email = models.EmailField(null=True, blank=True)
-    branch = models.CharField(max_length=3,choices=BRANCH,null=False)
+    year = models.IntegerField(null=False, choices=YEAR)
+    branch = models.CharField(max_length=40,null=False)
     gender = models.CharField(max_length=7,choices=GENDER,null=False)
     pwd = models.BooleanField(null=False, default=False)
-    community = models.CharField(max_length=25, choices=COMMUNITY, null=False)
-    year = models.IntegerField(null=False, choices=YEAR)
+    community = models.CharField(max_length=25, null=True, blank=True)
     dob = models.DateField(null=False)
-    blood_group = models.CharField(max_length=25,null=False)
+    blood_group = models.CharField(max_length=25, null=True, blank=True)
+    father_name = models.CharField(max_length=100, null=True, blank=True)
+    mother_name = models.CharField(max_length=100, null=True, blank=True)
     phone = models.CharField(null=False, max_length=10)
     parents_phone = models.CharField(null=False, max_length=10)
-    emergency_phone = models.CharField(null=False, max_length=10)
-    address = models.CharField(max_length=100,null=False)
-    photo = models.FileField(null=True, blank=True)
+    emergency_phone = models.CharField(null=True, blank=True, max_length=10)
+    address = models.TextField(null=False)
+    photo = models.ImageField(null=True, blank=True)
     is_hosteller = models.BooleanField(null=False, default=True)
-    has_paid = models.BooleanField(null=True, default=False)
-    amount_paid = models.FloatField(null=True, blank=True,default=0)
-    bank = models.CharField(max_length=100,null=True, blank=True)
-    challan_no = models.CharField(max_length=64,null=True, blank=True)
-    dop = models.DateField(null=True, blank=True)
-    application = models.FileField(null=True, blank=True)
-    undertaking_form = models.FileField(null=True, blank=True)
-    receipt = models.FileField(null=True, blank=True)
-    affidavit = models.FileField(null=True, blank=True)
 
     def __str__(self):
         return str(self.regd_no)
@@ -69,9 +46,13 @@ class Student(models.Model):
         super().save(*args, **kwargs)
 
         if not RoomDetail.objects.filter(student = self).exists():
-            det = RoomDetail.objects.create(student=self)
+            RoomDetail.objects.create(student=self)
         if not Attendance.objects.filter(student = self).exists():
-            att = Attendance.objects.create(student=self)
+            Attendance.objects.create(student=self)
+        if not Document.objects.filter(student = self).exists():
+            Document.objects.create(student = self)
+        if not FeeDetail.objects.filter(student = self).exists():
+            FeeDetail.objects.create(student = self)
 
 
 class Official(models.Model):
@@ -80,19 +61,6 @@ class Official(models.Model):
         ('Warden','Warden'),
         ('Deputy Chief-Warden', 'Deputy Chief-Warden'),
         ('Chief-Warden','Chief-Warden'),
-
-    )
-    BRANCH=(
-        ('CSE','Computer Science and Engineering'),
-        ('ECE','Electronics and Communication Engineering'),
-        ('EEE','Electrical and Electronics Engineering'),
-        ('CHE','Chemical Engineering'),
-        ('MME','Metallurgical and Materials Engineering'),
-        ('MEC','Mechanical Engineering'),
-        ('CIV','Civil Engineering'),
-        ('BIO','Biotechnology'),
-        ('SOS', 'School of Sciences'),
-        ('SHM', 'School of Humanities and Management')
     )
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -100,7 +68,6 @@ class Official(models.Model):
     emp_id = models.CharField(unique=True,null=False, max_length=20)
     name = models.CharField(max_length=100)
     designation = models.CharField(max_length=20,choices=EMP)
-    branch=models.CharField(max_length=20,choices=BRANCH)
     phone = models.CharField(max_length=10, null=False)
     email = models.EmailField(null=True, blank=True)
     block = models.ForeignKey('institute.Block', on_delete=models.SET_NULL, null=True, blank=True)
@@ -108,6 +75,9 @@ class Official(models.Model):
     def is_chief(self):
         return (self.designation == 'Deputy Chief-Warden' or self.designation == 'Chief-Warden')
 
+    def clean(self):
+        if self.is_chief() and self.block != None:
+            raise ValidationError('Chief Warden and Deputy Chief Warden cannot be assigned a block.')
 
     def __str__(self):
         return str(self.emp_id)

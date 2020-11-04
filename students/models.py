@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.base import Model
 from django.utils import timezone
 
 # Create your models here.
@@ -81,3 +82,24 @@ class Outing(models.Model):
 
     class Meta:
         ordering = ['-fromDate']
+
+class Document(models.Model):
+    student = models.OneToOneField('institute.Student', on_delete=models.CASCADE, null=False)
+    application = models.FileField(null=True, blank=True)
+    undertaking_form = models.FileField(null=True, blank=True)
+    receipt = models.FileField(null=True, blank=True)
+    day_scholar_affidavit = models.FileField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return 'Document: {} - {}'.format(self.id, self.student.regd_no)
+
+class FeeDetail(models.Model):
+    student = models.OneToOneField('institute.Student', on_delete=models.CASCADE, null=False)
+    has_paid = models.BooleanField(null=True, default=False)
+    amount_paid = models.FloatField(null=True, blank=True,default=0)
+    bank = models.CharField(max_length=100,null=True, blank=True)
+    challan_no = models.CharField(max_length=64,null=True, blank=True)
+    dop = models.DateField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return 'Bank Detail: {} - {}'.format(self.id, self.student.regd_no)
