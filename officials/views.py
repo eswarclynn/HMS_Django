@@ -16,10 +16,7 @@ def official_check(user):
     return user.is_authenticated and user.is_official
 
 def chief_warden_check(user):
-    if official_check(user):
-        official = user.official
-        chief_check = official.designation == 'Deputy Chief-Warden' or official.designation == 'Chief-Warden'
-    return official_check(user) and chief_check
+    return official_check(user) and user.official.is_chief()
 
 
 # Create your views here.
