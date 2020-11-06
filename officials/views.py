@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_exempt
@@ -184,14 +185,18 @@ def blockSearch(request):
             try:
                 student = Student.objects.get(regd_no = request.POST.get('regd_no'))
                 room_detail = student.roomdetail
-                if room_detail.block:
+                if room_detail.block and room_detail.room():
                     messages.error(request, f'Student {student.regd_no} already alloted room in {room_detail.block.name} {room_detail.room()}!')
                 else:
                     room_detail.block = block
                     room_detail.floor = request.POST.get('floor')
                     room_detail.room_no = request.POST.get('room_no')
+                    room_detail.full_clean()
                     room_detail.save()
                     messages.success(request, f'Student {student.regd_no} successfully alloted room in {room_detail.block.name} {room_detail.room()}!')
+            except ValidationError as error:
+                for message in error.messages:
+                    messages.error(request, message)
             except Student.DoesNotExist:
                 messages.error(request, f'Student not found!')
 

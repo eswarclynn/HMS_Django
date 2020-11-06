@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.base import Model
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 # Create your models here.
@@ -24,6 +24,22 @@ class RoomDetail(models.Model):
             floor = floor[0],
             room = self.room_no or 0
         )
+
+    def clean(self):
+        student = self.student
+        block = self.block
+        def valid_gender(student, block):
+            return student.gender == block.gender
+        
+        def valid_year(student, block):
+            return  ((student.year == 1 and block.room_type == '4S') or \
+                    ((student.year == 2 or student.year == 3) and block.room_type == '2S') or \
+                    (student.year == 4 and block.room_type == '1s'))
+
+        if block and not valid_gender(student, block):
+            raise ValidationError("{} Student cannot be placed in {} block!".format(student.gender, block.gender))
+        if block and not valid_year(student, block):
+            raise ValidationError("Year: {} Student cannot be placed in {} block!".format(student.year, block.room_type))
 
     def room(self):
         return self.floor and self.room_no and "{}-{}".format(self.floor[0], self.room_no)
