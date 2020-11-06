@@ -38,7 +38,7 @@ def home(request):
         students = Student.objects.filter(pk__in=student_ids)
         present_students = Attendance.objects.filter(student__in=students, status='Present')
         absent_students = Attendance.objects.filter(student__in=students, status='Absent')
-        complaints = Complaint.objects.filter(entity_id__in=students.values_list('regd_no', flat=True), status='Registered') | Complaint.objects.filter(entity_id__in=students.values_list('regd_no', flat=True), status='Processing')
+        complaints = Complaint.objects.filter(user__in=students.values_list('user', flat=True), status='Registered') | Complaint.objects.filter(user__in=students.values_list('user', flat=True), status='Processing')
 
     return render(request, 'officials/home.html', {'user_details': official, 'present':present_students, 'absent':absent_students, 'complaints':complaints,})
 
@@ -47,7 +47,7 @@ def home(request):
 def profile(request):
     user = request.user
     official = user.official
-    complaints = Complaint.objects.filter(entity_id = official.emp_id)
+    complaints = Complaint.objects.filter(user = user)
     return render(request, 'officials/profile.html', {'official': official, 'complaints': complaints})
 
 

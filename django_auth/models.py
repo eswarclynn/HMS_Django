@@ -65,6 +65,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
 
+    def entity(self):
+        return (self.is_student and self.student) or \
+            (self.is_official and self.official) or \
+            (self.is_worker and self.worker)
+    
+    def entity_id(self):
+        return (self.is_student and self.student.regd_no) or \
+            (self.is_official and self.official.emp_id) or \
+            (self.is_worker and self.worker.staff_id)
+
+    def entity_type(self):
+        return (self.is_student and 'Student') or \
+            (self.is_official and 'Official') or \
+            (self.is_worker and 'Worker')
+
     def home_url(self):
         if self.is_student:
             return reverse('students:home')

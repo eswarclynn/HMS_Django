@@ -28,7 +28,7 @@ def home(request):
     present_dates_count = (student.attendance.present_dates and len(student.attendance.present_dates.split(','))) or 0
     absent_dates_count = (student.attendance.absent_dates and len(student.attendance.absent_dates.split(','))) or 0
     outing_count = len(student.outing_set.all())
-    complaints = Complaint.objects.filter(entity_id = student.regd_no, status="Registered") | Complaint.objects.filter(entity_id = student.regd_no, status="Processing")
+    complaints = Complaint.objects.filter(user = user, status="Registered") | Complaint.objects.filter(user = user, status="Processing")
 
     return render(request, 'students/home.html', {'student': student, 'present_dates_count':present_dates_count, 'absent_dates_count':absent_dates_count, 'outing_count': outing_count, 'complaints':complaints})
 
