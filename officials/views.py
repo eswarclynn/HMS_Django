@@ -2,11 +2,12 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.detail import DetailView
 from institute.models import Block, Student, Official
 from students.models import Attendance, RoomDetail, Outing
 from django.contrib import messages
 from datetime import date as datePy
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponseForbidden
 from complaints.models import Complaint
 from workers.models import Worker, Attendance as AttendanceWorker
 from django.db.models import QuerySet
@@ -288,6 +289,17 @@ class StudentListView(OfficialTestMixin, ListView):
     def get_queryset(self):
         if self.request.user.official.is_chief(): return Student.objects.all()
         else: return Student.objects.filter(roomdetail__block=self.request.user.official.block) 
+
+class StudentDetailView(OfficialTestMixin, DetailView):
+    model = Student
+    template_name = 'officials/student_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        response =  super().get(request, *args, **kwargs)
+        if not self.request.user.official.is_chief() and (self.object.roomdetail.block != self.request.user.official.block): 
+            return HttpResponseForbidden()
+        return response
+
 
 class StudentRegisterView(CreateView):
     template_name = 'officials/student-register-form.html'

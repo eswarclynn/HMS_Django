@@ -17,6 +17,10 @@ class Student(models.Model):
         ('Female','Female'),
     )
 
+    def photo_storage_path(instance, filename):
+        extension = filename.split('.')[-1]
+        return 'Student-Photos/Year-{}/{}.{}'.format(instance.year, instance.regd_no, extension)
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     account_email = models.EmailField(unique=True, null=False)
     regd_no = models.CharField(unique=True, null=False, max_length=20)
@@ -36,7 +40,7 @@ class Student(models.Model):
     parents_phone = models.CharField(null=False, max_length=10)
     emergency_phone = models.CharField(null=True, blank=True, max_length=10)
     address = models.TextField(null=False)
-    photo = models.ImageField(null=True, blank=True)
+    photo = models.ImageField(null=True, blank=True, upload_to=photo_storage_path)
     is_hosteller = models.BooleanField(null=False, default=True)
 
     def __str__(self):
@@ -45,14 +49,15 @@ class Student(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-        if not RoomDetail.objects.filter(student = self).exists():
-            RoomDetail.objects.create(student=self)
-        if not Attendance.objects.filter(student = self).exists():
-            Attendance.objects.create(student=self)
-        if not Document.objects.filter(student = self).exists():
-            Document.objects.create(student = self)
-        if not FeeDetail.objects.filter(student = self).exists():
-            FeeDetail.objects.create(student = self)
+        if self.is_hosteller:
+            if not RoomDetail.objects.filter(student = self).exists():
+                RoomDetail.objects.create(student=self)
+            if not Attendance.objects.filter(student = self).exists():
+                Attendance.objects.create(student=self)
+            if not Document.objects.filter(student = self).exists():
+                Document.objects.create(student = self)
+            if not FeeDetail.objects.filter(student = self).exists():
+                FeeDetail.objects.create(student = self)
 
 
 class Official(models.Model):
