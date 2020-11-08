@@ -21,6 +21,7 @@ urlpatterns = [
     # path('search/',views.search, name='search'),
 
     path('student-list/', views.StudentListView.as_view(), name='student_list'),
+    path('student/<int:pk>', views.StudentDetailView.as_view(), name='student_detail'),
     path('register-student/', views.StudentRegisterView.as_view(), name='register_student'),
     path('edit-student/<int:pk>', views.StudentUpdateView.as_view(), name='edit_student'),
     path('delete-student/<int:pk>', views.StudentDeleteView.as_view(), name='delete_student'),

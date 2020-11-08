@@ -35,6 +35,26 @@ toast_messages.forEach(item => {
 })
 
 document.querySelectorAll('[data-row-href]').forEach(item => {
+  item.style.cursor = "pointer";
+
+  item.querySelectorAll("button").forEach(item => {
+    item.addEventListener("click", event => {
+      event.stopPropagation();
+    });
+  });
+
+  item.querySelectorAll("input").forEach(item => {
+    item.addEventListener("click", event => {
+      event.stopPropagation();
+    });
+  });
+  
+  item.querySelectorAll("a").forEach(item => {
+    item.addEventListener("click", event => {
+      event.stopPropagation();
+    })
+  });
+
   item.addEventListener("click", function() {
     window.location = this.dataset.rowHref;
   });
