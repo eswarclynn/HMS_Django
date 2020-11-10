@@ -34,7 +34,7 @@ class RoomDetail(models.Model):
         def valid_year(student, block):
             return  ((student.year == 1 and block.room_type == '4S') or \
                     ((student.year == 2 or student.year == 3) and block.room_type == '2S') or \
-                    (student.year == 4 and block.room_type == '1s'))
+                    (student.year == 4 and block.room_type == '1S'))
 
         if block and not valid_gender(student, block):
             raise ValidationError("{} Student cannot be placed in {} block!".format(student.gender, block.gender))
