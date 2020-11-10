@@ -1,4 +1,5 @@
 import os, csv, traceback
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
 from institute.models import Block, Student
@@ -6,7 +7,7 @@ from django.conf import settings
 
 
 class Command(BaseCommand):
-    help = "Imports Students from given CSV file to Student Model."
+    help = "Allot rooms to students given the Roll No. Usage: python manage.py allotrooms <filename>.csv"
 
     def get_file_path(self, file_name):
         return os.path.join(settings.BASE_DIR, "data", file_name)
@@ -35,7 +36,7 @@ class Command(BaseCommand):
                 created, rejected = [0, 0]
                 for data in csv_reader:
                     try:
-                        student = Student.objects.get(roll_no = data["id"])
+                        student = Student.objects.get(Q(regd_no = data["id"]) | Q(roll_no = data["id"]))
                         roomdetail = student.roomdetail
                         roomdetail.room_no = int(data["Room no"])
                         roomdetail.floor = self.get_floor_from_letter(data["floor"])
