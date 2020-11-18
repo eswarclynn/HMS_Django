@@ -4,7 +4,10 @@
 
 {% block content %}
 
-<h1 class="text-center">Officials List</h1>
+<div class="text-center">
+  <h1 class="text-center">Officials List</h1>
+  <a href="{% url 'officials:register_official' %}" class="btn btn-primary">+ Add Official</a>
+</div>
 <hr>
 <div class="overflow-auto p-4">
   <table class="table table-hover table-muted table-striped" id="att-table">

@@ -10,74 +10,75 @@
 
 {% block content %}
 <div class="container-fluid my-5 pt-5">
-  <div class="row justify-content-center mx-md-3 p-3">
-    <div class="col-12 text-center">
-      <h2 class="d-inline border-bottom border-info">Development Team</h2>
-    </div>
-    <div class="col-12 mt-3">
-      <h4 class="text-center">Faculty Advisor</h4>
-    </div>
-    <div class="col-12 col-md-6 col-lg-3 p-3 d-flex justify-content-center">
-      <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'institute/srilatha.jpg' %}" alt="Block Image"
-          style="width: auto; height: 250px;">
-        <div class="card-body">
-          <h5 class="card-title">Dr. Srilatha Chebrolu</h5>
-          <div class="card-text">
-            <p>Assisstant Professor</p>
-          </div>
-          <div class="card-reveal">
-            <h4>Dr. Srilatha Chebrolu</h4>
-            <span>Assistant Professor, Department of CSE</span>
-            <h5 class="mt-4">Contact:</h5>
-            <p>Phone: +91-8330967036</p>
-            <p>eMail ID: <a href="mailto:srilatha.chebrolu@nitandhra.ac.in">srilatha.chebrolu@nitandhra.ac.in</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="text-center">
+    <h2 class="d-inline border-bottom border-info">Development Team</h2>
   </div>
-
-  <div class="row justify-content-center mx-md-3 p-3 mt-4 border-top border-secondary">
-    <div class="col-12 mt-3">
-      <h4 class="text-center">Student Developers</h4>
-    </div>
-    <div class="col-12 col-md-6 col-lg-3 p-3 d-flex justify-content-center">
-      <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'institute/eswar.jpg' %}" alt="Block Image"
-          style="width: auto; height: 250px;">
-        <div class="card-body">
-          <h5 class="card-title">Eswar Prasad Clinton. A</h5>
-          <div class="card-text">
-            <p>Computer Science and Engineering</p>
-          </div>
-          <div class="card-reveal">
-            <h4>Eswar Prasad Clinton. A</h4>
-            <span>Computer Science and Engineering, Batch of 2018-22</span>
-            <h5 class="mt-4">Contact:</h5>
-            <p>eMail ID: <a href="mailto:411818@student.nitandhra.ac.in" class="card-link">411818@student.nitandhra.ac.in</a></p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/eswar-clynn" target="_blank" class="card-link">https://www.linkedin.com/in/eswar-clynn</a></p>
-            <p>Phone: +91 80565 48745</p>
+  <div class="row justify-content-aroud">
+    <div class="col-md-4 mt-4">
+      <h4 class="text-center mb-3">Faculty Advisor</h4>
+      <div class="row jutify-content-center">
+        <div class="col-12 d-flex jutify-content-center">
+          <div class="card mx-auto mt-3" style="width: 18rem; max-width:100%;">
+            <img class="card-img-top" src="{% static 'institute/srilatha.jpg' %}" alt="Block Image"
+              style="width: auto; height: 250px;">
+            <div class="card-body">
+              <h5 class="card-title">Dr. Srilatha Chebrolu</h5>
+              <div class="card-text">
+                <p>Assisstant Professor</p>
+              </div>
+              <div class="card-reveal">
+                <h4>Dr. Srilatha Chebrolu</h4>
+                <span>Assistant Professor, Department of CSE</span>
+                <h5 class="mt-4">Contact:</h5>
+                <p>Phone: +91-8330967036</p>
+                <p>eMail ID: <a href="mailto:srilatha.chebrolu@nitandhra.ac.in">srilatha.chebrolu@nitandhra.ac.in</a></p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-12 col-md-6 col-lg-3 p-3 d-flex justify-content-center">
-      <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'institute/chaithanya.jpg' %}" alt="Block Image"
-          style="width: auto; height: 250px;">
-        <div class="card-body">
-          <h5 class="card-title">Ravuri Lalitha Krishna Chaithanya</h5>
-          <div class="card-text">
-            <p>Computer Science and Engineering</p>
+    <div class="col mt-4">
+      <h4 class="text-center mb-3">Student Developers</h4>
+      <div class="row justify-content-aroud">
+        <div class="col-md-6 px-3 d-flex justify-content-center">
+          <div class="card mt-3" style="width: 18rem; max-width:100%;">
+            <img class="card-img-top" src="{% static 'institute/eswar.jpg' %}" alt="Block Image"
+              style="width: auto; height: 250px;">
+            <div class="card-body">
+              <h5 class="card-title">Eswar Prasad Clinton. A</h5>
+              <div class="card-text">
+                <p>Computer Science and Engineering</p>
+              </div>
+              <div class="card-reveal">
+                <h4>Eswar Prasad Clinton. A</h4>
+                <span>Computer Science and Engineering, Batch of 2018-22</span>
+                <h5 class="mt-4">Contact:</h5>
+                <p>eMail ID: <a href="mailto:411818@student.nitandhra.ac.in" class="card-link">411818@student.nitandhra.ac.in</a></p>
+                <p>LinkedIn: <a href="https://www.linkedin.com/in/eswar-clynn" target="_blank" class="card-link">https://www.linkedin.com/in/eswar-clynn</a></p>
+                <p>Phone: +91 80565 48745</p>
+              </div>
+            </div>
           </div>
-          <div class="card-reveal">
-            <h4>Ravuri Lalitha Krishna Chaithanya</h4>
-            <span>Computer Science and Engineering, Batch of 2018-22</span>
-            <h5 class="mt-4">Contact:</h5>
-            <p>eMail ID: <a href="mailto:411866@student.nitandhra.ac.in" class="card-link">411866@student.nitandhra.ac.in</a></p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/chaithanya-rlk-5b14a719b" target="_blank" class="card-link">https://www.linkedin.com/in/chaithanya-rlk-5b14a719b</a></p>
-            <p>Phone: +91 88979 23566</p>
+        </div>
+        <div class="col-md-6 px-3 d-flex justify-content-center">
+          <div class="card mt-3" style="width: 18rem; max-width:100%;">
+            <img class="card-img-top" src="{% static 'institute/chaithanya.jpg' %}" alt="Block Image"
+              style="width: auto; height: 250px;">
+            <div class="card-body">
+              <h5 class="card-title">Ravuri Lalitha Krishna Chaithanya</h5>
+              <div class="card-text">
+                <p>Computer Science and Engineering</p>
+              </div>
+              <div class="card-reveal">
+                <h4>Ravuri Lalitha Krishna Chaithanya</h4>
+                <span>Computer Science and Engineering, Batch of 2018-22</span>
+                <h5 class="mt-4">Contact:</h5>
+                <p>eMail ID: <a href="mailto:411866@student.nitandhra.ac.in" class="card-link">411866@student.nitandhra.ac.in</a></p>
+                <p>LinkedIn: <a href="https://www.linkedin.com/in/chaithanya-rlk-5b14a719b" target="_blank" class="card-link">https://www.linkedin.com/in/chaithanya-rlk-5b14a719b</a></p>
+                <p>Phone: +91 88979 23566</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -33,10 +33,18 @@
                   <h4>{{ block.name }}</h4>
                   <p>Room Type: {{ block.room_type }}</p>
                   <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
-                  <h5>Caretaker Contact</h5>
-                  <p class="font-weight-bold">{{ block.caretaker.name }}</p>
-                  <p>Email: {{ block.caretaker.email }}</p>
-                  <p>Phone: {{ block.caretaker.phone }}</p>
+                  {% if block.caretaker %}
+                    <h5>Caretaker Contact</h5>
+                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                    <p>Email: {{ block.caretaker.email }}</p>
+                    <p>Phone: {{ block.caretaker.phone }}</p>
+                  {% endif %}
+                  {% if block.warden %}
+                    <h5>Warden Contact</h5>
+                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                    <p>Email: {{ block.warden.email }}</p>
+                    <p>Phone: {{ block.warden.phone }}</p>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -65,10 +73,18 @@
                   <h4>{{ block.name }}</h4>
                   <p>Room Type: {{ block.room_type }}</p>
                   <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
-                  <h5>Caretaker Contact</h5>
-                  <p class="font-weight-bold">{{ block.caretaker.name }}</p>
-                  <p>Email: {{ block.caretaker.email }}</p>
-                  <p>Phone: {{ block.caretaker.phone }}</p>
+                  {% if block.caretaker %}
+                    <h5>Caretaker Contact</h5>
+                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                    <p>Email: {{ block.caretaker.email }}</p>
+                    <p>Phone: {{ block.caretaker.phone }}</p>
+                  {% endif %}
+                  {% if block.warden %}
+                    <h5>Warden Contact</h5>
+                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                    <p>Email: {{ block.warden.email }}</p>
+                    <p>Phone: {{ block.warden.phone }}</p>
+                  {% endif %}
                 </div>
               </div>
             </div>

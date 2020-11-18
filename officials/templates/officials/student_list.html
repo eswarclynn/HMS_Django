@@ -4,7 +4,10 @@
 
 {% block content %}
 
-<h1 class="text-center">Students List</h1>
+<div class="text-center">
+  <h1>Students List</h1>
+  <a href="{% url 'officials:register_student' %}" class="btn btn-primary">+ Add Student</a>
+</div>
 <hr />
 <div class="row mb-4 px-4 align-items-center">
   <div class="col-md mt-3 text-center">

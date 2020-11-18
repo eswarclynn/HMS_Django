@@ -4,7 +4,10 @@
 
 {% block content %}
 
-<h1 class="text-center">Staff List</h1>
+<div class="text-center">
+  <h1 class="text-center">Staff List</h1>
+  <a href="{% url 'officials:register_worker' %}" class="btn btn-primary">+ Add Staff</a>
+</div>
 <hr>
 <div class="overflow-auto p-4">
   <table class="table table-hover table-muted table-striped" id="att-table">
