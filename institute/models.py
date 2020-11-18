@@ -121,4 +121,7 @@ class Block(models.Model):
         return RoomDetail.objects.filter(block=self)
 
     def caretaker(self):
-        return self.official_set.all().first()
+        return self.official_set.filter(designation='Caretaker').first()
+
+    def warden(self):
+        return self.official_set.filter(designation='Warden').first()

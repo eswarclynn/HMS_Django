@@ -7,6 +7,10 @@ class ComplaintCreationForm(forms.ModelForm):
     class Meta:
         model = Complaint
         fields = ['type', 'complainee_id', 'summary', 'detailed']
+
+        labels = {
+            'detailed': 'Details'
+        }
         
         widgets = {
             'detailed': forms.Textarea(attrs={'rows': 4})

@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .forms import ComplaintCreationForm, MedicalIssueUpdationForm
 from complaints.forms import ComplaintUpdationForm
+import re
 
 # Create your views here.
 class ComplaintDetailView(LoginRequiredMixin, DetailView):
@@ -49,8 +50,10 @@ class ComplaintCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_title'] = 'Register {}'.format(self.model.__name__)
-        context['object_name'] = self.model.__name__
+        model_label = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', self.model.__name__) # CamelCase to Title Case
+        context['form_title'] = 'Register {}'.format(model_label)
+        context['object_name'] = model_label
+        print(context['object_name'])
         return context
     
 class ComplaintUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):

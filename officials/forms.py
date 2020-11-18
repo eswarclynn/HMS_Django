@@ -4,6 +4,7 @@ from institute.models import Student
 
 class StudentForm(forms.ModelForm):
     COMMUNITY_CHOICES = (
+        ( None, 'Select'),
         ('GEN', 'GEN'),
         ('OBC', 'OBC'),
         ('SC', 'SC'),
@@ -11,7 +12,19 @@ class StudentForm(forms.ModelForm):
         ('EWS', 'EWS')
     )
 
-    blood_group = forms.CharField(max_length=25, required=True)
+    BLOOD_GROUP_CHOICES = (
+        ( None, 'Select'),
+        ('A+', 'A+'),
+        ('A-', 'A-'),
+        ('B+', 'B+'),
+        ('B-', 'B-'),
+        ('O+', 'O+'),
+        ('O-', 'O-'),
+        ('AB+', 'AB+'),
+        ('AB-', 'AB-'),
+    )
+
+    blood_group = forms.CharField(max_length=25, required=True, widget=forms.Select(choices=BLOOD_GROUP_CHOICES))
     father_name = forms.CharField(max_length=100, required=True)
     mother_name = forms.CharField(max_length=100, required=True)
     community = forms.CharField(max_length=25, required=True, widget=forms.Select(choices=COMMUNITY_CHOICES),)
@@ -21,14 +34,15 @@ class StudentForm(forms.ModelForm):
         fields = '__all__'
 
         BRANCH_CHOICES=(
-            ('CSE','Computer Science and Engineering'),
-            ('ECE','Electronics and Communication Engineering'),
-            ('EEE','Electrical and Electronics Engineering'),
-            ('CHE','Chemical Engineering'),
-            ('MME','Metallurgical and Materials Engineering'),
-            ('MEC','Mechanical Engineering'),
-            ('CIV','Civil Engineering'),
+            ( None,'Select'),
             ('BIO','Biotechnology'),
+            ('CHE','Chemical Engineering'),
+            ('CIV','Civil Engineering'),
+            ('CSE','Computer Science and Engineering'),
+            ('EEE','Electrical and Electronics Engineering'),
+            ('ECE','Electronics and Communication Engineering'),
+            ('MEC','Mechanical Engineering'),
+            ('MME','Metallurgical and Materials Engineering'),
         )
 
         BOOLEAN_CHOICES = (

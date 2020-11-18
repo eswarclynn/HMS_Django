@@ -42,7 +42,10 @@ class RoomDetail(models.Model):
             raise ValidationError("Year: {} Student cannot be placed in {} block!".format(student.year, block.room_type))
 
     def room(self):
-        return self.floor and self.room_no and "{}-{}".format(self.floor[0], self.room_no)
+        if self.floor and self.room_no: 
+            return "{}-{}".format(self.floor[0], self.room_no)
+        else:
+            return "-"
 
 class Attendance(models.Model):
     OPTIONS = (

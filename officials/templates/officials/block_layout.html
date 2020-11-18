@@ -13,19 +13,21 @@
 <hr />
 <form method="GET" action="{% url 'officials:blockSearch' %}">
   <div class="row mt-3 mb-3">
-    <div class="col d-flex justify-content-end">
+    <div class="col d-none d-md-flex justify-content-end">
       <label for="block"><strong> Block :</strong></span>
     </div>
-    <div class="col form-group d-flex justify-content-center">
-      <select class="form-control w-50" id="block" name="block" required>
+    <div class="col-12 col-md-6 form-group d-flex justify-content-center">
+      <select class="form-control w-75" id="block" name="block" required>
         <option value="">Select Block</option>
         {% for item in blocks %}
         <option value="{{item.id}}" {% if item.id == current_block.id %} selected="selected" {% endif %}>{{item.name}}</option>
         {% endfor %}
       </select>
     </div>
-    <div class="col d-flex-inline justify-content-start">
-      <button class="btn btn-primary">Submit</button>
+    <div class="col-12 col-md d-flex justify-content-center justify-content-md-start">
+      <div>
+        <button class="btn btn-primary">Submit</button>
+      </div>
     </div>
   </div>
 </form>
@@ -43,6 +45,9 @@
   </div>
   <div class="col">
     Caretaker: <strong>{{current_block.caretaker.name}}</strong>
+  </div>
+  <div class="col">
+    Warden: <strong>{{current_block.warden.name}}</strong>
   </div>
 </div>
 <div class="row text-center mt-3">
