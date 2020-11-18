@@ -61,9 +61,9 @@ class BlockAttendanceSheetGenerator:
         present_absent_list = []
         for date in self.generated_dates:
             date_formatted = date.strftime("%Y-%m-%d")
-            if attendance.present_dates.find(date_formatted) != -1:
+            if attendance.present_dates and attendance.present_dates.find(date_formatted) != -1:
                 present_absent_list.append('P')
-            elif attendance.absent_dates.find(date_formatted) != -1:
+            elif attendance.absent_dates and attendance.absent_dates.find(date_formatted) != -1:
                 present_absent_list.append('A')
             else:
                 present_absent_list.append('-')
@@ -99,7 +99,10 @@ class BlockAttendanceSheetGenerator:
     def get_marked_dates(self):
         date_set = set()
         for attendance in self.attendance_list:
-            date_set |= set(attendance.present_dates.split(',')) | set(attendance.absent_dates.split(','))
+            if attendance.present_dates:
+                date_set |= set(attendance.present_dates.split(','))
+            if attendance.absent_dates:
+                date_set |= set(attendance.absent_dates.split(','))
         date_set.discard('')
 
         date_format = "%Y-%m-%d"
