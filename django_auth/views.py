@@ -59,8 +59,7 @@ class SignUpView(CreateView):
             Official.objects.filter(account_email = email).update(user = user)
         elif is_worker:
             Worker.objects.filter(account_email = email).update(user = user)
-
-        return super().form_valid(form)
+        return response
     
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)

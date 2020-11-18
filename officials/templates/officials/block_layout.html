@@ -183,7 +183,7 @@
 
       let count = 0;
 
-      {% for item in current_block.students %}
+      {% for item in current_block.roomdetail_set.all %}
         if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
           count += 1;
         }

@@ -1,32 +1,27 @@
 {% extends 'officials/base_officials.html' %}
 
-{% block title %}Student List{% endblock title %}
+{% block title %}Complaints List{% endblock title %}
 
 {% block content %}
 
-<div class="text-center">
-  <h1>Students List</h1>
-  {% if request.entity.is_chief %}
-    <a href="{% url 'officials:register_student' %}" class="btn btn-primary">+ Add Student</a>
-  {% endif %}
-</div>
+<h1 class="text-center">Complaints List</h1>
 <hr />
 <div class="row mb-4 px-4 align-items-center">
   <div class="col-md mt-3 text-center">
-    Year:
-    <select class="ml-2 form-control w-50 d-inline" id="year_select">
+    Type:
+    <select class="ml-2 form-control w-50 d-inline" id="type_select">
       <option value="">Select</option>
     </select>
   </div>
   <div class="col-md mt-3 text-center">
-    Branch:
-    <select class="ml-2 form-control w-50 d-inline" id="branch_select">
+    Status:
+    <select class="ml-2 form-control w-50 d-inline" id="status_select">
       <option value="">Select</option>
     </select>
   </div>
-  <div class="col-md  mt-3 text-center {% if not request.user.official.is_chief %} d-none {% endif %}">
-    Gender:
-    <select class="ml-2 form-control w-50 d-inline" id="gender_select">
+  <div class="col-md mt-3 text-center">
+    Year:
+    <select class="ml-2 form-control w-50 d-inline" id="year_select">
       <option value="">Select</option>
     </select>
   </div>
@@ -41,38 +36,27 @@
   <table class="table table-hover table-muted table-striped">
     <thead>
       <tr>
-        <th>Regd No</th>
+        <th>Entity No</th>
         <th>Name</th>
         <th>Year</th>
-        <th>Branch</th>
-        <th>Gender</th>
         <th>Block</th>
-        <th>Room No</th>
-        <th>Phone Number</th>
-        {% if request.user.official.is_chief %}
-        <th>Action</th>
-        {% endif %}
+        <th>Type</th>
+        <th>Summary</th>
+        <th>Status</th>
+        <th>Last Updated</th>
       </tr>
     </thead>
     <tbody>
-      {% for stud in object_list %}
-      <tr data-row-href="{% url 'officials:student_detail' stud.id %}">
-        <td>{{stud.regd_no}}</td>
-        <td>{{stud.name}}</td>
-        <td>{{stud.year}}</td>
-        <td>{{stud.branch}}</td>
-        <td>{{stud.gender}}</td>
-        <td>{{stud.roomdetail.block.short_name}}</td>
-        <td>{{stud.roomdetail.room}}</td>
-        <td>{{stud.phone}}</td>
-        {% if request.user.official.is_chief %}
-        <td nowrap>
-          <a href="{% url 'officials:edit_student' stud.id %}" target="_blank" class="btn btn-primary px-3">Edit</a>
-          <form action="{% url 'officials:delete_student' stud.id %}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{stud.name}}?');">{% csrf_token %}
-            <input type="submit" class="btn btn-danger ml-3" value="Delete" />
-          </form>
-        </td>
-        {% endif %}
+      {% for item in object_list %}
+      <tr class="text-center" data-row-href="{% url 'complaints:complaint_detail' item.pk %}">
+        <td>{{item.entity}}</td>
+        <td>{{item.entity.name}}</td>
+        <td>{{item.entity.year}}</td>
+        <td>{{item.entity.block.short_name}}</td>
+        <td>{{item.type}}</td>
+        <td>{{item.summary}}</td>
+        <td>{{item.status}}</td>
+        <td>{{item.updated_at|date:'d-m-Y'}}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -94,9 +78,10 @@
         this.api().columns().every(function () {
           var column = this;
           // Change here to include other columns (index of columns are used)
-          if (column.index() == 2 || column.index() == 3 || column.index() == 4 || column.index() == 5) {
+          let column_header = column.header().innerText.toLowerCase();
+          if (column_header == 'type' || column_header == 'status' || column_header == 'year' || column_header == 'block') {
             // Append label (get from header)
-            var select = $(`#${column.header().innerText.toLowerCase()}_select`)
+            var select = $(`#${column_header}_select`)
               .on('change', function () {
                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
                 // On change search for selected value and re-draw the table.

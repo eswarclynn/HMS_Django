@@ -387,3 +387,13 @@ class WorkerDeleteView(ChiefWardenTestMixin, LoginRequiredMixin, DeleteView):
     model = Worker
     success_url = reverse_lazy('officials:workers_list')
 
+class ComplaintListView(OfficialTestMixin, LoginRequiredMixin, ListView):
+    model = Complaint
+    template_name = 'officials/complaint_list.html'
+
+    def get_queryset(self):
+        if self.request.user.official.is_chief(): return Complaint.objects.all()
+        else: 
+            students = self.request.user.official.block.students()
+            return Complaint.objects.filter(user__in=students.values_list('student__user', flat=True))
+

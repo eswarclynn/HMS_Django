@@ -21,7 +21,7 @@ class Student(models.Model):
         extension = filename.split('.')[-1]
         return 'Student-Photos/Year-{}/{}.{}'.format(instance.year, instance.regd_no, extension)
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     account_email = models.EmailField(unique=True, null=False)
     regd_no = models.CharField(unique=True, null=False, max_length=20)
     roll_no = models.CharField(unique=True, null=False, max_length=20)
@@ -58,6 +58,9 @@ class Student(models.Model):
                 Document.objects.create(student = self)
             if not FeeDetail.objects.filter(student = self).exists():
                 FeeDetail.objects.create(student = self)
+
+    def block(self):
+        return self.roomdetail.block
 
 
 class Official(models.Model):

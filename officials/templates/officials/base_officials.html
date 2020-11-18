@@ -71,6 +71,8 @@
       <a href="{% url 'officials:attendance_log' %}" class="{% if url_name == 'attendance_log' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-calendar"></i></span> Attendance Log</a>
       <a href="{% url 'officials:student_list' %}" class="{% if url_name == 'student_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-graduation-cap"></i></span> Student List</a>
       <a href="{% url 'officials:grant_outing' %}" class="{% if url_name == 'grant_outing' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-map-marker" ></i></span> Outing Requests</a>
+      <a href="{% url 'officials:complaint_list' %}"  class="{% if url_name == 'complaint_list' %}active{% endif %}"><span class="mr-3"><i class="fa fa-quote-right"></i></span>Complaints List</a>      
+    
     {% endif %}
     {% if request.user.is_student %}
       <a href="{% url 'students:home' %}" class="{% if url_name == 'home' %}active{% endif %}"><span span class="mr-3"><i class="fa fa-tachometer"></i></span> Dashboard</a>
