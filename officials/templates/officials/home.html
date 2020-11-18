@@ -153,7 +153,7 @@
     <tbody>
       {% for item in complaints %}
       <tr class="text-center" data-row-href="{% url 'complaints:complaint_detail' item.pk %}">
-        <td>{{item.entity.id}}</td>
+        <td>{{item.entity}}</td>
         <td>{{item.type}}</td>
         <td>{{item.complainee}}</td>
         <td>{{item.summary}}</td>

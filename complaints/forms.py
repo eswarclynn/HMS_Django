@@ -25,7 +25,7 @@ class ComplaintCreationForm(forms.ModelForm):
 
         if (type == 'Indisciplinary' or type == 'Discrimination/ Harassment' or type == 'Damage to property') and not complainee_id:
             raise forms.ValidationError("Please specify the registration no. of the person against whom the complaint has to be registered.")
-        elif complainee_id:
+        elif not (type == 'Indisciplinary' or type == 'Discrimination/ Harassment' or type == 'Damage to property') and complainee_id:
             raise forms.ValidationError("Cannot assign complainee to {} complaint.".format(type))
         
         return cleaned_data
