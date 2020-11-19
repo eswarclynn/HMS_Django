@@ -38,7 +38,6 @@
             <td>{{ attendance.student.roomdetail.room }}</td>
             <td>
               <select name="{{ attendance.id }}" class="form-control {% if attendance.present_on_date  %} is-valid {% endif %} {% if attendance.absent_on_date %} is-invalid {% endif %}" style="width: 130px;">
-                <option value="">Select</option>
                 <option value="present" {% if attendance.present_on_date  %} selected {% endif %} >Present</option>
                 <option value="absent" {% if attendance.absent_on_date %} selected {% endif %}>Absent</option>
               </select>
