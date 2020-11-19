@@ -101,6 +101,20 @@ class Official(models.Model):
                 return complaints.models.Complaint.objects.filter(user__in=users, status='Registered') | complaints.models.Complaint.objects.filter(user__in=users, status='Processing') | self.user.complaint_set.filter(status='Registered') | self.user.complaint_set.filter(status='Processing')
             else:
                 return complaints.models.Complaint.objects.filter(user__in=users) | self.user.complaint_set.all()
+
+    def related_medical_issues(self, pending=True):
+        if self.is_chief():
+            if pending:
+                return complaints.models.MedicalIssue.objects.filter(status='Registered')
+            else:
+                return complaints.models.MedicalIssue.objects.all()
+        else:
+            students = self.block.students()
+            users = students.values_list('user', flat=True)
+            if pending:
+                return complaints.models.MedicalIssue.objects.filter(user__in=users, status='Registered') | self.user.medicalissue_set.filter(status='Registered')
+            else:
+                return complaints.models.MedicalIssue.objects.filter(user__in=users) | self.user.medicalissue_set.all()
                 
 
     def __str__(self):

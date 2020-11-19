@@ -399,3 +399,10 @@ class ComplaintListView(OfficialTestMixin, LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return self.request.user.official.related_complaints(pending=False)
+
+class MedicalIssueListView(OfficialTestMixin, LoginRequiredMixin, ListView):
+    model = Complaint
+    template_name = 'officials/medical_issue_list.html'
+
+    def get_queryset(self):
+        return self.request.user.official.related_medical_issues(pending=False)
