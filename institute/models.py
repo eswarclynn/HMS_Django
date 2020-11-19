@@ -1,3 +1,4 @@
+import complaints
 from django.db import models
 from django.core.exceptions import ValidationError
 from students.models import Document, FeeDetail, RoomDetail, Attendance
@@ -86,6 +87,23 @@ class Official(models.Model):
     def clean(self):
         if self.is_chief() and self.block != None:
             raise ValidationError('Chief Warden and Deputy Chief Warden cannot be assigned a block.')
+
+    def related_complaints(self, pending=True):
+        if self.is_chief():
+            if pending:
+                return complaints.models.Complaint.objects.filter(status='Registered') | complaints.models.Complaint.objects.filter(status='Processing')
+            else:
+                return complaints.models.Complaint.objects.all()
+        else:
+            student_rooms = self.block.roomdetail_set.all()
+            student_ids = student_rooms.values_list('student', flat=True)
+            students = Student.objects.filter(pk__in=student_ids)
+            users = students.values_list('user', flat=True)
+            if pending:
+                return complaints.models.Complaint.objects.filter(user__in=users, status='Registered') | complaints.models.Complaint.objects.filter(user__in=users, status='Processing') | self.user.complaint_set.filter(status='Registered') | self.user.complaint_set.filter(status='Processing')
+            else:
+                return complaints.models.Complaint.objects.filter(user__in=users) | self.user.complaint_set.all()
+                
 
     def __str__(self):
         return str(self.emp_id)

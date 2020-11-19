@@ -29,7 +29,7 @@ def home(request):
     if official.is_chief():
         present_students = Attendance.objects.filter(status='Present')
         absent_students = Attendance.objects.filter(status='Absent')
-        complaints = Complaint.objects.filter(status='Registered') | Complaint.objects.filter(status='Processing')
+        complaints = official.related_complaints()
 
     else:
         if not official.block: 
@@ -40,7 +40,7 @@ def home(request):
         students = Student.objects.filter(pk__in=student_ids)
         present_students = Attendance.objects.filter(student__in=students, status='Present')
         absent_students = Attendance.objects.filter(student__in=students, status='Absent')
-        complaints = Complaint.objects.filter(user__in=students.values_list('user', flat=True), status='Registered') | Complaint.objects.filter(user__in=students.values_list('user', flat=True), status='Processing')
+        complaints = official.related_complaints()
 
     return render(request, 'officials/home.html', {'user_details': official, 'present':present_students, 'absent':absent_students, 'complaints':complaints,})
 
@@ -392,8 +392,4 @@ class ComplaintListView(OfficialTestMixin, LoginRequiredMixin, ListView):
     template_name = 'officials/complaint_list.html'
 
     def get_queryset(self):
-        if self.request.user.official.is_chief(): return Complaint.objects.all()
-        else: 
-            students = self.request.user.official.block.students()
-            return Complaint.objects.filter(user__in=students.values_list('student__user', flat=True))
-
+        return self.request.user.official.related_complaints(pending=False)
