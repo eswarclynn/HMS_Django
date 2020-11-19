@@ -121,13 +121,19 @@ def attendance_log(request):
         attendance_list = Attendance.objects.filter(student__in = official.block.roomdetail_set.all().values_list('student', flat=True))
 
     if request.GET.get('by_regd_no'):
-        student = attendance_list.get(student__regd_no = request.GET.get('by_regd_no')).student
-        if student.attendance.present_dates: present_dates = student.attendance.present_dates.split(',') 
-        if student.attendance.absent_dates: absent_dates = student.attendance.absent_dates.split(',')
+        try:
+            student = attendance_list.get(student__regd_no = request.GET.get('by_regd_no')).student
+            if student.attendance.present_dates: present_dates = student.attendance.present_dates.split(',') 
+            if student.attendance.absent_dates: absent_dates = student.attendance.absent_dates.split(',')
+        except Attendance.DoesNotExist:
+            messages.error(request, "Invalid Student Registration No.")
 
     if request.GET.get('by_date'):
         present_attendance = attendance_list.filter(present_dates__contains = request.GET.get('by_date'))
         absent_attendance = attendance_list.filter(absent_dates__contains = request.GET.get('by_date'))
+
+        if present_attendance.count() == 0 and absent_attendance.count() == 0:
+            messages.error(request, "No Attendance Records Found!")
 
     return render(request, 'officials/attendance_log.html', {'official':official, 'student': student, 'date': request.GET.get('by_date'),'present_attendance': present_attendance, 'absent_attendance': absent_attendance, 'present_dates': present_dates, 'absent_dates': absent_dates})
 
