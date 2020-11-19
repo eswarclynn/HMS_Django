@@ -95,9 +95,7 @@ class Official(models.Model):
             else:
                 return complaints.models.Complaint.objects.all()
         else:
-            student_rooms = self.block.roomdetail_set.all()
-            student_ids = student_rooms.values_list('student', flat=True)
-            students = Student.objects.filter(pk__in=student_ids)
+            students = self.block.students()
             users = students.values_list('user', flat=True)
             if pending:
                 return complaints.models.Complaint.objects.filter(user__in=users, status='Registered') | complaints.models.Complaint.objects.filter(user__in=users, status='Processing') | self.user.complaint_set.filter(status='Registered') | self.user.complaint_set.filter(status='Processing')
@@ -138,8 +136,13 @@ class Block(models.Model):
         elif self.room_type == '2S': return self.capacity*2
         elif self.room_type == '1S': return self.capacity
 
-    def students(self):
+    def roomdetails(self):
         return RoomDetail.objects.filter(block=self)
+
+    def students(self):
+        student_rooms = self.roomdetail_set.all()
+        student_ids = student_rooms.values_list('student', flat=True)
+        return Student.objects.filter(pk__in=student_ids)
 
     def caretaker(self):
         return self.official_set.filter(designation='Caretaker').first()

@@ -55,7 +55,7 @@
     Capacity: <strong>{{current_block.capacity}} rooms - {{current_block.student_capacity}} students</strong>
   </div>
   <div class="col">
-    Filled: <strong><span id="filled_room"></span> rooms - {{current_block.students.count}} students</strong>
+    Filled: <strong><span id="filled_room"></span> rooms - {{current_block.roomdetails.count}} students</strong>
   </div>
   <div class="col ">
     Vacant: <strong><span id="vacant_room"></span> rooms</strong>
@@ -218,7 +218,7 @@
         }
   
         let roll = "";
-        {% for item in current_block.students %}
+        {% for item in current_block.roomdetails %}
           if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
             roll += '{{item.student.regd_no}}, ';
           }
@@ -285,7 +285,7 @@
     tbody.innerHTML = "";
 
     let count = 0;
-    {% for item in current_block.students %}
+    {% for item in current_block.roomdetails %}
       if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
         let row = document.createElement('tr');
         row.innerHTML = `
