@@ -62,7 +62,7 @@
             <tr data-row-href="{% url 'complaints:medicalissue_detail' item.id %}">
           {% endif %}
             
-            <td class="text-center">{{item.entity.id}}</td>
+            <td class="text-center">{{item.entity}}</td>
             <td class="text-center">{{item.entity.name}}</td>
             <td class="text-center">{{item.summary}}</td>
             <td class="text-center">{{item.updated_at|date:'d-m-Y'}}</td>
