@@ -77,6 +77,8 @@ class Attendance(models.Model):
                 self.absent_dates = date
             else:
                 self.absent_dates = ','.join(set(self.absent_dates.split(',') + [date]))
+        if timezone.now().date() == timezone.datetime.strptime(date, "%Y-%m-%d").date():
+                self.status = status.title()
 
         self.save()
         
