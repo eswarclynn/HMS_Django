@@ -65,7 +65,7 @@ def attendance(request):
     if request.method == 'POST' and request.POST.get('submit'):
         date = request.POST.get('date')
         for attendance in attendance_list:
-            attendance.mark_attendance(date, request.POST.get(str(attendance.id)))
+            if request.POST.get(str(attendance.id)): attendance.mark_attendance(date, request.POST.get(str(attendance.id)))
 
         messages.success(request, f'Attendance marked for date: {date}')
 
@@ -91,7 +91,7 @@ def attendance_workers(request):
     if request.method == 'POST' and request.POST.get('submit'):
         date = request.POST.get('date')
         for attendance in attendance_list:
-            attendance.mark_attendance(date, request.POST.get(str(attendance.id)))
+            if request.POST.get(str(attendance.id)): attendance.mark_attendance(date, request.POST.get(str(attendance.id)))
 
         messages.success(request, f'Staff Attendance marked for date: {date}')
 
