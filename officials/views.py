@@ -274,7 +274,7 @@ def blockSearch(request):
 #     return render(request, 'officials/water-can.html')
 
 
-from .forms import StudentForm
+from .forms import StudentForm, WorkerForm
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
@@ -370,7 +370,7 @@ class WorkerListView(ChiefWardenTestMixin, ListView):
 class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
     template_name = 'officials/official-register-form.html'
     model = Worker
-    fields = ['staff_id', 'name', 'designation', 'account_email', 'email', 'phone', 'gender', 'block']
+    form_class = WorkerForm
     success_url = reverse_lazy('officials:workers_list')
 
     def get_context_data(self, **kwargs):
@@ -381,7 +381,7 @@ class WorkerRegisterView(ChiefWardenTestMixin, CreateView):
 class WorkerUpdateView(ChiefWardenTestMixin, LoginRequiredMixin, UpdateView):
     template_name = 'officials/official-register-form.html'
     model = Worker
-    fields = ['staff_id', 'name', 'designation', 'account_email', 'email', 'phone', 'gender', 'block']
+    form_class = WorkerForm
     success_url = reverse_lazy('officials:workers_list')
 
     def get_context_data(self, **kwargs):

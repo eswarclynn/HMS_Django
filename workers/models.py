@@ -5,15 +5,6 @@ from institute.models import Block
 
 # Create your models here.
 class Worker(models.Model):
-    EMP=(
-        ('Scavenger','Scavenger'),
-        ('General Servant','General Servant'),
-        ('Doctor', 'Doctor'),
-        ('Mess Incharge', 'Mess Incharge'),
-        ('Electrician','Electrician'), 
-        ('Gym Trainer','Gym Trainer'),
-        ('PT/Games Coach','PT/Games Coach'),
-    )
     GENDER=(
         ('Male','Male'),
         ('Female','Female'),
@@ -23,7 +14,7 @@ class Worker(models.Model):
     account_email = models.EmailField(unique=True, null=False)
     staff_id = models.CharField(unique=True, null=False, max_length=20)
     name = models.CharField(max_length=100, null=False)
-    designation = models.CharField(max_length=50,choices=EMP)
+    designation = models.CharField(max_length=50)
     gender = models.CharField(max_length=10,choices=GENDER)
     phone = models.CharField(max_length=10)
     email = models.EmailField(null=True, blank=True)

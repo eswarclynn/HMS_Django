@@ -91,14 +91,14 @@ class Official(models.Model):
     def related_complaints(self, pending=True):
         if self.is_chief():
             if pending:
-                return complaints.models.Complaint.objects.filter(status='Registered') | complaints.models.Complaint.objects.filter(status='Processing')
+                return complaints.models.Complaint.objects.filter(status__in=['Registered', 'Processing']) # | complaints.models.Complaint.objects.filter(status='Processing')
             else:
                 return complaints.models.Complaint.objects.all()
         else:
             students = self.block.students()
             users = students.values_list('user', flat=True)
             if pending:
-                return complaints.models.Complaint.objects.filter(user__in=users, status='Registered') | complaints.models.Complaint.objects.filter(user__in=users, status='Processing') | self.user.complaint_set.filter(status='Registered') | self.user.complaint_set.filter(status='Processing')
+                return complaints.models.Complaint.objects.filter(user__in=users, status__in=['Registered', 'Processing']) | self.user.complaint_set.filter(status__in=['Registered', 'Processing'])
             else:
                 return complaints.models.Complaint.objects.filter(user__in=users) | self.user.complaint_set.all()
 

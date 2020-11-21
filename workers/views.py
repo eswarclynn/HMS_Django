@@ -14,9 +14,11 @@ def home(request):
     worker = user.worker    
 
     if worker.designation == 'Electrician':
-        complaints = Complaint.objects.filter(type='Electrical', status='Registered') | Complaint.objects.filter(type='Electrical', status='Processing')
+        complaints = Complaint.objects.filter(type='Electrical', status__in=['Registered', 'Processing'])
+    elif worker.designation == 'Estate Staff':
+        complaints = Complaint.objects.filter(type=['Electrical', 'Civil'], status__in=['Registered', 'Processing'])
     elif worker.designation == 'Mess Incharge':
-        complaints = Complaint.objects.filter(type='Food Issues', status='Registered') | Complaint.objects.filter(type='Food Issues', status='Processing')
+        complaints = Complaint.objects.filter(type='Food Issues', status__in=['Registered', 'Processing'])
     elif worker.designation == 'Doctor':
         complaints = MedicalIssue.objects.filter(status='Registered')
     else:

@@ -1,5 +1,6 @@
 from django import forms
 from institute.models import Student
+from workers.models import Worker
 
 
 class StudentForm(forms.ModelForm):
@@ -67,4 +68,25 @@ class StudentForm(forms.ModelForm):
 
         help_texts = {
             'is_hosteller': 'Yes for Hosteller. No for Day Scholar.',
+        }
+
+class WorkerForm(forms.ModelForm):
+    class Meta:
+        model = Worker
+        fields = ['staff_id', 'name', 'designation', 'account_email', 'email', 'phone', 'gender', 'block']
+
+        DESGINATION_CHOICES = (
+            (None, 'Select'),
+            ('Doctor', 'Doctor'),
+            ('Electrician','Electrician'), 
+            ('Estate Staff','Estate Staff'), 
+            ('General Servant','General Servant'),
+            ('Gym Trainer','Gym Trainer'),
+            ('Mess Incharge', 'Mess Incharge'),
+            ('PT/Games Coach','PT/Games Coach'),
+            ('Scavenger','Scavenger'),
+        )
+
+        widgets = {
+            'designation': forms.Select(choices=DESGINATION_CHOICES)
         }
