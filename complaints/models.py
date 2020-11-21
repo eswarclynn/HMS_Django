@@ -7,30 +7,14 @@ User = get_user_model()
 
 # Create your models here.
 class Complaint(models.Model):
-    TYPE = (
-        ('General','General'),
-        ('Food Issues', 'Food Issues'),
-        ('Electrical','Electrical'),
-        ('Civil', 'Civil'),
-        ('Room Cleaning','Room Cleaning'),
-        ('Restroom Cleaning','Restroom Cleaning'),
-        ('Indisciplinary','Indisciplinary'),
-        ('Discrimination/ Harassment','Discrimination/ Harassment'),
-        ('Damage to property','Damage to property')
-    )
     STATUS = (
         ('Registered','Registered'),
         ('Processing','Processing'),
         ('Resolved','Resolved')
     )
-    ENTITY_TYPE = (
-        ('Student', 'Student'),
-        ('Official', 'Official'),
-        ('Worker', 'Worker')
-    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.CharField(max_length=40,choices=TYPE, null=False)
+    type = models.CharField(max_length=40, null=False)
     complainee = models.ForeignKey(Student, on_delete=models.DO_NOTHING, null=True, blank=True)
     summary = models.CharField(max_length=200,null=False)
     detailed = models.TextField(null=False)
@@ -59,11 +43,6 @@ class MedicalIssue(models.Model):
     STATUS = (
         ('Registered','Registered'),
         ('Resolved','Resolved')
-    )
-    ENTITY_TYPE = (
-        ('Student', 'Student'),
-        ('Official', 'Official'),
-        ('Worker', 'Worker')
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

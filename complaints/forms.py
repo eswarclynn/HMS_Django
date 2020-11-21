@@ -8,12 +8,25 @@ class ComplaintCreationForm(forms.ModelForm):
         model = Complaint
         fields = ['type', 'complainee_id', 'summary', 'detailed']
 
+        TYPE = (
+            ('General','General'),
+            ('Food Issues', 'Food Issues'),
+            ('Electrical','Electrical'),
+            ('Civil', 'Civil'),
+            ('Room Cleaning','Room Cleaning'),
+            ('Restroom Cleaning','Restroom Cleaning'),
+            ('Indisciplinary','Indisciplinary'),
+            ('Discrimination/ Harassment','Discrimination/ Harassment'),
+            ('Damage to property','Damage to property')
+        )
+
         labels = {
             'detailed': 'Details'
         }
         
         widgets = {
-            'detailed': forms.Textarea(attrs={'rows': 4})
+            'detailed': forms.Textarea(attrs={'rows': 4}),
+            'type': forms.Select(choices=TYPE)
         }
 
     def clean_complainee_id(self):
