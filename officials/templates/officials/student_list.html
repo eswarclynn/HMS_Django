@@ -6,7 +6,7 @@
 
 <div class="text-center">
   <h1>Students List</h1>
-  {% if request.entity.is_chief %}
+  {% if request.user.entity.is_chief %}
     <a href="{% url 'officials:register_student' %}" class="btn btn-primary">+ Add Student</a>
   {% endif %}
 </div>
