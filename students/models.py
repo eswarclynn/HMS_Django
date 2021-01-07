@@ -110,6 +110,7 @@ class Document(models.Model):
     undertaking_form = models.FileField(null=True, blank=True)
     receipt = models.FileField(null=True, blank=True)
     day_scholar_affidavit = models.FileField(null=True, blank=True)
+    aadhar_card = models.FileField(null=True, blank=True)
 
     def __str__(self) -> str:
         return 'Document: {} - {}'.format(self.id, self.student.regd_no)

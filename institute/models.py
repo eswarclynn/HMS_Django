@@ -33,6 +33,7 @@ class Student(models.Model):
     gender = models.CharField(max_length=7,choices=GENDER,null=False)
     pwd = models.BooleanField(null=False, default=False)
     community = models.CharField(max_length=25, null=True, blank=True)
+    aadhar_number = models.CharField(max_length=15, null=True, blank=True)
     dob = models.DateField(null=False)
     blood_group = models.CharField(max_length=25, null=True, blank=True)
     father_name = models.CharField(max_length=100, null=True, blank=True)
