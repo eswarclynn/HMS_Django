@@ -1,7 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from institute.models import Block, phone_validator
+from institute.models import Block
+from institute.validators import numeric_only
 
 # Create your models here.
 class Worker(models.Model):
@@ -16,7 +17,7 @@ class Worker(models.Model):
     name = models.CharField(max_length=100, null=False)
     designation = models.CharField(max_length=50)
     gender = models.CharField(max_length=10,choices=GENDER)
-    phone = models.CharField(max_length=10, validators=[phone_validator])
+    phone = models.CharField(max_length=10, validators=[numeric_only])
     email = models.EmailField(null=True, blank=True)
     block = models.ForeignKey(Block, on_delete=models.CASCADE, null=True, blank=True)
 

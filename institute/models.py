@@ -3,10 +3,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from students.models import Document, FeeDetail, RoomDetail, Attendance
 from django.conf import settings
-
-def phone_validator(value: str):
-    if not value.isnumeric():
-        raise ValidationError("Phone number should be numeric.")
+from django.core.validators import MinLengthValidator
+from institute.validators import numeric_only, date_no_future
 
 # Create your models here.
 class Student(models.Model):
@@ -28,8 +26,8 @@ class Student(models.Model):
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     account_email = models.EmailField(unique=True, null=False)
-    regd_no = models.CharField(unique=True, null=False, max_length=20)
-    roll_no = models.CharField(unique=True, null=False, max_length=20)
+    regd_no = models.CharField(unique=True, null=False, max_length=6, validators=[MinLengthValidator(6)])
+    roll_no = models.CharField(unique=True, null=False, max_length=6, validators=[MinLengthValidator(6)])
     name = models.CharField(max_length=100, null=False)
     email = models.EmailField(null=True, blank=True)
     year = models.IntegerField(null=False, choices=YEAR)
@@ -38,13 +36,13 @@ class Student(models.Model):
     pwd = models.BooleanField(null=False, default=False)
     community = models.CharField(max_length=25, null=True, blank=True)
     aadhar_number = models.CharField(max_length=15, null=True, blank=True)
-    dob = models.DateField(null=False)
+    dob = models.DateField(null=False, validators=[date_no_future])
     blood_group = models.CharField(max_length=25, null=True, blank=True)
     father_name = models.CharField(max_length=100, null=True, blank=True)
     mother_name = models.CharField(max_length=100, null=True, blank=True)
-    phone = models.CharField(null=False, max_length=10, validators=[phone_validator])
-    parents_phone = models.CharField(null=False, max_length=10, validators=[phone_validator])
-    emergency_phone = models.CharField(null=True, blank=True, max_length=10, validators=[phone_validator])
+    phone = models.CharField(null=False, max_length=10, validators=[numeric_only])
+    parents_phone = models.CharField(null=False, max_length=10, validators=[numeric_only])
+    emergency_phone = models.CharField(null=True, blank=True, max_length=10, validators=[numeric_only])
     address = models.TextField(null=False)
     photo = models.ImageField(null=True, blank=True, upload_to=photo_storage_path)
     is_hosteller = models.BooleanField(null=False, default=True)
@@ -82,7 +80,7 @@ class Official(models.Model):
     emp_id = models.CharField(unique=True,null=False, max_length=20)
     name = models.CharField(max_length=100)
     designation = models.CharField(max_length=20,choices=EMP)
-    phone = models.CharField(max_length=10, null=False, validators=[phone_validator])
+    phone = models.CharField(max_length=10, null=False, validators=[numeric_only])
     email = models.EmailField(null=True, blank=True)
     block = models.ForeignKey('institute.Block', on_delete=models.SET_NULL, null=True, blank=True)
 
