@@ -140,7 +140,11 @@
 
 
 <div class="container-fluid mt-4 d-none" id="table-container">
-  <h2 id="room" class="text-center"></h2>
+  <div class="d-flex justify-content-between align-items-center">
+    <span></span>
+    <h2 id="room" class="text-center"></h2>
+    <h5 class="text-danger" onclick="closeRoomTable()"><i class="fa fa-times"></i></h5>
+  </div>
   <table class="table table-hover table-muted table-striped">
     <thead>
       <th>Regd No.</th>
@@ -232,17 +236,18 @@
       if (table.classList.contains('d-none')) {
         table.classList.add('d-block');
         table.classList.remove('d-none');
-      }
-      else if (table.classList.contains('d-block')) {
-        table.classList.add('d-none');
-        table.classList.remove('d-block');
-      }
-  
+      }  
       document.querySelector('#table-container table > tbody').scrollIntoView();
-  
     });
   });
 
+  function closeRoomTable() {
+    table = document.getElementById("table-container");
+    if (table.classList.contains('d-block')) {
+      table.classList.remove('d-block');
+      table.classList.add('d-none');
+    }
+  }
 
   function showFloor() {
 
@@ -271,7 +276,7 @@
     let floor = room[0];
     let no = parseInt(room.slice(2));
     let room_capacity = parseInt('{{ current_block.room_type|slice:"0:1" }}');
-    document.querySelector('#table-container > h2#room').innerHTML = room_string;
+    document.querySelector('#table-container h2#room').innerHTML = room_string;
 
     if (floor == 'G') {
       floor = 'Ground';
