@@ -201,6 +201,9 @@ def blockSearch(request):
                     room_detail.full_clean()
                     room_detail.save()
                     messages.success(request, f'Student {student.regd_no} successfully alloted room in {room_detail.block.name} {room_detail.room()}!')
+            except RoomDetail.DoesNotExist as error:
+                # Day Scholars have no room detail.
+                messages.error(request, "Cannot assign room to day scholars.")
             except ValidationError as error:
                 for message in error.messages:
                     messages.error(request, message)

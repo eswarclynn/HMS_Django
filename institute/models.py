@@ -50,6 +50,12 @@ class Student(models.Model):
     def __str__(self):
         return str(self.regd_no)
 
+    def clean(self):
+        super().clean()
+        if not self.is_hosteller and RoomDetail.objects.filter(student = self).exists():
+            raise ValidationError("Day scholars cannot be alloted a room.")
+
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
