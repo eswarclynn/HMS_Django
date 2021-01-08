@@ -187,18 +187,4 @@
     });
   });
 </script>
-<script>
-  var present_dates = [];
-  var absent_dates = [];
-
-  {% for date in present_dates %}
-    present_dates.push(new Date('{{ date }}'));
-  {% endfor %}
-
-  {% for date in absent_dates %}
-    absent_dates.push(new Date('{{ date }}'));
-  {% endfor %}
-</script>
-{% load static %}
-<script src="{% static 'students/attendance_history.js' %}"></script>
 {% endblock script_links %}
