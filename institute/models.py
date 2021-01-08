@@ -4,6 +4,10 @@ from django.core.exceptions import ValidationError
 from students.models import Document, FeeDetail, RoomDetail, Attendance
 from django.conf import settings
 
+def phone_validator(value: str):
+    if not value.isnumeric():
+        raise ValidationError("Phone number should be numeric.")
+
 # Create your models here.
 class Student(models.Model):
     YEAR = (
@@ -38,9 +42,9 @@ class Student(models.Model):
     blood_group = models.CharField(max_length=25, null=True, blank=True)
     father_name = models.CharField(max_length=100, null=True, blank=True)
     mother_name = models.CharField(max_length=100, null=True, blank=True)
-    phone = models.CharField(null=False, max_length=10)
-    parents_phone = models.CharField(null=False, max_length=10)
-    emergency_phone = models.CharField(null=True, blank=True, max_length=10)
+    phone = models.CharField(null=False, max_length=10, validators=[phone_validator])
+    parents_phone = models.CharField(null=False, max_length=10, validators=[phone_validator])
+    emergency_phone = models.CharField(null=True, blank=True, max_length=10, validators=[phone_validator])
     address = models.TextField(null=False)
     photo = models.ImageField(null=True, blank=True, upload_to=photo_storage_path)
     is_hosteller = models.BooleanField(null=False, default=True)
@@ -78,7 +82,7 @@ class Official(models.Model):
     emp_id = models.CharField(unique=True,null=False, max_length=20)
     name = models.CharField(max_length=100)
     designation = models.CharField(max_length=20,choices=EMP)
-    phone = models.CharField(max_length=10, null=False)
+    phone = models.CharField(max_length=10, null=False, validators=[phone_validator])
     email = models.EmailField(null=True, blank=True)
     block = models.ForeignKey('institute.Block', on_delete=models.SET_NULL, null=True, blank=True)
 
