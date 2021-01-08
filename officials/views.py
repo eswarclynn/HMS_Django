@@ -191,6 +191,8 @@ def blockSearch(request):
             block = Block.objects.get(id = request.POST.get('block_id'))
             try:
                 student = Student.objects.get(regd_no = request.POST.get('regd_no'))
+                if not student.is_hosteller:
+                    raise ValidationError("Cannot assign room to day scholars.")
                 room_detail = student.roomdetail
                 if room_detail.block and room_detail.room():
                     messages.error(request, f'Student {student.regd_no} already alloted room in {room_detail.block.name} {room_detail.room()}!')
