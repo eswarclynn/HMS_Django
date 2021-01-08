@@ -1,10 +1,7 @@
 from django.urls import path
-from django.views.generic import FormView, DeleteView
 from django.conf.urls.static import static 
 from django.conf import settings
-
 from . import views
-from .forms import StudentForm
 
 app_name= 'officials'
 

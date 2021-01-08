@@ -1,7 +1,5 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.messages.api import get_messages
-from institute.models import Block, Student, Official
+from django.shortcuts import render
+from institute.models import Block
 
 # Create your views here.
 def index(request):

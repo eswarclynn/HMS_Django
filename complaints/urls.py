@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth.decorators import login_required
 from . import views
 from .models import MedicalIssue, Complaint
 from .forms import ComplaintCreationForm, MedicalIssueUpdationForm, ComplaintUpdationForm

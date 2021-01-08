@@ -1,14 +1,11 @@
-from django.shortcuts import redirect, render
 from django.urls import reverse
 from .models import Complaint
-from institute.models import Student, Official
-from workers.models import Worker
+from institute.models import Student
 from django.http.response import Http404
-from django.contrib import messages
 from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import ComplaintCreationForm, MedicalIssueUpdationForm
+from .forms import MedicalIssueUpdationForm
 from complaints.forms import ComplaintUpdationForm
 import re
 

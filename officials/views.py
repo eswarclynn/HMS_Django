@@ -6,13 +6,9 @@ from django.views.generic.detail import DetailView
 from institute.models import Block, Student, Official
 from students.models import Attendance, RoomDetail, Outing
 from django.contrib import messages
-from datetime import date as datePy
 from django.http.response import Http404, HttpResponseForbidden
 from complaints.models import Complaint
 from workers.models import Worker, Attendance as AttendanceWorker
-from django.db.models import QuerySet
-from django.db.models import Sum
-import re
 
 def official_check(user):
     return user.is_authenticated and user.is_official

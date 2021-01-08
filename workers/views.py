@@ -1,6 +1,5 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.core.exceptions import PermissionDenied
-from workers.models import Worker
 from complaints.models import Complaint, MedicalIssue
 from django.contrib.auth.decorators import user_passes_test, login_required
 

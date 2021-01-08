@@ -1,13 +1,12 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.http import Http404
-from institute.models import Block, Student, Official
-from students.models import Attendance, Outing
+from institute.models import Student
+from students.models import Outing
 from complaints.models import Complaint
-from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import user_passes_test
-from django.views.generic import CreateView, UpdateView, DeleteView, ListView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import CreateView, UpdateView, ListView
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from .forms import OutingForm
 

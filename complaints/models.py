@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from institute.models import Student, Official
-from workers.models import Worker
+from institute.models import Student
 
 User = get_user_model()
 
