@@ -26,6 +26,9 @@ class RoomDetail(models.Model):
         )
 
     def clean(self):
+        if self.block.roomdetail_set.exclude(pk=self.pk).filter(room_no=self.room_no, floor=self.floor).count() >= self.block.per_room_capacity():
+            raise ValidationError("Room filled to maximum capacity.")
+
         student = self.student
         block = self.block
         def valid_gender(student, block):

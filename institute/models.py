@@ -154,6 +154,11 @@ class Block(models.Model):
     def short_name(self):
         return self.name.split()[0]
 
+    def per_room_capacity(self):
+        import re
+        # Regex to find room_capacity from room_type
+        return int(re.search(r'\d+', self.room_type).group())
+
     def student_capacity(self):
         if self.room_type == '4S':   return self.capacity*4
         elif self.room_type == '2S': return self.capacity*2
