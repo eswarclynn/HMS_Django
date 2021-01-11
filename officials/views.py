@@ -219,8 +219,10 @@ def blockSearch(request):
         return redirect(reverse_lazy('officials:blockSearch') + '?block={}'.format(block_id))
 
     if request.GET.get('block'):
-        block = Block.objects.get(id=request.GET.get('block')) 
-        return render(request, 'officials/block_layout.html',{'blocks':blocks, 'current_block': block})
+        from django.core.serializers import serialize
+        block = Block.objects.get(id=request.GET.get('block'))
+        block_json = serialize('json', [block])
+        return render(request, 'officials/block_layout.html',{'blocks':blocks, 'current_block': block, 'current_block_json': block_json})
 
     return render(request, 'officials/block_layout.html',{'blocks':blocks})
 
