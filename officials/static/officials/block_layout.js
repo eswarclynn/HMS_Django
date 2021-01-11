@@ -49,7 +49,7 @@ window.onload = function() {
   document.getElementById('partial_room').innerHTML = partial_count;
   document.getElementById('vacant_room').innerHTML = vacant_count;
 
-
+  document.getElementById('ground-con').style.display = "block";
 }
 
 function closeRoomTable() {

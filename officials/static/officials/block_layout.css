@@ -4,13 +4,9 @@
 
 .floor-con{
     border: 1.5px solid #bebebe; 
-    border-radius: 10px; 
-}
-
-#first-con, #second-con {
+    border-radius: 10px;
     display: none;
 }
-
 
 .room-card{
     background: radial-gradient(circle, rgb(170, 161, 161) 0%, rgb(80, 80, 80) 100%);
