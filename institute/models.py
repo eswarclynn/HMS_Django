@@ -146,6 +146,7 @@ class Block(models.Model):
     name = models.CharField(max_length=50,null=False)
     room_type = models.CharField(max_length=2,choices=OPTION)
     gender = models.CharField(max_length=7,choices=GENDER)
+    floor_count = models.IntegerField(null=False, verbose_name="No. of Floors")
     capacity = models.IntegerField(null=False)
 
     def __str__(self):
