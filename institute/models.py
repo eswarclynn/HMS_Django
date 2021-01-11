@@ -1,10 +1,10 @@
 import complaints
 from django.db import models
 from django.core.exceptions import ValidationError
-from students.models import Document, FeeDetail, RoomDetail, Attendance
 from django.conf import settings
 from django.core.validators import MinLengthValidator
 from institute.validators import numeric_only, date_no_future
+from institute.constants import FLOOR_OPTIONS
 
 # Create your models here.
 class Student(models.Model):
@@ -52,22 +52,8 @@ class Student(models.Model):
 
     def clean(self):
         super().clean()
-        if not self.is_hosteller and RoomDetail.objects.filter(student = self).exists():
+        if not self.is_hosteller and hasattr(self, 'roomdetail'):
             raise ValidationError("Day scholars cannot be alloted a room.")
-
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        if self.is_hosteller:
-            if not RoomDetail.objects.filter(student = self).exists():
-                RoomDetail.objects.create(student=self)
-            if not Attendance.objects.filter(student = self).exists():
-                Attendance.objects.create(student=self)
-            if not Document.objects.filter(student = self).exists():
-                Document.objects.create(student = self)
-            if not FeeDetail.objects.filter(student = self).exists():
-                FeeDetail.objects.create(student = self)
 
     def block(self):
         return self.roomdetail.block
@@ -155,6 +141,9 @@ class Block(models.Model):
     def short_name(self):
         return self.name.split()[0]
 
+    def available_floors(self):
+        return FLOOR_OPTIONS[:self.floor_count]
+
     def per_room_capacity(self):
         import re
         # Regex to find room_capacity from room_type
@@ -166,7 +155,7 @@ class Block(models.Model):
         elif self.room_type == '1S': return self.capacity
 
     def roomdetails(self):
-        return RoomDetail.objects.filter(block=self)
+        return self.roomdetail_set.all()
 
     def students(self):
         student_rooms = self.roomdetail_set.all()

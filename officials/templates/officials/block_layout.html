@@ -69,6 +69,7 @@
   <span class="mr-2 mt-1">Select Floor: </span>
   <div>
     <select name="floor" id="floor" class="form-control d-inline bg-info text-white" onchange="showFloor()">
+      {% for floor in current_block.available_floor %}{% endfor %}
       <option value="ground">Ground Floor</option>
       <option value="first">First Floor</option>
       <option value="second">Second Floor</option>
@@ -164,7 +165,7 @@
 {% endblock content %}
 
 {% block script_links %}
-  
+
 <script>
   $(document).ready(function () {
     var filled_count = 0;
@@ -250,24 +251,10 @@
   }
 
   function showFloor() {
-
-    let floor = document.getElementById("floor").value;
-
-    if (floor == "ground") {
-      document.getElementById("ground-con").style.display = "block";
-      document.getElementById("first-con").style.display = "none";
-      document.getElementById("second-con").style.display = "none";
-    }
-    else if (floor == "first") {
-      document.getElementById("ground-con").style.display = "none";
-      document.getElementById("first-con").style.display = "block";
-      document.getElementById("second-con").style.display = "none";
-    }
-    else if (floor == "second") {
-      document.getElementById("ground-con").style.display = "none";
-      document.getElementById("first-con").style.display = "none";
-      document.getElementById("second-con").style.display = "block";
-    }
+    const floor = document.getElementById("floor").value.toLowerCase();
+    const floor_id = floor+"-con";
+    document.querySelectorAll(".floor-con").forEach(floor_con => floor_con.style.display = "none");
+    document.getElementById(floor_id).style.display = "block";
   }
 
   function placeDetails(room_string) {

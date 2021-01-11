@@ -1,11 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from institute.constants import FLOOR_OPTIONS
 
 # Create your models here.
 class RoomDetail(models.Model):
-    FLOOR_OPTIONS = ('Ground', 'First', 'Second', 'Third', 'Fourth')
-
     student = models.OneToOneField('institute.Student', on_delete=models.CASCADE, null=False)
     block = models.ForeignKey('institute.Block', on_delete=models.CASCADE, null=True, blank=True)
     room_no = models.IntegerField(null=True, blank=True)
@@ -31,7 +30,7 @@ class RoomDetail(models.Model):
         if self.block.roomdetail_set.exclude(pk=self.pk).filter(room_no=self.room_no, floor=self.floor).count() >= self.block.per_room_capacity():
             raise ValidationError("Room filled to maximum capacity.")
         
-        if self.floor not in self.available_floors():
+        if self.floor not in self.block.available_floors():
             raise ValidationError("Floor not available.")
 
         student = self.student
@@ -49,9 +48,6 @@ class RoomDetail(models.Model):
         if block and not valid_year(student, block):
             raise ValidationError("Year: {} Student cannot be placed in {} block!".format(student.year, block.room_type))
     
-    def available_floors(self):
-        return self.FLOOR_OPTIONS[:self.block.floor_count]
-
     def room(self):
         if self.floor and self.room_no:
             if self.floor == 'Fourth':
