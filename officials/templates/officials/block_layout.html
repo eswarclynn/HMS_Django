@@ -69,71 +69,86 @@
   <span class="mr-2 mt-1">Select Floor: </span>
   <div>
     <select name="floor" id="floor" class="form-control d-inline bg-info text-white" onchange="showFloor()">
-      <option value="ground">Ground Floor</option>
-      <option value="first">First Floor</option>
-      <option value="second">Second Floor</option>
+      {% for floor in current_block.available_floors %}
+        <option value="{{floor}}">{{floor}} Floor</option>
+      {% endfor %}
     </select>
   </div>
 </div>
 
 {% if current_block|lower == 'tungabhadra hall of residence'  %}
 <div>
-  {% include 'officials/Tunga.html' %}
+  {% include 'officials/layouts/Tunga.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'krishnaveni hall of residence'  %}
 <div>
-  {% include 'officials/Krishnaveni.html' %}
+  {% include 'officials/layouts/Krishnaveni.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'munneru hall of residence'  %}
 <div>
-  {% include 'officials/Munneru.html' %}
+  {% include 'officials/layouts/Munneru.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'bhima hall of residence'  %}
 <div>
-  {% include 'officials/Bhima.html' %}
+  {% include 'officials/layouts/Bhima.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'ghataprabha hall of residence'  %}
 <div>
-  {% include 'officials/Ghata.html' %}
+  {% include 'officials/layouts/Ghata.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'indravathi hall of residence'  %}
 <div>
-  {% include 'officials/Indravathi.html' %}
+  {% include 'officials/layouts/Indravathi.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'manjeera hall of residence'  %}
 <div>
-  {% include 'officials/Manjeera.html' %}
+  {% include 'officials/layouts/Manjeera.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'purna hall of residence'  %}
 <div>
-  {% include 'officials/Purna.html' %}
+  {% include 'officials/layouts/Purna.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'banganga hall of residence'  %}
 <div>
-  {% include 'officials/Banganga.html' %}
+  {% include 'officials/layouts/Banganga.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'godavari hall of residence'  %}
 <div>
-  {% include 'officials/Godavari.html' %}
+  {% include 'officials/layouts/Godavari.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'pranahita hall of residence'  %}
 <div>
-  {% include 'officials/Pranahita.html' %}
+  {% include 'officials/layouts/Pranahita.html' %}
 </div>
 {% endif %}
 {% if current_block|lower == 'sabari hall of residence'  %}
 <div>
-  {% include 'officials/Sabari.html' %}
+  {% include 'officials/layouts/Sabari.html' %}
+</div>
+{% endif %}
+{% if current_block.block_id == '2S-D'  %}
+<div>
+  {% include 'officials/layouts/5_floor.html' %}
+</div>
+{% endif %}
+{% if current_block.block_id == '1S-D'  %}
+<div>
+  {% include 'officials/layouts/5_floor.html' %}
+</div>
+{% endif %}
+{% if current_block.block_id == '4S-B'  %}
+<div>
+  {% include 'officials/layouts/5_floor.html' %}
 </div>
 {% endif %}
 
@@ -164,171 +179,31 @@
 {% endblock content %}
 
 {% block script_links %}
-  
+
 <script>
-  $(document).ready(function () {
-    var filled_count = 0;
-    var partial_count = 0;
-    var vacant_count = 0;
-    var room_capacity = parseInt('{{current_block.room_type|slice:"0:1"}}');
-
-    $('.room-card').each(function () {
-      room = this.innerHTML;
-      floor = room[0];
-      no = parseInt(room.slice(2));
-
-      if (floor == 'G') {
-        floor = 'Ground';
-      } else if (floor == 'F') {
-        floor = 'First';
-      } else if (floor == 'S') {
-        floor = 'Second';
-      }
-
-      let count = 0;
-
-      {% for item in current_block.roomdetail_set.all %}
-        if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
-          count += 1;
-        }
-      {% endfor %}
-
-      if (count == room_capacity) {
-        filled_count += 1;
-      } else if (0 < count && count < room_capacity) {
-        $(this).addClass("partial");
-        partial_count += 1;
-      } else if (count == 0) {
-        $(this).addClass('vacant');
-        vacant_count += 1;
+  var current_block = JSON.parse('{{current_block_json|safe}}')[0];
+  var current_block = {id: current_block.pk, ...current_block.fields}
+  var room_capacity = parseInt('{{current_block.room_type|slice:"0:1"}}');
+  var available_floors = '{{ current_block.available_floors|safeseq|join:"," }}'.split(",");
+  var roomdetails = [];
+  {% for room in current_block.roomdetail_set.all %}
+    roomdetails.push({
+      id: parseInt('{{room.id}}'),
+      room_no: parseInt('{{room.room_no}}'),
+      floor: '{{room.floor}}',
+      student: {
+        id: parseInt('{{room.student.id}}'),
+        regd_no: '{{room.student.regd_no}}',
+        roll_no: '{{room.student.roll_no}}',
+        name: '{{room.student.name}}',
+        year: parseInt('{{room.student.year}}'),
+        branch: '{{room.student.branch}}',
+        phone: '{{room.student.phone}}',
+        email: '{{room.student.email}}',
       }
     });
-
-    document.getElementById('filled_room').innerHTML = filled_count;
-    document.getElementById('partial_room').innerHTML = partial_count;
-    document.getElementById('vacant_room').innerHTML = vacant_count;
-
-    $('.room-card').hover(function() {
-        let room = $(this).html();
-        let floor = room[0];
-        let no = parseInt(room.slice(2));
-  
-        if (floor == 'G') {
-          floor = 'Ground';
-        } else if (floor == 'F') {
-          floor = 'First';
-        } else if (floor == 'S') {
-          floor = 'Second';
-        }
-  
-        let roll = "";
-        {% for item in current_block.roomdetails %}
-          if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
-            roll += '{{item.student.regd_no}}, ';
-          }
-        {% endfor %}
-        $(this).tooltip({title: roll}).tooltip('show');
-    });
-  
-    $('.room-card').click(function() {
-      table = document.getElementById("table-container");
-      placeDetails($(this).html());
-      if (table.classList.contains('d-none')) {
-        table.classList.add('d-block');
-        table.classList.remove('d-none');
-      }  
-      document.querySelector('#table-container table > tbody').scrollIntoView();
-    });
-  });
-
-  function closeRoomTable() {
-    table = document.getElementById("table-container");
-    if (table.classList.contains('d-block')) {
-      table.classList.remove('d-block');
-      table.classList.add('d-none');
-    }
-  }
-
-  function showFloor() {
-
-    let floor = document.getElementById("floor").value;
-
-    if (floor == "ground") {
-      document.getElementById("ground-con").style.display = "block";
-      document.getElementById("first-con").style.display = "none";
-      document.getElementById("second-con").style.display = "none";
-    }
-    else if (floor == "first") {
-      document.getElementById("ground-con").style.display = "none";
-      document.getElementById("first-con").style.display = "block";
-      document.getElementById("second-con").style.display = "none";
-    }
-    else if (floor == "second") {
-      document.getElementById("ground-con").style.display = "none";
-      document.getElementById("first-con").style.display = "none";
-      document.getElementById("second-con").style.display = "block";
-    }
-  }
-
-  function placeDetails(room_string) {
-
-    let room = room_string;
-    let floor = room[0];
-    let no = parseInt(room.slice(2));
-    let room_capacity = parseInt('{{ current_block.room_type|slice:"0:1" }}');
-    document.querySelector('#table-container h2#room').innerHTML = room_string;
-
-    if (floor == 'G') {
-      floor = 'Ground';
-    } else if (floor == 'F') {
-      floor = 'First';
-    } else if (floor == 'S') {
-      floor = 'Second';
-    }
-
-    let tbody = document.querySelector('#table-container table > tbody');
-    tbody.innerHTML = "";
-
-    let count = 0;
-    {% for item in current_block.roomdetails %}
-      if ((floor == '{{item.floor}}') && (no == '{{item.room_no}}')) {
-        let row = document.createElement('tr');
-        row.innerHTML = `
-          <td>{{item.student.regd_no}}</td>\
-          <td>{{item.student.roll_no}}</td>\
-          <td>{{item.student.name}}</td>\
-          <td>{{item.student.year}}</td>\
-          <td>{{item.student.branch}}</td>\
-          <td>{{item.student.phone}}</td>\
-          <td>{{item.student.email}}</td>\
-          <td>\
-            <form method="POST" onsubmit="return confirm('Are you sure?')">{% csrf_token %}
-              <input type="hidden" name="roomdetail_id" value="{{item.id}}" />
-              <input type='submit' name='remove' value='Remove' class='btn btn-danger' />\
-            </form>
-          </td>`;
-        tbody.appendChild(row);
-        count++;
-      }
-    {% endfor %}
-
-    if (count < room_capacity) {
-      const template = document.createElement('template');
-      let row = document.createElement('tr');
-      row.innerHTML = `
-        <td colspan='10' class='text-center'>\
-          <form method="POST">{% csrf_token %}
-            Add Student to room :\
-            <input type='text' name='regd_no' class='ml-4'> \
-            <input type='hidden' name='block_id' value='{{current_block.id}}' /> \
-            <input type='hidden' name='floor' value='${floor}' /> \
-            <input type='hidden' name='room_no' value='${no}' /> \
-            <input type='submit' name='Add' value='Add' class='btn btn-primary ml-5'>\
-          </form>
-        </td>`;
-      tbody.appendChild(row); 
-    }
-  }
-
+  {% endfor %}
 </script>
+{% load static %}
+<script src="{% static 'officials/block_layout.js' %}"></script>
 {% endblock script_links %}

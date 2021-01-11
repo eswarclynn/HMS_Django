@@ -1,31 +1,38 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from institute.constants import FLOOR_OPTIONS
 
 # Create your models here.
 class RoomDetail(models.Model):
-    FLOOR_OPTIONS = (
-        ('Ground', 'Ground'),
-        ('First', 'First'),
-        ('Second', 'Second')
-    )
-
     student = models.OneToOneField('institute.Student', on_delete=models.CASCADE, null=False)
     block = models.ForeignKey('institute.Block', on_delete=models.CASCADE, null=True, blank=True)
     room_no = models.IntegerField(null=True, blank=True)
-    floor = models.CharField(max_length=10, choices=FLOOR_OPTIONS, null=True, blank=True)
+    floor = models.CharField(max_length=10, choices=list(map(lambda floor: (floor, floor), FLOOR_OPTIONS)), null=True, blank=True)
 
     def __str__(self):
-        block = self.block_id or "None"
-        floor = self.floor or "None"
-        return "{regd_no}<{block}: {floor}-{room}>".format(
-            regd_no = self.student, 
-            block = block,
-            floor = floor[0],
-            room = self.room_no or 0
-        )
+        if self.floor and self.room_no:
+            block = self.block_id
+            if self.floor == 'Fourth':
+                floor = self.floor[:2]
+            else:
+                floor = self.floor[0]
+            return "{regd_no}<{block}: {floor}-{room}>".format(
+                regd_no = self.student, 
+                block = block,
+                floor = floor,
+                room = self.room_no
+            )
+        else:
+            return "{}-".format(self.student)
 
     def clean(self):
+        if self.block.roomdetail_set.exclude(pk=self.pk).filter(room_no=self.room_no, floor=self.floor).count() >= self.block.per_room_capacity():
+            raise ValidationError("Room filled to maximum capacity.")
+        
+        if self.floor not in self.block.available_floors():
+            raise ValidationError("Floor not available.")
+
         student = self.student
         block = self.block
         def valid_gender(student, block):
@@ -40,10 +47,14 @@ class RoomDetail(models.Model):
             raise ValidationError("{} Student cannot be placed in {} block!".format(student.gender, block.gender))
         if block and not valid_year(student, block):
             raise ValidationError("Year: {} Student cannot be placed in {} block!".format(student.year, block.room_type))
-
+    
     def room(self):
-        if self.floor and self.room_no: 
-            return "{}-{}".format(self.floor[0], self.room_no)
+        if self.floor and self.room_no:
+            if self.floor == 'Fourth':
+                floor = self.floor[:2]
+            else:
+                floor = self.floor[0]
+            return "{}-{}".format(floor, self.room_no)
         else:
             return "-"
 
