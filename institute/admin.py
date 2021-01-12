@@ -9,7 +9,7 @@ class OfficialAdmin(admin.ModelAdmin):
     list_display = ('emp_id', 'name', 'user', 'designation', 'phone', 'block')
 
 class BlocksAdmin(admin.ModelAdmin):
-    list_display = ('block_id', 'name', 'room_type', 'gender', 'capacity')
+    list_display = ('name', 'block_id', 'room_type', 'gender', 'capacity')
 
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Official, OfficialAdmin)
