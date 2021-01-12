@@ -6,7 +6,7 @@ from institute.constants import FLOOR_OPTIONS
 # Create your models here.
 class RoomDetail(models.Model):
     student = models.OneToOneField('institute.Student', on_delete=models.CASCADE, null=False)
-    block = models.ForeignKey('institute.Block', on_delete=models.CASCADE, null=True, blank=True)
+    block = models.ForeignKey('institute.Block', on_delete=models.SET_NULL, null=True, blank=True)
     room_no = models.IntegerField(null=True, blank=True)
     floor = models.CharField(max_length=10, choices=list(map(lambda floor: (floor, floor), FLOOR_OPTIONS)), null=True, blank=True)
 

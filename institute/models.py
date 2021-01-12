@@ -67,7 +67,7 @@ class Official(models.Model):
         ('Chief-Warden','Chief-Warden'),
     )
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     account_email = models.EmailField(unique=True, null=False)
     emp_id = models.CharField(unique=True,null=False, max_length=20)
     name = models.CharField(max_length=100)
