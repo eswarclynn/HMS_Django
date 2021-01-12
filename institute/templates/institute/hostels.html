@@ -10,87 +10,89 @@
 
 {% block content %}
   <div class="container-fluid my-5 pt-5">
-    <div class="row justify-content-center mx-md-3 p-3">
-      <div class="col-12 text-center">
+    <div class="mx-md-3 p-3">
+      <div class="mt-3 text-center">
         <h2 class="d-inline border-bottom border-info">Hostel Blocks</h2>
       </div>
-      <div class="col-12 mt-3">
-        <h4 class="text-center">Girls Hostels</h4>
-      </div>
+      <h4 class="text-center mt-3">Girls Hostels</h4>
       
-      {% for block in blocks %}
-        {% if block.gender == 'Female' %}
-          <div class="col-12 col-md-6 col-lg-3 p-3 d-flex justify-content-center">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="{% static 'institute/img2.jpg' %}" alt="Block Image" style="width: auto; height: 250px;">
-              <div class="card-body">
-                <h4 class="card-title">{{ block.name }}</h4>
-                <div class="card-text">
-                  <p>Room Type: {{ block.room_type }}</p>
-                  <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
-                </div>
-                <div class="card-reveal">
-                  <h4>{{ block.name }}</h4>
-                  <p>Room Type: {{ block.room_type }}</p>
-                  <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
-                  {% if block.caretaker %}
-                    <h5>Caretaker Contact</h5>
-                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
-                    <p>Email: {{ block.caretaker.email }}</p>
-                    <p>Phone: {{ block.caretaker.phone }}</p>
-                  {% endif %}
-                  {% if block.warden %}
-                    <h5>Warden Contact</h5>
-                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
-                    <p>Email: {{ block.warden.email }}</p>
-                    <p>Phone: {{ block.warden.phone }}</p>
-                  {% endif %}
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
+        {% for block in blocks %}
+          {% if block.gender == 'Female' %}
+            <div class="col p-3 d-flex justify-content-center">
+              <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{% static 'institute/img2.jpg' %}" alt="Block Image" style="width: auto; height: 250px;">
+                <div class="card-body">
+                  <h4 class="card-title">{{ block.name }}</h4>
+                  <div class="card-text">
+                    <p>Room Type: {{ block.room_type }}</p>
+                    <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
+                  </div>
+                  <div class="card-reveal">
+                    <h4>{{ block.name }}</h4>
+                    <p>Room Type: {{ block.room_type }}</p>
+                    <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
+                    {% if block.caretaker %}
+                      <h5>Caretaker Contact</h5>
+                      <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                      <p>Email: {{ block.caretaker.email }}</p>
+                      <p>Phone: {{ block.caretaker.phone }}</p>
+                    {% endif %}
+                    {% if block.warden %}
+                      <h5>Warden Contact</h5>
+                      <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                      <p>Email: {{ block.warden.email }}</p>
+                      <p>Phone: {{ block.warden.phone }}</p>
+                    {% endif %}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        {% endif %}
-      {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
     
-    <div class="row justify-content-center mx-md-3 p-3 mt-4 border-top border-secondary">
-      <div class="col-12">
+    <div class="mx-md-3 p-3 mt-4 border-top border-secondary">
+      <div class="">
         <h4 class="text-center">Boys Hostels</h4>
       </div>
-      
-      {% for block in blocks %}
-        {% if block.gender == 'Male' %}
-          <div class="col-12 col-md-6 col-lg-3 p-3 d-flex justify-content-center">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="{% static 'institute/img2.jpg' %}" alt="Card image cap" style="width: auto; height: 250px;">
-              <div class="card-body">
-                <h4 class="card-title">{{ block.name }}</h4>
-                <div class="card-text">
-                  <p>Room Type: {{ block.room_type }}</p>
-                  <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
-                </div>
-                <div class="card-reveal">
-                  <h4>{{ block.name }}</h4>
-                  <p>Room Type: {{ block.room_type }}</p>
-                  <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
-                  {% if block.caretaker %}
-                    <h5>Caretaker Contact</h5>
-                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
-                    <p>Email: {{ block.caretaker.email }}</p>
-                    <p>Phone: {{ block.caretaker.phone }}</p>
-                  {% endif %}
-                  {% if block.warden %}
-                    <h5>Warden Contact</h5>
-                    <p class="font-weight-bold">{{ block.caretaker.name }}</p>
-                    <p>Email: {{ block.warden.email }}</p>
-                    <p>Phone: {{ block.warden.phone }}</p>
-                  {% endif %}
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 justify-content-center">
+        {% for block in blocks %}
+          {% if block.gender == 'Male' %}
+            <div class="col p-3 d-flex justify-content-center">
+              <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{% static 'institute/img2.jpg' %}" alt="Card image cap" style="width: auto; height: 250px;">
+                <div class="card-body">
+                  <h4 class="card-title">{{ block.name }}</h4>
+                  <div class="card-text">
+                    <p>Room Type: {{ block.room_type }}</p>
+                    <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
+                  </div>
+                  <div class="card-reveal">
+                    <h4>{{ block.name }}</h4>
+                    <p>Room Type: {{ block.room_type }}</p>
+                    <p>{{ block.capacity }} rooms | {{ block.student_capacity }} students</p>
+                    {% if block.caretaker %}
+                      <h5>Caretaker Contact</h5>
+                      <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                      <p>Email: {{ block.caretaker.email }}</p>
+                      <p>Phone: {{ block.caretaker.phone }}</p>
+                    {% endif %}
+                    {% if block.warden %}
+                      <h5>Warden Contact</h5>
+                      <p class="font-weight-bold">{{ block.caretaker.name }}</p>
+                      <p>Email: {{ block.warden.email }}</p>
+                      <p>Phone: {{ block.warden.phone }}</p>
+                    {% endif %}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        {% endif %}
-      {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      
     </div>
   </div>
 {% endblock content %}
