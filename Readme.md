@@ -24,12 +24,16 @@ APP_EMAIL_PASSWORD=<placeholder_email_password>
 ```
 Key generated at https://miniwebtool.com/django-secret-key-generator/
 
-#### Setup MySQL DB(In MySQL CLI or Workbench)
- - `CREATE SCHEMA hosteldb;`
- - `CREATE USER 'hosteladmin'@'localhost' IDENTIFIED WITH mysql_native_password BY '12345';`
- - `grant all on hosteldb.* to 'hosteladmin'@'localhost';`
- - `flush privileges;`
- - Please follow instructions given at https://medium.com/@omaraamir19966/connect-django-with-mysql-database-f946d0f6f9e3 to install **mysqlclient** inside PreferredDirectory/HMS_Django
+#### Setup PostgreSQL DB(in psql cli)
+- Install PostgreSQL following https://www.postgresqltutorial.com/postgresql-getting-started/install-postgresql/.
+- Run `psql` or `psql postgres`(whichever works) in your terminal and run the following commands.
+  - `CREATE DATABASE hosteldb;`
+  - `CREATE USER hosteladmin WITH PASSWORD 'hostel123';`
+  - `ALTER ROLE hosteladmin SET client_encoding TO 'utf8';`
+  - `ALTER ROLE hosteladmin SET default_transaction_isolation TO 'read committed';`
+  - `GRANT ALL PRIVILEGES ON DATABASE hosteldb TO hosteladmin;`
+- Update whatever password you choose in `settings.py`.
+
 
 #### Migrate, Create Superuser and Run Server(CMD/Terminal at PreferredDirectory/HMS_Django)
  - `python manage.py migrate`
